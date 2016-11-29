@@ -1,0 +1,290 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<article>
+<h1 id="risk_calc">Risikoberechnung</h1>
+
+<p>
+	Die Risikoberechnung basiert auf dem A-priori-Algorithmus. Hierbei werden die zuvor definierten Bedingungen
+	kombiniert, relevante Kombinationen gesucht und deren Wahrscheinlichkeit berechnet.
+</p>
+
+<h2>Beschreibung des A-priori-Algorithmus zur Findung von Risikokriterien</h2>
+
+<p>
+	Die Merkmale sind Bedingungen, welche mit allen Studenten in der Datenbank geprüft werden. Der Support ist der
+	prozentuale Anteil aller Studenten auf die eine Kombination aus Bedingungen (Itemset) zutrifft.
+</p>
+
+<img src="img/docs/apriori.png" alt="A-priori-Algorithmus">
+
+<ol type="1">
+	<li>Eine Itemmenge I mit allen Merkmalen wird generiert</li>
+	<li>Eine leere Itemmenge I<sub>temp</sub> wird angelegt.</li>
+	<li>
+		Für k=1 (k wird in jedem Durchlauf um 1 hochgezählt)
+		<ol type="a">
+			<li>
+				Jede Kombination (Itemset) X der Itemmenge I mit k Elementen wird generiert und durchlaufen:
+				<ol type="i">
+					<li>Der Support für jedes Itemset X wird berechnet.</li>
+					<li>Falls der Support größer als der minimal zulässige Support ist, werden die Items von X in
+						der Itemmenge I<sub>temp</sub> aufgenommen.
+					</li>
+					<li>
+						Zudem wird in diesem Fall jede Untermenge A von X mit k-1 items generiert und durchlaufen:
+						<ol type="1">
+							<li>Der Support für das Itemset A wird berechnet.</li>
+							<li>Durch Division des Supports von Itemset X und des Supports von Itemset A wird die
+								Konfidenz ermittelt.
+							</li>
+							<li>Ist die Konfidenz größer oder gleich der minimalen Konfidenz, wird die
+								Differenzmenge B aus Itemset X und generierter Untermenge A berechnet.
+							</li>
+							<li>Zudem wird die Association Rule A -> B gespeichert.</li>
+						</ol>
+					</li>
+
+				</ol>
+			</li>
+			<li>Die Itemmenge I wird mit der Itemmenge I<sub>temp</sub> überschrieben.</li>
+		</ol>
+	</li>
+</ol>
+
+<p>
+	Bei S-BEAT ist die Association Rule ein Risikokriterium und wird auf technischer Seite Path genannt. Ein solcher
+	Pfad ist immer eine Kombination aus Bedingungen.
+</p>
+
+<img src="img/docs/data_structure.png" alt="Datenstruktur">
+
+<p>
+	Bedingungen (Merkmal/Item) werden als <code>PathElement</code> gespeichert. Ein Path besteht dabei aus zwei
+	Listen deren
+	Elemente vom Typ <code>PathElement</code> sind. Die Liste <code>filter_elements</code> enthält die Bedingungen
+	der Seite A einer
+	Association Rule und die Liste <code>elements</code> die Elemente der Seite B.
+</p>
+
+<p>
+	Die Seite B ist bei S-BEAT immer die Bedingung <i>Studium erfolgreich = Nein</i>. Die Konfidenz ist die
+	Wahrscheinlichkeit, dass die Regel eintritt und wird als <code>value</code> des <code>Path</code> gespeichert.
+</p>
+
+<h2>Optimierter A-priori-Algorithmus bei S-BEAT</h2>
+
+<p>
+	Bei S-BEAT nennt sich die Implementierung des A-priori-Algorithmus <code>PathGenerator</code>, denn damit werden
+	die Pfade generiert und in der Datenbank abgespeichert.
+</p>
+
+<p>
+	Jede <code>PathGenerator</code> Instanz generiert Pfade mit einer festen Anzahl (k) an Filter Elementen für eine
+	definierte Menge an Bedingungen <code>feature_set</code> (<code>PathElement</code> Objekte). Ist ein <code>PathGenerator</code>
+	fertig, instanziiert er automatisch einen neuen mit erhöhtem k und den zuvor benutzten Bedingungen <code>features_used</code>.
+</p>
+
+<p>
+	Der <code>PathGenerator</code> nutzt die <code>StudentsBitArray</code> Klasse, welche alle Studenten in der
+	Datenbank auf die Bedingungen abbildet. Diese hat eine C Implementierung, das Modul <code>bitmapchecker</code>,
+	welches als <code>bitmapchecker.pyd</code> für Windows bzw. als <code>bitmapchecker.so</code> für Linux
+	kompiliert werden muss. Dieses C Modul bietet auch eine Funktion an, welche alle Kombinationen prüft und
+	berechnet wie viele Studenten darauf zutreffen. Dabei müssen Millionen von Kombinationstests durchgeführt
+	werden, was in Python sehr lange dauert. Daher wurden diese Vorgänge in C implementiert. Hier wird immer nur
+	dann ein Callback aufgerufen, wenn die mit <code>print_rate</code> angegeben Durchläufe abgelaufen sind oder ein
+	Pfad gefunden wurde, welcher den minimalen Support <code>min_support</code> überschreitet.
+</p>
+
+<img src="img/docs/python_c_work.png" alt="Python zu C Arbeitsauslagerung">
+
+<p>
+	Nach diesem Prinzip wird der Großteil der Arbeit in einen C-basierten Prozess ausgelagert und somit um ein
+	vielfaches schneller erledigt. Das Ganze findet parallel in 6 Prozessen statt, welche sich die Arbeit aufteilen.
+	So profitiert das Verfahren von Multicore Prozessoren.
+</p>
+
+<p>
+	Wie viele mögliche Kombinationen der A-priori-Algorithmus prüfen muss, wird von dem <code>PathGenerator</code>
+	zuvor berechnet, damit festgestellt werden kann wie weit der <code>PathGenerator</code> ist.
+</p>
+
+<p>
+	<code>feature_count</code> ist die Anzahl der Merkmale im gegebenen <code>feature_set</code>. <code>k</code> ist
+	die Dimension der zu prüfenden Kombinationen. Wenn <code>k</code> = 2 ist, dann werden alle möglichen
+	Zweierkombinationen der
+	Merkmale in <code>feature_set</code> gebildet und geprüft.
+</p>
+
+<p>
+	Die Anzahl der zur prüfenden Kombinationen wird mit folgender Formel berechnet:
+</p>
+
+<img src="img/docs/combinations_formula.png" alt="Formal der Kombinationen">
+
+<p>
+	Bei einem <code>feature_count</code> von 100 bei k = 5 wären das 75.287.520 Kombinationen. Bei jeder dieser
+	Prüfungen werden alle Studenten durchlaufen und geprüft, ob ein Student auf die Kombination an Bedingungen
+	zutrifft.
+</p>
+
+<h2>Berechnungen für einen Pfad / Kombination</h2>
+
+<p>
+	Eine Kombination aus Bedingungen muss bestimmte Voraussetzungen erfüllen, bevor diese als Pfad in die Datenbank
+	eingefügt werden.
+</p>
+
+<p>
+	Für k>=2 wird zuerst geprüft, ob die Bedingung <i>Studium erfolgreich = Nein</i> enthalten ist, denn diese muss
+	bei jedem Pfad als einziges Element der <code>elements</code> Liste vorhanden sein.
+</p>
+
+<p>
+	Danach wird der Support berechnet. Es wird gezählt wie viele Studenten auf alle Bedingungen der aktuellen
+	Kombination zutreffen. Die daraus resultierende Menge wird als <code>matched</code> bezeichnet. Sind dies
+	weniger als durch <code>min_support</code> definiert, so wird die Kombination verworfen. Es werden dabei nur
+	Studenten betrachtet die bereits ihr Studium abgeschlossen bzw. abgebrochen haben. Die Anzahl dieser wird als
+	<code>total_count</code> bezeichnet.
+</p>
+
+<p>
+	Der Support wird als Prozentwert im Verhältnis zur Anzahl der betrachteten Studenten (<code>total_count</code>)
+	berechnet. Es gibt jedoch einen Fall bei dem diese Anzahl reduziert wird. Wenn eine Bedingung von einer anderen
+	abhängig ist. Dann wird die Anzahl der Studenten genommen, welche auf diese Bedingung zutreffen.
+</p>
+
+<h3>Beispiel</h3>
+<table class="tbl spaced">
+	<thead>
+	<tr>
+		<th>Bedingung</th>
+		<th>Studenten, die auf die Bedingung zutreffen</th>
+		<th>Studenten, die auf alle Bedingungen zutreffen</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>Semester mit Prüfungsleistungen >= 1</td>
+		<td>6484</td>
+		<td rowspan="4">1286</td>
+	</tr>
+	<tr>
+		<td>Nicht bestandene Prüfungsleistungen im 1. Semester > 1</td>
+		<td>1592</td>
+	</tr>
+	<tr>
+		<td>Studium erfolgreich = Nein</td>
+		<td>3014</td>
+	</tr>
+	<tr>
+		<td>Studium abgeschlossen = Ja</td>
+		<td>7272</td>
+	</tr>
+	</tbody>
+</table>
+
+<p>
+	Normalerweise ist <code>total_count</code> = 7272. Doch in diesem Fall ist <i>Nicht bestandene
+	Prüfungsleistungen im 1. Semester > 1</i> abhängig von <i>Semester mit Prüfungsleistungen >= 1</i> da es ja
+	keinen Sinn machen würde Studenten zu betrachten, welche noch kein Semester studiert haben. Somit wird <code>total_count</code>
+	= 6484 verwendet. Der Support berechnet sich dann wie folgt:
+</p>
+
+<img src="img/docs/support_formula.png" alt="Support Formel">
+
+<p>
+	Der minimale Support ist aktuell auf 0,05 eingestellt. Da 0,2 größer ist, wird diese Kombination akzeptiert. Die
+	Bedingungen werden in die <code>features_used</code> Menge aufgenommen und somit auch beim nächsten Durchlauf
+	mit erhöhtem <code>k</code> wieder geprüft.
+</p>
+
+<p>
+	Danach wird die Kombination in <code>filter_elements</code> und <code>elements</code> zur Bildung eines
+	<code>Path</code> aufgeteilt.
+</p>
+
+<p>
+	<i>Semester mit Prüfungsleistungen >= 1</i> und <i>Nicht bestanden im 1. Semester > 1</i> sind
+	<code>filter_elements</code>. <i>Studium erfolgreich = Nein</i> ist in <code>elements</code>.
+</p>
+
+<p>
+	Mit den <code>filter_elements</code> wird die Konfidenz des <code>Path</code> berechnet. Dazu wird berechnet wie
+	viele Studenten auf diese Bedingungen passen. Die Anzahl dieser Studenten wird als <code>count</code> gespeichert.
+</p>
+
+<table class="tbl spaced">
+	<thead>
+	<tr>
+		<th>Bedingung</th>
+		<th>Studenten, die auf die Bedingung zutreffen</th>
+		<th>Studenten, die auf alle Bedingungen zutreffen</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>Semester mit Prüfungsleistungen >= 1</td>
+		<td>6484</td>
+		<td rowspan="3">1592</td>
+	</tr>
+	<tr>
+		<td>Nicht bestandene Prüfungsleistungen im 1. Semester > 1</td>
+		<td>1592</td>
+	</tr>
+	<tr>
+		<td>Studium abgeschlossen = Ja</td>
+		<td>7272</td>
+	</tr>
+	</tbody>
+</table>
+
+<p>
+	Die Konfidenz berechnet sich dann wie folgt:
+</p>
+
+<img src="img/docs/confidence_formula.png" alt="Konfidenz Formel">
+
+<p>
+	Das bedeutet, dass 81% der Studenten, welche im ersten Semester mehr als eine Prüfungsleistung nicht bestehen ihr
+	Studium nicht erfolgreich beenden.
+</p>
+
+<p>
+	Sollte die Konfidenz unter der <code>min_confidence</code> (aktuell bei 0,01) liegen, wird die Kombination
+	verworfen.
+	Die Konfidenz wird als value des Path abgespeichert.
+</p>
+
+<h2>Risikoberechnung für einen Studenten</h2>
+
+<p>
+	Wenn alle relevanten Pfade vom A-priori-Algorithmus gefunden wurden, folgt der im Updateprozess mit <code>calculate_student_risk</code>
+	bezeichnete Schritt. Bei diesem wird jeder Student einzeln betrachtet um mit Hilfe einer Datenbankabfrage die auf
+	den Studenten zutreffenden Pfade zu ermitteln.
+</p>
+
+<p>
+	Die Pfade eines Studenten werden nach ihrem <code>value</code> sortiert. Das Risiko eines Studenten ist besonders hoch,
+	wenn auf ihn viele Pfade mit einem hohen <code>value</code> zutreffen. Der <code>value</code> des
+	Pfades welcher als Median ermittelt wurde, wird als Risikowert <code>risk.median</code> des Studenten gespeichert
+	sofern der Student noch studiert.
+</p>
+
+<p>
+	Für eine spätere Skalierung der Risikowerte wird dabei der minimale und maximale Risikowert gespeichert. Nachdem
+	alle Studenten durchlaufen wurden, wird die Differenz zwischen dem maximalen und dem minimalen Risikowert als
+	Wertebereich festgelegt und für alle Studenten ein in diesen Wertebereich skalierter Risikowert <code>risk.median_scaled</code>
+	gespeichert. Somit hat der Student mit dem höchsten Risiko 100% während der Studenten mit dem niedrigsten Risiko den
+	skalierten Wert 0% hat.
+</p>
+
+<p>
+	Indem die Studenten nach dem Risikowert <code>risk.median_scaled</code> sortiert werden, können nun die kritischsten
+	Fälle festgestellt werden.
+</p>
+
+
+
+</article>

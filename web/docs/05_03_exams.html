@@ -1,0 +1,61 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<article>
+	<h1 id="ui_exams">Prüfungsleistungen</h1>
+
+	<p>
+		Die Prüfungsleistungen zeigen eine tabellarische Übersicht mit allen Prüfungsleistungen
+		aus allen (Bachelor-)Studiengängen einer Hochschule, die von Studenten/Studentinnen bisher abgelegt wurden,
+		sowohl erfolgreich als auch nicht erfolgreich.
+		Dabei sind zu jeder Prüfungsleistung Angaben zu folgenden Feldern aufgelistet:
+	<ul>
+		<li>EDV Nr. und Name der Prüfungsleistung</li>
+		<li>Studiengangsgruppe</li>
+		<li><span data-config="cp_label"></span> Vergütung</li>
+		<li>Bewertung durch Note (zeigt im Fall einer unbenoteten Prüfungsleistung nein an)</li>
+		<li>bestanden / nicht bestanden in % (generell sowie im aktuellen/letzten Semester)</li>
+		<li>nicht bestanden (absolut)</li>
+		<li>Anzahl der Anmeldungen im aktuellen und letzten Semester</li>
+	</ul>
+	<br>
+	Zu beachten:
+	Der einstellbare Filter "Status=AN letztes Semester" umfasst Prüfungsleistungen, für die noch keine Benotungen
+	vorliegen.
+	"Anzahl Anmeldungen" bezeichnet die Gesamtzahl aller Studenten, die eine bestimmte Prüfung bisher angemeldet haben.
+	</p>
+
+</article>
+
+<article>
+	<h1 id="ui_exam_details">Prüfungsleistung Details</h1>
+
+	<p>
+		In der Ansicht Prüfungsleistungsdetails kann für eine bestimmte Prüfungsleistung eine
+		Notenverteilung für alle verfügbaren Semester eingesehen werden.
+		Diese wird durch ein Säulendiagramm dargestellt, welches die Ergebnisse aller verfügbaren Semester
+		standardmäßig pro Säule überlagert (Einstellung Stacked) darstellt.
+		Dabei wird jedes Semester in einer eigenen Farbe repräsentiert.
+		Wechselt man zur Einstellung Grouped werden die Ergebnisse pro Semester in einzelnen Säulen veranschaulicht.
+		Die Legende auf der rechten Seite dient dazu einzelne Semester gezielt ein- und ausblenden zu können.
+
+		Unterhalb der Notenverteilung findet man eine Tabelle "Semester", welche Auskunft darüber gibt
+	</p>
+	<ul>
+		<li>wie oft diese Prüfungsleistung in einem bestimmten Semester abgelegt wurde</li>
+		<li>in wievielen Fällen sie in diesem bestanden oder nicht bestanden wurde (absolute Anzahl und prozentual)</li>
+		<li>welches jeweils die durchschnittliche und beste Note waren</li>
+	</ul>
+	<p>
+		In der letzten Zeile der Tabelle findet sich der jeweils für die einzelnen Spalten aufsummierte Wert über alle
+		Semester.<br>
+		Der Notenspiegel orientiert sich an der Darstellung der
+		<a href="docs_extended.html?page=05_02_students#performance_record">"Student Details"-Seite</a>.
+		Einzig die erste Spalte enthält nicht die EDV-Nummer der Prüfungsleistung,
+		sondern die anonyme Identifikationsnummer der Studierenden, welche diese Prüfungsleistung
+		abgelegt haben.
+
+	</p>
+
+</article>

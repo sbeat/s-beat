@@ -1,0 +1,67 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+{% set active_page = "courses" %}
+{% extends "index.html" %}
+{% block title %}Studiengangsgruppe: {{ request.args.get('stg',0) }}{% endblock %}
+{% block content %}
+<div class="layout" data-load="CourseDetails" data-stg="{{ request.args.get('stg',0) }}">
+	<h1>Studiengangsgruppe Details: {{ request.args.get('stg',0) }} - <span data-course="name"></span></h1>
+
+	<article>
+		<h2>Studiengänge</h2>
+		<table class="tbl">
+			<thead>
+			<tr>
+				<th><div><span>Kürzel</span></div></th>
+				<th><div><span>Regelstudienzeit</span></div></th>
+				<th><div><span>Anzahl Studenten</span></div></th>
+				<th><div><span>Studierend</span></div></th>
+				<th><div><span>Studium erfolgreich</span></div></th>
+				<th><div><span>Studium erfolgreich in %</span></div></th>
+				<th><div><span>Studium nicht erfolgreich</span></div></th>
+				<th data-course="hide_resigned"><div><span>Rücktritte in %</span></div></th>
+			</tr>
+			</thead>
+			<tbody data-course="courses_data" data-columns="
+				stg_original:str,
+				semesters:int,
+				count_students:int,
+				count_studying:int,
+				count_successful:int,
+				success_perc:percent,
+				count_failed:int,
+				exam_perc_resigned:percent
+			">
+			</tbody>
+			<tfoot>
+				<tr class="summary">
+					<td>Gesamt</td>
+					<td>-</td>
+					<td data-course="count_students"></td>
+					<td data-course="count_current"></td>
+					<td data-course="count_successful"></td>
+					<td data-course="success_perc"></td>
+					<td data-course="count_failed"></td>
+					<td data-course="exam_perc_resigned"></td>
+				</tr>
+			</tfoot>
+		</table>
+	</article>
+
+	<article>
+		<h2>Risikoverteilung</h2>
+		<svg data-course="risk_graph" style="height: 200px"></svg>
+		<hr class="gradeline">
+	</article>
+	<br>
+	<article>
+		<h2>Kohorten nach Startsemester</h2>
+
+		<div data-load="CourseSemesterList" data-stg="{{ request.args.get('stg') }}"></div>
+
+	</article>
+
+</div>
+{% endblock %}

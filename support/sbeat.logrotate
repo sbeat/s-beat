@@ -1,0 +1,8 @@
+/home/sbeat/s-beat/logs/*.log {
+        daily
+        missingok
+        rotate 12
+        compress
+        delaycompress
+        notifempty
+}

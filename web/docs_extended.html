@@ -1,0 +1,43 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+{% set active_page = "docs" %}
+{% extends "index.html" %}
+{% block title %}Dokumentation{% endblock %}
+{% set website_class = "" %}
+{% block side_nav %}
+<a href="docs_extended.html?page=01_introduction" class="{{ 'active' if request.args.page=='01_introduction' }}">Einführung</a>
+<a href="docs_extended.html?page=02_contact" class="{{ 'active' if request.args.page=='02_contact' }}">Ansprechpartner</a>
+<a href="docs_extended.html?page=03_data_source" class="{{ 'active' if request.args.page=='03_data_source' }}">Datenherkunft</a>
+<a href="docs_extended.html?page=04_data_access" class="{{ 'active' if request.args.page=='04_data_access' }}">Zugriffsberechtigungen</a>
+
+<a href="docs_extended.html?page=05_user_interface" class="{{ 'active' if request.args.page=='05_user_interface' }}">Benutzeroberfläche</a>
+<div class="subnavi">
+	<a href="docs_extended.html?page=05_01_courses" class="{{ 'active' if request.args.page=='05_01_courses' }}">Studiengänge</a>
+	<a href="docs_extended.html?page=05_02_students" class="{{ 'active' if request.args.page=='05_02_students' }}">Studenten</a>
+	<a href="docs_extended.html?page=05_03_exams" class="{{ 'active' if request.args.page=='05_03_exams' }}">Prüfungsleistungen</a>
+	{% if g.has_right('admin_access') %}
+	<a href="docs_extended.html?page=05_04_admin" class="{{ 'active' if request.args.page=='05_04_admin' }}">Administration</a>
+	{% endif %}
+</div>
+<a href="docs_extended.html?page=06_use_cases" class="{{ 'active' if request.args.page=='06_use_cases' }}">Anleitung</a>
+<a href="docs_extended.html?page=07_troubleshooting" class="{{ 'active' if request.args.page=='07_troubleshooting' }}">Problembehandlung</a>
+
+<a href="docs_extended.html?page=08_data_analysis" class="{{ 'active' if request.args.page=='08_data_analysis' }}">Technische Datenanalyse</a>
+<div class="subnavi">
+	<a href="docs_extended.html?page=08_01_students" class="{{ 'active' if request.args.page=='08_01_students' }}">Berechnete Studentendaten</a>
+	<a href="docs_extended.html?page=08_02_student_conditions" class="{{ 'active' if request.args.page=='08_02_student_conditions' }}">Bedingungen für Studenten</a>
+	<a href="docs_extended.html?page=08_03_risk_calc" class="{{ 'active' if request.args.page=='08_03_risk_calc' }}">Risikoberechnung</a>
+	<a href="docs_extended.html?page=08_04_exams" class="{{ 'active' if request.args.page=='08_04_exams' }}">Berechnete Prüfungsleistungsdaten</a>
+	<a href="docs_extended.html?page=08_05_courses" class="{{ 'active' if request.args.page=='08_05_courses' }}">Berechnete Studiengangsdaten</a>
+</div>
+
+{% endblock %}
+{% block content %}
+<div class="layout">
+
+	{% include 'docs/'+request.args.page+'.html' %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+{% set active_page = "admin" %}
+{% set active_subpage = "update" %}
+{% extends "index.html" %}
+{% set website_class = "" %}
+{% block title %}Update{% endblock %}
+{% block content %}
+<div class="layout">
+	{% if not g.has_right('admin_access') %}
+	<article>
+		<h1>Zugriff verweigert</h1>
+		<p>
+			Sie haben keine Berechtigung.
+		</p>
+	</article>
+	{% else %}
+	<article>
+		<h1>Update Prozess</h1>
+		<p>
+			Der Updateprozess importiert alle unter
+			<a href="import.html">Datenimport</a> aktiven Dateien der Reihenfolge nach und
+			führt Berechnungen auf den importierten Daten aus.
+		</p>
+		<div data-load="UpdateProcess"></div>
+
+	</article>
+	{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,2251 @@
+{
+    "path_elements": {
+        "158142228975149": {
+            "query_id": "277583107504263",
+            "condition": {
+                "negate": false,
+                "compare_value": 30,
+                "name": null,
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "31673728360758": {
+            "query_id": "86644067394598",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "244309109840856": {
+            "query_id": "80465912483826",
+            "condition": {
+                "negate": false,
+                "compare_value": 200,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "155934661787705": {
+            "query_id": "277583107504263",
+            "condition": {
+                "negate": false,
+                "compare_value": 20,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "276596492956530": {
+            "query_id": "91169225556964",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "181471029026465": {
+            "query_id": "28722832388109",
+            "condition": {
+                "negate": false,
+                "compare_value": 100,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "56751766090867": {
+            "query_id": "267668165988270",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    18,
+                    21
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "263247887664805": {
+            "query_id": "137876325173946",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "208697294309959": {
+            "query_id": "106754935518026",
+            "condition": {
+                "negate": false,
+                "compare_value": 3,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "33350339195843": {
+            "query_id": "242241165532437",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "190845358994566": {
+            "query_id": "158181538402706",
+            "condition": {
+                "negate": false,
+                "compare_value": 200,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "65064046269678": {
+            "query_id": "19648334566410",
+            "condition": {
+                "negate": false,
+                "compare_value": 1,
+                "name": null,
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "169685209482700": {
+            "query_id": "105963129928353",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    400,
+                    490
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "89898126469214": {
+            "query_id": "134130057881604",
+            "condition": {
+                "negate": false,
+                "compare_value": 8,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "160591509441558": {
+            "query_id": "16306424766052",
+            "condition": {
+                "negate": false,
+                "compare_value": 7,
+                "name": "sem_7",
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "155149501721879": {
+            "query_id": "267668165988270",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    26,
+                    29
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "150692966940463": {
+            "query_id": "262024128776410",
+            "condition": {
+                "negate": false,
+                "compare_value": "M",
+                "name": null,
+                "comparator": "equal",
+                "order": 0
+            }
+        },
+        "22710261559705": {
+            "query_id": "93894541222828",
+            "condition": {
+                "negate": false,
+                "compare_value": 3,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "147982068062645": {
+            "query_id": "86644067394598",
+            "condition": {
+                "negate": false,
+                "compare_value": 8,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "193588126515261": {
+            "query_id": "207258636627673",
+            "condition": {
+                "negate": false,
+                "compare_value": true,
+                "name": null,
+                "comparator": "is",
+                "order": 0
+            }
+        },
+        "104654383023907": {
+            "query_id": "80465912483826",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    300,
+                    390
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "158195919731839": {
+            "query_id": "45566759107119",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "204209084431014": {
+            "query_id": "207258636627673",
+            "condition": {
+                "negate": false,
+                "compare_value": false,
+                "name": null,
+                "comparator": "is",
+                "order": 0
+            }
+        },
+        "249547503432556": {
+            "query_id": "93894541222828",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "98482008721106": {
+            "query_id": "164774754277897",
+            "condition": {
+                "negate": false,
+                "compare_value": 1,
+                "name": null,
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "232614459968216": {
+            "query_id": "28722832388109",
+            "condition": {
+                "negate": false,
+                "compare_value": 30,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "164230372323082": {
+            "query_id": "239731493788010",
+            "condition": {
+                "negate": false,
+                "compare_value": 2,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "223945821606081": {
+            "query_id": "91169225556964",
+            "condition": {
+                "negate": false,
+                "compare_value": 2,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "42276825043457": {
+            "query_id": "86644067394598",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "268447631572803": {
+            "query_id": "16306424766052",
+            "condition": {
+                "negate": false,
+                "compare_value": 1,
+                "name": "sem_1",
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "144353824156463": {
+            "query_id": "242241165532437",
+            "condition": {
+                "negate": false,
+                "compare_value": 6,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "128861364066119": {
+            "query_id": "239191696477107",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    300,
+                    390
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "179194552741762": {
+            "query_id": "61190239120118",
+            "condition": {
+                "negate": false,
+                "compare_value": 40,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "81780859009055": {
+            "query_id": "137876325173946",
+            "condition": {
+                "negate": false,
+                "compare_value": 3,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "77679055542751": {
+            "query_id": "129186408171030",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    300,
+                    390
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "178685154625542": {
+            "query_id": "108391785586208",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "260471795037093": {
+            "query_id": "106754935518026",
+            "condition": {
+                "negate": false,
+                "compare_value": 2,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "176290231760950": {
+            "query_id": "129186408171030",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    200,
+                    290
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "141615678797250": {
+            "query_id": "242241165532437",
+            "condition": {
+                "negate": false,
+                "compare_value": 8,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "54101502952797": {
+            "query_id": "16306424766052",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": "sem_5",
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "138659648170108": {
+            "query_id": "147082045167704",
+            "condition": {
+                "negate": false,
+                "compare_value": 24,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "1866379387666": {
+            "query_id": "236476328553231",
+            "condition": {
+                "negate": false,
+                "compare_value": true,
+                "name": "success",
+                "comparator": "is",
+                "order": 0
+            }
+        },
+        "142459585044234": {
+            "query_id": "267668165988270",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    22,
+                    25
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "149700887667832": {
+            "query_id": "134130057881604",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "144572815791909": {
+            "query_id": "133405623548888",
+            "condition": {
+                "negate": false,
+                "compare_value": 200,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "82805825649494": {
+            "query_id": "106754935518026",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "46374926099579": {
+            "query_id": "86644067394598",
+            "condition": {
+                "negate": false,
+                "compare_value": 7,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "193526871163561": {
+            "query_id": "45566759107119",
+            "condition": {
+                "negate": false,
+                "compare_value": 7,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "171317530272989": {
+            "query_id": "242864900513852",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "172310651914230": {
+            "query_id": "61190239120118",
+            "condition": {
+                "negate": false,
+                "compare_value": 20,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "49075205798932": {
+            "query_id": "93894541222828",
+            "condition": {
+                "negate": false,
+                "compare_value": 1,
+                "name": null,
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "204467859997737": {
+            "query_id": "86644067394598",
+            "condition": {
+                "negate": false,
+                "compare_value": 9,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "270015516103466": {
+            "query_id": "242864900513852",
+            "condition": {
+                "negate": false,
+                "compare_value": 1,
+                "name": null,
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "50900776281204": {
+            "query_id": "91169225556964",
+            "condition": {
+                "negate": false,
+                "compare_value": 6,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "34233027809182": {
+            "query_id": "164774754277897",
+            "condition": {
+                "negate": false,
+                "compare_value": 2,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "183765631044094": {
+            "query_id": "19648334566410",
+            "condition": {
+                "negate": false,
+                "compare_value": 3,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "167811656264741": {
+            "query_id": "16306424766052",
+            "condition": {
+                "negate": false,
+                "compare_value": 6,
+                "name": "sem_6",
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "30254386091081": {
+            "query_id": "228523202795513",
+            "condition": {
+                "negate": false,
+                "compare_value": 50,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "29273312185905": {
+            "query_id": "239731493788010",
+            "condition": {
+                "negate": false,
+                "compare_value": 1,
+                "name": null,
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "31271828267106": {
+            "query_id": "242864900513852",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "122312205645211": {
+            "query_id": "228523202795513",
+            "condition": {
+                "negate": false,
+                "compare_value": 60,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "250453445177617": {
+            "query_id": "239731493788010",
+            "condition": {
+                "negate": false,
+                "compare_value": 3,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "80928664460614": {
+            "query_id": "228523202795513",
+            "condition": {
+                "negate": false,
+                "compare_value": 30,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "201040987791374": {
+            "query_id": "158181538402706",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    400,
+                    490
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "225886802610039": {
+            "query_id": "16306424766052",
+            "condition": {
+                "negate": false,
+                "compare_value": 3,
+                "name": "sem_3",
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "145939978695726": {
+            "query_id": "108391785586208",
+            "condition": {
+                "negate": false,
+                "compare_value": 3,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "34469192277393": {
+            "query_id": "28722832388109",
+            "condition": {
+                "negate": false,
+                "compare_value": 100,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "86763288135685": {
+            "query_id": "91169225556964",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "37525289676494": {
+            "query_id": "242241165532437",
+            "condition": {
+                "negate": false,
+                "compare_value": 9,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "13338467819698": {
+            "query_id": "80465912483826",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    400,
+                    490
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "241242885498254": {
+            "query_id": "239191696477107",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    200,
+                    290
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "202454991758174": {
+            "query_id": "105963129928353",
+            "condition": {
+                "negate": false,
+                "compare_value": 200,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "236943670336086": {
+            "query_id": "108391785586208",
+            "condition": {
+                "negate": false,
+                "compare_value": 2,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "235019115875139": {
+            "query_id": "45566759107119",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "234284482292212": {
+            "query_id": "16306424766052",
+            "condition": {
+                "negate": false,
+                "compare_value": 9,
+                "name": "sem_9",
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "215933603348138": {
+            "query_id": "129186408171030",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    400,
+                    490
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "72434199526191": {
+            "query_id": "105963129928353",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    200,
+                    290
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "8600972592446": {
+            "query_id": "277583107504263",
+            "condition": {
+                "negate": false,
+                "compare_value": 30,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "103680468505286": {
+            "query_id": "45566759107119",
+            "condition": {
+                "negate": false,
+                "compare_value": 8,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "79620994109608": {
+            "query_id": "262024128776410",
+            "condition": {
+                "negate": false,
+                "compare_value": "W",
+                "name": null,
+                "comparator": "equal",
+                "order": 0
+            }
+        },
+        "167318155987690": {
+            "query_id": "106754935518026",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "168254977909274": {
+            "query_id": "45566759107119",
+            "condition": {
+                "negate": false,
+                "compare_value": 9,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "45524637803962": {
+            "query_id": "134130057881604",
+            "condition": {
+                "negate": false,
+                "compare_value": 7,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "186155540444628": {
+            "query_id": "228523202795513",
+            "condition": {
+                "negate": false,
+                "compare_value": 20,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "225318304915513": {
+            "query_id": "242864900513852",
+            "condition": {
+                "negate": false,
+                "compare_value": 2,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "239959993107178": {
+            "query_id": "134130057881604",
+            "condition": {
+                "negate": false,
+                "compare_value": 9,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "133838627494770": {
+            "query_id": "183598533761377",
+            "condition": {
+                "negate": false,
+                "compare_value": true,
+                "name": null,
+                "comparator": "is",
+                "order": 0
+            }
+        },
+        "35071362639178": {
+            "query_id": "137876325173946",
+            "condition": {
+                "negate": false,
+                "compare_value": 2,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "47604267433445": {
+            "query_id": "147082045167704",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    7,
+                    12
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "137907172288455": {
+            "query_id": "242864900513852",
+            "condition": {
+                "negate": false,
+                "compare_value": 3,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "100616043837363": {
+            "query_id": "91169225556964",
+            "condition": {
+                "negate": false,
+                "compare_value": 3,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "110446313149123": {
+            "query_id": "228523202795513",
+            "condition": {
+                "negate": false,
+                "compare_value": 60,
+                "name": null,
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "114211257020760": {
+            "query_id": "133405623548888",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    200,
+                    290
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "23531767136210": {
+            "query_id": "61190239120118",
+            "condition": {
+                "negate": false,
+                "compare_value": 30,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "151964237305087": {
+            "query_id": "106754935518026",
+            "condition": {
+                "negate": false,
+                "compare_value": 1,
+                "name": null,
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "259383076546386": {
+            "query_id": "164774754277897",
+            "condition": {
+                "negate": false,
+                "compare_value": 6,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "50900995307248": {
+            "query_id": "105963129928353",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    300,
+                    390
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "62386753330311": {
+            "query_id": "80465912483826",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    200,
+                    290
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "162703527248700": {
+            "query_id": "61190239120118",
+            "condition": {
+                "negate": false,
+                "compare_value": 60,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "75382816967354": {
+            "query_id": "242241165532437",
+            "condition": {
+                "negate": false,
+                "compare_value": 7,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "157050243177590": {
+            "query_id": "28722832388109",
+            "condition": {
+                "negate": false,
+                "compare_value": 80,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "232478704826340": {
+            "query_id": "16306424766052",
+            "condition": {
+                "negate": false,
+                "compare_value": 8,
+                "name": "sem_8",
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "218992225411172": {
+            "query_id": "137876325173946",
+            "condition": {
+                "negate": false,
+                "compare_value": 1,
+                "name": null,
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "92014879646133": {
+            "query_id": "16306424766052",
+            "condition": {
+                "negate": false,
+                "compare_value": 2,
+                "name": "sem_2",
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "35758113139424": {
+            "query_id": "239191696477107",
+            "condition": {
+                "negate": false,
+                "compare_value": 200,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "219616510774698": {
+            "query_id": "133405623548888",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    400,
+                    490
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "210068698147931": {
+            "query_id": "19648334566410",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "73786748899412": {
+            "query_id": "19648334566410",
+            "condition": {
+                "negate": false,
+                "compare_value": 2,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "56194491684442": {
+            "query_id": "242241165532437",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "234713228435969": {
+            "query_id": "239731493788010",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "54715078418874": {
+            "query_id": "129626329099983",
+            "condition": {
+                "negate": false,
+                "compare_value": false,
+                "name": null,
+                "comparator": "is",
+                "order": 0
+            }
+        },
+        "171165500896723": {
+            "query_id": "137876325173946",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "238237536470231": {
+            "query_id": "158181538402706",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    200,
+                    290
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "67736183435245": {
+            "query_id": "133405623548888",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    300,
+                    390
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "43336195205666": {
+            "query_id": "134130057881604",
+            "condition": {
+                "negate": false,
+                "compare_value": 6,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "236612821072478": {
+            "query_id": "267668165988270",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    30,
+                    35
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "44038322292620": {
+            "query_id": "93894541222828",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "157212287730848": {
+            "query_id": "239191696477107",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    400,
+                    490
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "112885363659759": {
+            "query_id": "267668165988270",
+            "condition": {
+                "negate": false,
+                "compare_value": 36,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "253300504708414": {
+            "query_id": "91169225556964",
+            "condition": {
+                "negate": false,
+                "compare_value": 1,
+                "name": null,
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "139928023578204": {
+            "query_id": "16306424766052",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": "sem_4",
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "119023536006496": {
+            "query_id": "61190239120118",
+            "condition": {
+                "negate": false,
+                "compare_value": 50,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "80026178125024": {
+            "query_id": "147082045167704",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    0,
+                    6
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "266699089965338": {
+            "query_id": "134130057881604",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "139633613121710": {
+            "query_id": "19648334566410",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "27731184089717": {
+            "query_id": "228523202795513",
+            "condition": {
+                "negate": false,
+                "compare_value": 40,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "151238102844963": {
+            "query_id": "164774754277897",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "107123170166662": {
+            "query_id": "277583107504263",
+            "condition": {
+                "negate": false,
+                "compare_value": 10,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "145804577032480": {
+            "query_id": "93894541222828",
+            "condition": {
+                "negate": false,
+                "compare_value": 2,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "85741093456839": {
+            "query_id": "158181538402706",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    300,
+                    390
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "237562624332216": {
+            "query_id": "108391785586208",
+            "condition": {
+                "negate": false,
+                "compare_value": 1,
+                "name": null,
+                "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "97965078322510": {
+            "query_id": "28722832388109",
+            "condition": {
+                "negate": false,
+                "compare_value": 60,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "87567761051688": {
+            "query_id": "147082045167704",
+            "condition": {
+                "negate": false,
+                "compare_value": [
+                    13,
+                    24
+                ],
+                "name": null,
+                "comparator": "between",
+                "order": 0
+            }
+        },
+        "256158803360980": {
+            "query_id": "86644067394598",
+            "condition": {
+                "negate": false,
+                "compare_value": 6,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "90691258816857": {
+            "query_id": "239731493788010",
+            "condition": {
+                "negate": false,
+                "compare_value": 5,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "125197909847153": {
+            "query_id": "236476328553231",
+            "condition": {
+                "negate": false,
+                "compare_value": false,
+                "name": "failed",
+                "comparator": "is",
+                "order": 0
+            }
+        },
+        "260726955465412": {
+            "query_id": "45566759107119",
+            "condition": {
+                "negate": false,
+                "compare_value": 6,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        },
+        "117189338969942": {
+            "query_id": "267668165988270",
+            "condition": {
+                "negate": false,
+                "compare_value": 18,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "81295681405949": {
+            "query_id": "129626329099983",
+            "condition": {
+                "negate": false,
+                "compare_value": true,
+                "name": null,
+                "comparator": "is",
+                "order": 0
+            }
+        },
+        "272687188180464": {
+            "query_id": "129186408171030",
+            "condition": {
+                "negate": false,
+                "compare_value": 200,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "71375346216724": {
+            "query_id": "61190239120118",
+            "condition": {
+                "negate": false,
+                "compare_value": 60,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
+        "142438083069333": {
+            "query_id": "108391785586208",
+            "condition": {
+                "negate": false,
+                "compare_value": 4,
+                "name": null,
+                "comparator": "greater",
+                "order": 0
+            }
+        }
+    },
+    "queries": {
+        "246370083489518": {
+            "category": "Student.Studium.Immatrikulation",
+            "auto_generate": false,
+            "name": "Start Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "semester",
+            "q": "start_semester",
+            "_id": 246370083489518
+        },
+        "134130057881604": {
+            "category": "Student.Studium.Prüfungsleistungen",
+            "auto_generate": false,
+            "name": "Klausuren im 3. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "225886802610039"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_3.count_KL",
+            "_id": 134130057881604
+        },
+        "97204296078490": {
+            "category": "Student.HZB",
+            "auto_generate": false,
+            "name": "HZB Datum",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "date",
+            "q": "hzb_date",
+            "_id": 97204296078490
+        },
+        "220582987062373": {
+            "category": "Student.Studium.Prüfungsleistungen",
+            "auto_generate": false,
+            "name": "Unentschuldigte Rücktritte",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "cnt_unauthorized_delayed_exams",
+            "_id": 220582987062373
+        },
+        "245255415777657": {
+            "category": "ignore",
+            "auto_generate": false,
+            "name": "Bestandene Prüfungsleistungen in %",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "percent",
+            "q": "exam_success_perc",
+            "_id": 245255415777657
+        },
+        "28722832388109": {
+            "category": "Student.Studium.{cp_label}",
+            "auto_generate": false,
+            "name": "Erreichte {cp_label} nach 4. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "139928023578204"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_4.bonus_total",
+            "_id": 28722832388109
+        },
+        "251894967566839": {
+            "category": "Student.Studium",
+            "auto_generate": false,
+            "name": "Dauer des Studiums in Semestern",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "semesters",
+            "_id": 251894967566839
+        },
+        "187046572528114": {
+            "category": "ignore",
+            "auto_generate": false,
+            "name": "Anzahl fertige Prüfungsleistungen",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "exam_count_finish",
+            "_id": 187046572528114
+        },
+        "93894541222828": {
+            "category": "Student.Studium.Prüfungsleistungen.Aufgeschoben",
+            "auto_generate": false,
+            "name": "Aufgeschoben im 3. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "225886802610039"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_3.delayed",
+            "_id": 93894541222828
+        },
+        "118172288837028": {
+            "category": "Student.Studium",
+            "auto_generate": true,
+            "name": "Studiengangsgruppe",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "stg",
+            "q": "stg",
+            "_id": 118172288837028
+        },
+        "129186408171030": {
+            "category": "Student.HZB",
+            "auto_generate": false,
+            "name": "HZB Note",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "grade",
+            "q": "hzb_grade",
+            "_id": 129186408171030
+        },
+        "86644067394598": {
+            "category": "Student.Studium.Prüfungsleistungen",
+            "auto_generate": false,
+            "name": "Klausuren im 4. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "139928023578204"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_4.count_KL",
+            "_id": 86644067394598
+        },
+        "61190239120118": {
+            "category": "Student.Studium.{cp_label}",
+            "auto_generate": false,
+            "name": "Erreichte {cp_label} nach 3. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "225886802610039"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_3.bonus_total",
+            "_id": 61190239120118
+        },
+        "147082045167704": {
+            "category": "Student.HZB",
+            "auto_generate": false,
+            "name": "Monate seit HZB",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "hzb_imm_time",
+            "_id": 147082045167704
+        },
+        "63256351179670": {
+            "category": "ignore",
+            "auto_generate": false,
+            "name": "Nicht bestandene Prüfungsleistungen in %",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "percent",
+            "q": "exam_failed_perc",
+            "_id": 63256351179670
+        },
+        "267668165988270": {
+            "category": "Student",
+            "auto_generate": false,
+            "name": "Alter bei Immatrikulation",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "age",
+            "_id": 267668165988270
+        },
+        "45566759107119": {
+            "category": "Student.Studium.Prüfungsleistungen",
+            "auto_generate": false,
+            "name": "Klausuren im 2. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "92014879646133"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_2.count_KL",
+            "_id": 45566759107119
+        },
+        "236476328553231": {
+            "category": "Student.Studium",
+            "auto_generate": false,
+            "name": "Studium erfolgreich",
+            "success": true,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "yesno",
+            "q": "success",
+            "_id": 236476328553231
+        },
+        "87891287968435": {
+            "category": "ignore",
+            "auto_generate": false,
+            "name": "Anzahl der Risikokriterien",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "risk.count",
+            "_id": 87891287968435
+        },
+        "158797064289519": {
+            "category": "Student.Studium.Note",
+            "auto_generate": false,
+            "name": "Abschlussnote",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "grade",
+            "q": "final_grade",
+            "_id": 158797064289519
+        },
+        "129626329099983": {
+            "category": "Student.Studium",
+            "auto_generate": false,
+            "name": "Studium abgebrochen",
+            "success": false,
+            "query_type": "dict",
+            "ignore": true,
+            "depends": null,
+            "formatting": "yesno",
+            "q": "aborted",
+            "_id": 129626329099983
+        },
+        "277481967739210": {
+            "category": "Student.Studium.Note",
+            "auto_generate": false,
+            "name": "Note Hauptstudium",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "grade",
+            "q": "grade_main_studies",
+            "_id": 277481967739210
+        },
+        "262024128776410": {
+            "category": "Student",
+            "auto_generate": false,
+            "name": "Geschlecht",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "gender",
+            "q": "gender",
+            "_id": 262024128776410
+        },
+        "133405623548888": {
+            "category": "Student.Studium.Note",
+            "auto_generate": false,
+            "name": "Note im 3.Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "225886802610039"
+            ],
+            "formatting": "grade",
+            "q": "semester_data.sem_3.grade",
+            "_id": 133405623548888
+        },
+        "89420356822986": {
+            "category": "Student.Studium.Prüfungsleistungen",
+            "auto_generate": false,
+            "name": "Anzahl Prüfungsleistungen",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "exam_count",
+            "_id": 89420356822986
+        },
+        "21360668082707": {
+            "category": "Student.Studium.Prüfungsleistungen",
+            "auto_generate": false,
+            "name": "Anzahl Rücktritte",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "exam_count_resigned",
+            "_id": 21360668082707
+        },
+        "24707809941947": {
+            "category": "Student.HZB",
+            "auto_generate": true,
+            "name": "HZB Gruppe",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "str",
+            "q": "hzb_type",
+            "_id": 24707809941947
+        },
+        "108391785586208": {
+            "category": "Student.Studium.Prüfungsleistungen.Aufgeschoben",
+            "auto_generate": false,
+            "name": "Aufgeschoben im 4. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "139928023578204"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_4.delayed",
+            "_id": 108391785586208
+        },
+        "242864900513852": {
+            "category": "Student.Studium.Prüfungsleistungen.Nicht bestanden",
+            "auto_generate": false,
+            "name": "Nicht bestandene Prüfungsleistungen im 4. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "139928023578204"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_4.failed",
+            "_id": 242864900513852
+        },
+        "16306424766052": {
+            "category": "Student.Studium.Prüfungsleistungen",
+            "auto_generate": false,
+            "name": "Semester mit Prüfungsleistungen",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "study_time_real",
+            "_id": 16306424766052
+        },
+        "137876325173946": {
+            "category": "Student.Studium.Prüfungsleistungen.Aufgeschoben",
+            "auto_generate": false,
+            "name": "Aufgeschoben im 2. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "92014879646133"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_2.delayed",
+            "_id": 137876325173946
+        },
+        "239191696477107": {
+            "category": "Student.Studium.Note",
+            "auto_generate": false,
+            "name": "Note Grundstudium",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "grade",
+            "q": "grade_basic_studies",
+            "_id": 239191696477107
+        },
+        "247285248370190": {
+            "category": "ignore",
+            "auto_generate": false,
+            "name": "Skalierte Misserfolgswahrscheinlichkeit",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "percent",
+            "q": "risk.median_scaled",
+            "_id": 247285248370190
+        },
+        "80465912483826": {
+            "category": "Student.Studium.Note",
+            "auto_generate": false,
+            "name": "Note im 4.Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "139928023578204"
+            ],
+            "formatting": "grade",
+            "q": "semester_data.sem_4.grade",
+            "_id": 80465912483826
+        },
+        "47773133230382": {
+            "category": "ignore",
+            "auto_generate": false,
+            "name": "Anzahl angemeldete Prüfungsleistungen",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "exam_count_applied",
+            "_id": 47773133230382
+        },
+        "93821011273590": {
+            "category": "ignore",
+            "auto_generate": false,
+            "name": "Anzahl Studenten gesamt",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "count",
+            "_id": 93821011273590
+        },
+        "91169225556964": {
+            "category": "Student.Studium.Prüfungsleistungen.Aufgeschoben",
+            "auto_generate": false,
+            "name": "Aufgeschoben im 1. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "268447631572803"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_1.delayed",
+            "_id": 91169225556964
+        },
+        "228523202795513": {
+            "category": "Student.Studium.{cp_label}",
+            "auto_generate": false,
+            "name": "Erreichte {cp_label} nach 2. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "92014879646133"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_2.bonus_total",
+            "_id": 228523202795513
+        },
+        "72297707011729": {
+            "category": "ignore",
+            "auto_generate": false,
+            "name": "Anzahl bestandene Prüfungsleistungen",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "exam_count_success",
+            "_id": 72297707011729
+        },
+        "207258636627673": {
+            "category": "Student.Studium",
+            "auto_generate": false,
+            "name": "Studium abgeschlossen",
+            "success": false,
+            "query_type": "dict",
+            "ignore": true,
+            "depends": null,
+            "formatting": "yesno",
+            "q": "finished",
+            "_id": 207258636627673
+        },
+        "266752888822078": {
+            "category": "Student.Studium.Prüfungsleistungen",
+            "auto_generate": false,
+            "name": "Anzahl nicht bestandene Prüfungsleistungen",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "exam_count_failed",
+            "_id": 266752888822078
+        },
+        "103403766439120": {
+            "category": "Student.Studium",
+            "auto_generate": false,
+            "name": "Exmatrikulation",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "date",
+            "q": "exm_date",
+            "_id": 103403766439120
+        },
+        "183598533761377": {
+            "category": "Student",
+            "auto_generate": false,
+            "name": "Wurde beraten",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "yesno",
+            "q": "consulted",
+            "_id": 183598533761377
+        },
+        "105963129928353": {
+            "category": "Student.Studium.Note",
+            "auto_generate": false,
+            "name": "Note im 2.Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "92014879646133"
+            ],
+            "formatting": "grade",
+            "q": "semester_data.sem_2.grade",
+            "_id": 105963129928353
+        },
+        "267944577112878": {
+            "category": "Student",
+            "auto_generate": false,
+            "name": "Geburtsdatum",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "date",
+            "q": "birth_date",
+            "_id": 267944577112878
+        },
+        "106754935518026": {
+            "category": "Student.Studium.Prüfungsleistungen.Nicht bestanden",
+            "auto_generate": false,
+            "name": "Nicht bestandene Prüfungsleistungen im 1. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "268447631572803"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_1.failed",
+            "_id": 106754935518026
+        },
+        "256791217337391": {
+            "category": "Student.Studium.Note",
+            "auto_generate": false,
+            "name": "Note aktuell inkl. NB, EN",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "grade",
+            "q": "grade_nb_current",
+            "_id": 256791217337391
+        },
+        "164774754277897": {
+            "category": "Student.Studium.Prüfungsleistungen",
+            "auto_generate": false,
+            "name": "Entschuldigte Rücktritte",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "92014879646133"
+            ],
+            "formatting": "int",
+            "q": "cnt_delayed_exams",
+            "_id": 164774754277897
+        },
+        "242241165532437": {
+            "category": "Student.Studium.Prüfungsleistungen",
+            "auto_generate": false,
+            "name": "Klausuren im 1. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "268447631572803"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_1.count_KL",
+            "_id": 242241165532437
+        },
+        "19648334566410": {
+            "category": "Student.Studium.Prüfungsleistungen.Nicht bestanden",
+            "auto_generate": false,
+            "name": "Nicht bestandene Prüfungsleistungen im 3. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "225886802610039"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_3.failed",
+            "_id": 19648334566410
+        },
+        "239666344008579": {
+            "category": "Student.Studium.Note",
+            "auto_generate": false,
+            "name": "Note aktuell",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "grade",
+            "q": "grade_current",
+            "_id": 239666344008579
+        },
+        "60775735999270": {
+            "category": "Student.Studium.{cp_label}",
+            "auto_generate": false,
+            "name": "{cp_label} Punkte gesamt",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "int",
+            "q": "bonus_total",
+            "_id": 60775735999270
+        },
+        "206423089702192": {
+            "category": "Student.Studium",
+            "auto_generate": true,
+            "name": "Studiengang",
+            "success": false,
+            "query_type": "dict",
+            "ignore": true,
+            "depends": null,
+            "formatting": "stg",
+            "q": "stg_original",
+            "_id": 206423089702192
+        },
+        "158181538402706": {
+            "category": "Student.Studium.Note",
+            "auto_generate": false,
+            "name": "Note im 1.Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "268447631572803"
+            ],
+            "formatting": "grade",
+            "q": "semester_data.sem_1.grade",
+            "_id": 158181538402706
+        },
+        "239731493788010": {
+            "category": "Student.Studium.Prüfungsleistungen.Nicht bestanden",
+            "auto_generate": false,
+            "name": "Nicht bestandene Prüfungsleistungen im 2. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "92014879646133"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_2.failed",
+            "_id": 239731493788010
+        },
+        "222820074972876": {
+            "category": "ignore",
+            "auto_generate": false,
+            "name": "Misserfolgswahrscheinlichkeit",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "percent",
+            "q": "risk.median",
+            "_id": 222820074972876
+        },
+        "185013138638513": {
+            "category": "ignore",
+            "auto_generate": false,
+            "name": "Durchschnittliche Misserfolgswahrscheinlichkeit",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "percent",
+            "q": "risk.mean",
+            "_id": 185013138638513
+        },
+        "48284248669966": {
+            "category": "ignore",
+            "auto_generate": false,
+            "name": "Immatrikulation Datum",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": null,
+            "formatting": "date",
+            "q": "imm_date",
+            "_id": 48284248669966
+        },
+        "277583107504263": {
+            "category": "Student.Studium.{cp_label}",
+            "auto_generate": false,
+            "name": "Erreichte {cp_label} nach 1. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "268447631572803"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_1.bonus_total",
+            "_id": 277583107504263
+        }
+    }
+}

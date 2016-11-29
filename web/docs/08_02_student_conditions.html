@@ -1,0 +1,198 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<article>
+	<h1 id="data_analysis_student_conditions">Bedingungen für Studenten</h1>
+
+	<p>
+		Die Bedingungen für Studenten werden in der Administration unter Definitionen konfiguriert.
+		Auf Basis dieser Bedingungen werden Risikokriterien gefunden.
+	</p>
+
+	<p>
+		Die Definition der Bedingungen erfolgt mittels Queries (auch Datenfelder genannt). Ein Query ist ein Attribut eines Studenten. Dazu gehören
+		auch die zuvor für einen Studenten berechneten Werte. Für jedes Query gibt es mehrere Bedingungen. Jede
+		Bedingung deckt dabei einen Wert oder einen Wertebereich ab.
+	</p>
+
+	<p>
+		Zu einem Query gehören eine Formatierungsangabe, eine Datengruppe und Abhängigkeiten. Mit der
+		Formatierungsangabe weiß das Frontend wie es den Wert ausgeben soll und wie der Wert gefiltert werden kann. Die
+		Datengruppe bestimmt unter welcher Hierarchie das Query in der Filterauswahl im Frontend zu finden ist.
+		Hierarchie-Ebenen werden dabei mit einem Punkt getrennt.
+	</p>
+
+	<h2>Übersicht der Bedingungen</h2>
+	<p>
+		Die hier aufgeführten Bedingungen zeigen nicht den aktuellen Stand aus der S-BEAT Administration.
+	</p>
+
+	<table class="tbl spaced">
+		<thead>
+		<tr>
+			<th>Bedingung</th>
+			<th>Beschreibung<br>
+				mögliche Werte
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>gender</td>
+			<td>
+				Das Geschlecht<br>
+				männlich und weiblich
+
+			</td>
+		</tr>
+		<tr>
+			<td>hzb_grade</td>
+			<td>
+				Die Hochschulzugangsberechtigung<br>
+				besser als 2, zwischen 2 und 2.9, zwischen 3 und 3.9,
+				zwischen 4 und 4.9.
+
+			</td>
+		</tr>
+		<tr>
+			<td>hzb_type</td>
+			<td>
+				Alle in der Datenbank vorhandenen Hochschulzugangsberechtigungsgruppen<br>
+				z.B. Abitur, Kolleg, Ausland
+
+			</td>
+		</tr>
+		<tr>
+			<td>hzb_imm_time</td>
+			<td>
+				Die Zeit zwischen HZB und Immatrikulation in Monaten.<br>
+				0-6, 7-12, 13-24 und mehr als 24 Monate
+
+			</td>
+		</tr>
+		<tr>
+			<td>age</td>
+			<td>
+				Das Alter bei der Immatrikulation<br>
+				niedriger 18, 18-21, 22-25, 26-29, 30-35, größer 36.
+
+			</td>
+		</tr>
+		<tr>
+			<td>stg</td>
+			<td>
+				Alle in der Datenbank vertretenen Studiengangsgruppen<br>
+			</td>
+		</tr>
+		<tr>
+			<td>study_time_real</td>
+			<td>
+				Anzahl Semester mit abgeschlossenen Prüfungsleistungen<br>
+				größer 1, 2, 3, 4, 5, 6, 7, 8, 9
+
+			</td>
+		</tr>
+		<tr>
+			<td>grade_basic_studies</td>
+			<td>
+				Note aller bestandenen Prüfungen im Grundstudium<br>
+				&lt; 2, 2-2.9, 3-3.9, 4-4.9
+
+			</td>
+		</tr>
+		<tr>
+			<td>success</td>
+			<td>
+				Ist das Studium erfolgreich gewesen<br>
+				ja/nein
+
+			</td>
+		</tr>
+		<tr>
+			<td>cnt_delayed_exams</td>
+			<td>
+				Entschuldigte Rücktritte
+				gleich 1, größer 1, 2, 3, 4, 5, 6
+
+			</td>
+		</tr>
+		<tr>
+			<td>cnt_unauthorized_delayed_exams</td>
+			<td>
+				Unentschuldigte Rücktritte
+				gleich 1, größer 1, 2, 3
+
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<p>
+		Für das erste, zweite und dritte Semester eines Studenten werden die nachfolgenden Bedingungen definiert. Diese
+		sind davon abhängig, ob study_time_real größer oder gleich dem geforderten Semester ist.
+		Es würde keinen Sinn machen die aufgeführten Bedingungen bei einem Studenten zu prüfen, der noch kein Semester
+		mit abgeschlossenen Prüfungsleistungen hat.
+	</p>
+
+	<table class="tbl spaced">
+		<thead>
+		<tr>
+			<th>Bedingung</th>
+			<th>Beschreibung<br>
+				mögliche Werte
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>semester_data.sem_1.bonus_total</td>
+			<td>
+				Erreichte <span data-config="cp_label"></span> nach 1. Semester<br>
+				&lt; 10, &lt; 20, &lt; 30, &gt;= 30
+
+			</td>
+		</tr>
+		<tr>
+			<td>semester_data.sem_1.grade</td>
+			<td>
+				Note im ersten Semester<br>
+				&lt; 2, 2-2.9, 3-3.9, 4-4.9
+
+			</td>
+		</tr>
+		<tr>
+			<td>semester_data.sem_1.delayed</td>
+			<td>
+				Entschuldigte Rücktritte im ersten Semester<br>
+				gleich 1, größer 1, 2, 3, 4, 5, 6
+
+			</td>
+		</tr>
+		<tr>
+			<td>semester_data.sem_1.failed</td>
+			<td>
+				Nicht bestandene Prüfungsleistungen im ersten Semester<br>
+				gleich 1, größer 1, 2, 3, 4, 5
+
+			</td>
+		</tr>
+		<tr>
+			<td>semester_data.sem_1.count_KL</td>
+			<td>
+				Anzahl der Klausuren im ersten Semester<br>
+				größer 4, 5, 6, 7, 8, 9
+
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<p>
+		Dieselben Bedingungen werden für das zweite und dritte Semester definiert. Dort unterscheiden sich nur die
+		erreichten <span data-config="cp_label"></span>.
+	</p>
+
+
+
+</article>

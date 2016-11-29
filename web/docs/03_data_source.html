@@ -1,0 +1,295 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<article>
+<h1 id="data_source">Datenherkunft &amp; verwendete Daten</h1>
+
+<p>
+	Im Rahmen von S-BEAT werden die nachfolgend aufgeführten Datenfelder aus dem Hochschul-Informations-System
+	(HIS) verwendet.<br>
+	Sofern kein HIS eingesetzt wird, muss in gemeinsamer Arbeit festgestellt werden,
+	ob und inwieweit vergleichbare Daten geliefert werden können
+	und ob in dieser Dokumentation aufgeführte Funktionalitäten dadurch eingeschränkt werden.<br>
+	Nachfolgend angegebene Prüfungsformen und andere eine Prüfung betreffende Felder sind hier beispielhaft genannt
+	und stellen keine feste Vorgabe dar, da sich diese erfahrungsgemäß von Hochschule zu Hochschule unterscheiden.
+</p>
+
+
+<h2>Studentendaten</h2>
+
+<p>
+	Die Daten von Studenten liegen in anonymisierter Form vor. Jedem Student ist eine Identifikationsnummer (IDENTNR)
+	zugeordnet, welche nur von
+	ausgesuchten Personen auf die Matrikel-Nr. und die persönlichen Daten des Studenten zurückgeführt werden kann.
+	Für diese Deanonymisierung sind die <a href="#identdata">Identifikationsdaten</a> notwendig.
+</p>
+
+<p>
+	In den Analysen von S-BEAT werden standardmäßig ausschließlich Daten von Bachelorstudenten verarbeitet und alle anderen
+	Studiengänge ignoriert. Die konkrete Umsetzung ist zwischen den Vertragspartnern zu klären.
+</p>
+
+<table class="tbl spaced">
+	<thead>
+	<tr>
+		<th>Feld</th>
+		<th>Beschreibung</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>IDENTNR</td>
+		<td>Identifikationsnummer eines Studenten</td>
+	</tr>
+	<tr>
+		<td>STG</td>
+		<td>Studiengangskürzel</td>
+	</tr>
+	<tr>
+		<td>IMMDAT</td>
+		<td>Immatrikulationsdatum</td>
+	</tr>
+	<tr>
+		<td>EXMDAT</td>
+		<td>Exmatrikulationsdatum</td>
+	</tr>
+	<tr>
+		<td>SPERRART1</td>
+		<td>Befristet immatrikuliert</td>
+	</tr>
+	<tr>
+		<td>PNR</td>
+		<td>=8000, wenn Abschluss erhalten</td>
+	</tr>
+	<tr>
+		<td>PDATUM</td>
+		<td>Datum der Abschlussprüfung</td>
+	</tr>
+	<tr>
+		<td>GESCHL</td>
+		<td>Geschlecht</td>
+	</tr>
+	<tr>
+		<td>GEBDAT</td>
+		<td>Geburtsdatum</td>
+	</tr>
+	<tr>
+		<td>HZBNOTE</td>
+		<td>Hochschulzugangsberechtigungsnote (Hinweis: ist an dieser Stelle eine Note von 9.9 eingetragen bedeutet
+			dass, dass keine solche vorliegt.)
+		</td>
+	</tr>
+	<tr>
+		<td>HZBDATUM</td>
+		<td>Hochschulzugangsberechtigungsdatum</td>
+	</tr>
+	<tr id="hzb_group">
+		<td>HZBART</td>
+		<td>
+			Hochschulzugangsberechtigungsgruppe:<br><br>
+			Abitur = Allgemeine Hochschulreife<br>
+			Ausland = Im Ausland erworbene Hochschulzugangsberechtigung<br>
+			Beruf = Studienberechtigung ohne formale Hochschulreife<br>
+			F-Abitur = Fachgebundene Hochschulreife<br>
+			FH-Reife = Fachhochschulreife<br>
+			Kolleg = Fachhochschulreife Kolleg
+		</td>
+	</tr>
+	</tbody>
+</table>
+
+<h2 id="studienleistungsdaten">Studienleistungsdaten</h2>
+
+<p>
+	Die Studienleistungsdaten werden während des Studiums erfasst und jedes Semester aktualisiert.
+</p>
+<table class="tbl spaced">
+	<thead>
+	<tr>
+		<th>Feld</th>
+		<th>Beschreibung</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>IDENTNR</td>
+		<td>Identifikationsnummer des Studenten</td>
+	</tr>
+	<tr>
+		<td>PNR</td>
+		<td>EDV Nummer der Leistung</td>
+	</tr>
+	<tr>
+		<td>PDTXT</td>
+		<td>Name der Leistung</td>
+	</tr>
+	<tr>
+		<td>ABSCHLART</td>
+		<td>Art des Abschlusses auf den diese Leistung angerechnet wird z.B. Bachelor</td>
+	</tr>
+	<tr>
+		<td>STG</td>
+		<td>Studiengangskürzel</td>
+	</tr>
+	<tr>
+		<td>PSEM</td>
+		<td>Semester in welchem die Leistung abgelegt wurde</td>
+	</tr>
+	<tr>
+		<td>BONUS</td>
+		<td>Anzahl der
+			<span data-config="cp_label"></span>
+			Punkte für diese Leistung</td>
+	</tr>
+	<tr>
+		<td>NACHNAME</td>
+		<td>Nachname des Prüfers</td>
+	</tr>
+	<tr>
+		<td>VORNAME</td>
+		<td>Vorname des Prüfers</td>
+	</tr>
+	<tr>
+		<td>PSTATUS</td>
+		<td>
+			Status:<br>
+			AN = Angemeldet<br>
+			BE = Bestanden<br>
+			NB = Nicht bestanden<br>
+			EN = Endgültig nicht bestanden<br>
+		</td>
+	</tr>
+	<tr>
+		<td>PART</td>
+		<td>
+			Art:<br>
+			PL = Prüfungsleistung<br>
+			PV = Prüfungsvorleistung<br>
+			VS = Vorleistung zur Zwischenprüfung bzw. Bachelorarbeit<br>
+		</td>
+	</tr>
+	<tr>
+		<td>PNOTE</td>
+		<td>Note der Leistung</td>
+	</tr>
+	<tr>
+		<td>PVERMERK</td>
+		<td>
+			Vermerk:<br>
+			G = Genehmigter Rücktritt<br>
+			M = Mündlich bei Drittversuch<br>
+			U = Unentschuldigter Rücktritt<br>
+			RT = Rücktritt
+		</td>
+	</tr>
+	<tr>
+		<td>PVERSUCH</td>
+		<td>Nr. des Versuchs</td>
+	</tr>
+	<tr>
+		<td>PFORM</td>
+		<td>
+			Form:<br>
+			A = Anwesenheitspflicht (mit definierter Mindestquote)<br>
+			BA = Bachelorarbeit<br>
+			EN = Entwurf (z.B. Erstellen einer techn. Zeichnung)<br>
+			HA = Hausarbeit<br>
+			KL = Klausurarbeit<br>
+			LA = Laborarbeit<br>
+			LT = Lerntagebuch<br>
+			LÜ = Laborübungen<br>
+			MP = Mündliche Prüfung<br>
+			N = Sonderform <br>
+			PA = Praktische Arbeit<br>
+			PP = Praktische Arbeit und Präsentation<br>
+			PS = Praktisches Studiensemester<br>
+			RE = Referat <br>
+			SP = Praktische Arbeit (hoher Kreativanteil & besondere Arbeitsumgebung Studio/Atelier)<br>
+			ST = Studienarbeit<br>
+			TE = Theoretisch-empirische Arbeit<br>
+		</td>
+	</tr>
+	<tr>
+		<td>PANERK</td>
+		<td>
+			Anerkennung (genaue Bedeutung unbekannt)<br>
+			N = einzig vorkommender Wert<br>
+		</td>
+	</tr>
+	<tr>
+		<td>PFLICHT</td>
+		<td>
+			Bereich der Leistung:<br>
+			P = Pflichtfach<br>
+			W = Wahlpflichtfach<br>
+			WA = Wahlpflichtfach anderer Studiengang<br>
+			Z = Zusatzfach
+		</td>
+	</tr>
+	<tr>
+		<td>PABSCHN</td>
+		<td>
+			Studiumsabschnitt welchem die Prüfung zugeordnet wird:<br>
+			G = Grundstudium<br>
+			H = Hauptstudium<br>
+		</td>
+	</tr>
+	<tr>
+		<td>PDATUM</td>
+		<td>
+			Datum der Leistung
+		</td>
+	</tr>
+	</tbody>
+</table>
+<p>
+	Auf Basis der Prüfungsleistungsdaten berechnet S-BEAT die gewichteten Durchschnittsnoten der Studenten.
+	Dies kann nicht komplett erfolgen, da die Bachelor Thesis nicht in den Daten enthalten ist.
+	Jedoch ist die Abschlussnote in den Daten enthalten, in welche die Bachelor Thesis bereits einberechnet wurde.
+</p>
+
+<h2 id="identdata">Studenten Identifikationsdaten</h2>
+
+<p>
+	Die Identifikationsdaten enthalten die persönlichen Daten der Studenten und können nur von
+	<a href="docs_extended.html?page=04_data_access">berechtigten Benutzern</a> eingesehen werden.<br>
+	Diese Daten sind optional. Es wird nicht vorausgesetzt, dass diese ins System importiert werden.
+</p>
+<table class="tbl spaced">
+	<thead>
+	<tr>
+		<th>Feld</th>
+		<th>Beschreibung</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>IDENTNR</td>
+		<td>Identifikationsnummer eines Studenten</td>
+	</tr>
+	<tr>
+		<td>MATRIKELNR</td>
+		<td>Matrikel-Nr. eines Studenten</td>
+	</tr>
+	<tr>
+		<td>VORNAME</td>
+		<td>Vorname des Studenten</td>
+	</tr>
+	<tr>
+		<td>NACHNAME</td>
+		<td>Nachname des Studenten</td>
+	</tr>
+	<tr>
+		<td>KUERZEL</td>
+		<td>Kürzel bzw. Benutzername des Studenten</td>
+	</tr>
+	<tr>
+		<td>EMAIL</td>
+		<td>E-Mail des Studenten</td>
+	</tr>
+	</tbody>
+</table>
+
+
+</article>

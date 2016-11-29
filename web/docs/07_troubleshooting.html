@@ -1,0 +1,192 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<article>
+	<h1 id="troubleshooting">Problembehandlung</h1>
+	<p>
+
+	</p>
+
+</article>
+
+<article>
+	<h2 id="ts_browser_compatibility">Browser Kompatibilität</h2>
+	<p>
+		Die S-BEAT Weboberfläche ist mit HTML5 und CSS3 erstellt. Deshalb kann diese nur mit modernen Browsern genutzt werden.
+		Dazu gehören Internet Explorer ab Version 9, Firefox ab Version 10, Google Chrome, Safari ab Version 4.
+		Getestet und entwickelt wurde S-BEAT mit Firefox 31 und Chrome 37.
+	</p>
+	<p>
+		Sollte es in modernen Browsern zu Darstellungs- oder Bedienungsproblemen kommen, benachrichtigen Sie bitte das
+		<a href="docs_extended.html?page=02_contact">Betreuungsteam von S-BEAT</a>.
+	</p>
+
+</article>
+
+{% if g.has_right('admin_access') %}
+<article>
+	<h2 id="ts_dataupdate_csv_error">Datenupdate nimmt CSV Datei nicht an</h2>
+	<p>
+		Wurde eine Datei ausgewählt und es erscheint ein Fehler, wurde diese abgelehnt.<br>
+		Jede Datei wird nachdem sie ausgewählt wurde überprüft. Je nach Art werden verschiedene Merkmale geprüft.
+	</p>
+	<p>
+		Folgendes wird geprüft:
+	</p>
+	<ol>
+		<li>
+			Der Dateiname einer Datei darf nur Buchstaben, Zahlen, - und _ enthalten und muss mit .csv enden.
+		</li>
+		<li>
+			Die Datei muss mindestens eine Datenzeile enthalten.
+		</li>
+		<li>
+			Sind alle geforderten Spalten vorhanden und haben diese die richtige Groß/Kleinschreibung?
+		</li>
+		<li>
+			Sind Datumsangaben vorhanden und haben diese das geforderte Format?
+		</li>
+	</ol>
+
+	<p>
+		Folgende Fehlermeldungen können vorkommen:
+	</p>
+
+	<table class="tbl spaced">
+		<thead>
+		<tr>
+			<th>Fehler</th>
+			<th>Lösung</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>Der Dateiname darf nur Buchstaben, Zahlen, - und _ enthalten und muss mit .csv enden.</td>
+			<td>
+				Benennen Sie die Datei um und entfernen Sie alle nicht erlaubten Zeichen.
+			</td>
+		</tr>
+		<tr>
+			<td>Keine Datenzeilen in der Datei gefunden.</td>
+			<td>
+				Die ausgewählte Datei hat offensichtlich keine Daten. Wählen Sie eine andere Datei oder
+				überprüfen Sie, ob es bei der Erstellung der Datei ein Problem gab.
+			</td>
+		</tr>
+		<tr>
+			<td>Das Trennzeichen ";" wurde nicht gefunden.</td>
+			<td>
+				Die Datei sollte im CSV Format sein. Dabei werden Spalten mit einem Trennzeichen getrennt.
+				Doch das gesuchte Trennzeichen wurde nicht gefunden. Die Spalten wurden möglicherweise mit einem
+				anderen Trennzeichen getrennt. Prüfen Sie das Format der CSV Datei.
+			</td>
+		</tr>
+		<tr>
+			<td>Die Spalte "NAME" wurde nicht gefunden.</td>
+			<td>
+				Es wird eine bestimmte Spalte erwartet. Diese Spalte fehlt offensichtlich in der CSV Datei.
+				Bitte fügen Sie diese Spalte in der Datei ein oder prüfen Sie woher die Datei kommt.
+			</td>
+		</tr>
+		<tr>
+			<td>Die Zeile 'x' hat weniger Spalten als es Kopfspalten gibt.</td>
+			<td>
+				Das CSV Format scheint nicht konsistent zu sein. Möglicherweise ist die CSV Datei beschädigt.
+				Möglicherweise gab es ein Problem mit der Erstellung der Datei.
+			</td>
+		</tr>
+		<tr>
+			<td>Die Spalte "NAME" enthält ein ungültiges Datumsformat. Das Datum sollte im Format TT-MMM-YY sein Z.B. 04-Mrz-99.</td>
+			<td>
+				Das Datum in der Datei ist nicht wie erwartet formatiert. Passen Sie die Erstellung der Datei entsprechend an.
+			</td>
+		</tr>
+		<tr>
+			<td>Die Spalte "NAME" enthält ein ungültigen Monat "x".</td>
+			<td>
+				Das Datum in der Datei ist nicht wie erwartet formatiert. Passen Sie die Erstellung der Datei entsprechend an.
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+
+</article>
+
+<article>
+	<h2 id="ts_dataimport_error">Datenimport läuft nicht durch</h2>
+	<p>
+		Sollte der Datenimport nicht durchlaufen, kann das viele Ursachen haben. Nachfolgend werden ein paar
+		Anhaltspunkte erläutert.<br>
+		In den meisten Fällen, muss dies von einem Entwickler untersucht werden. Als Nutzer können Sie nur
+		das Format der hochgeladenen CSV Dateien überprüfen.
+	</p>
+
+
+	<table class="tbl spaced">
+		<thead>
+		<tr>
+			<th>Schritt</th>
+			<th>Beschreibung</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>import_courses</td>
+			<td>
+				Läuft dieser Schritt nicht durch, könnte es daran liegen, dass die Datei data/courses_2014.csv fehlt
+				oder diese einen unerwarteten Zeichensatz besitzt.<br>
+				Weil dies der erste Schritt ist, könnte es auch daran liegen, dass die Datenbank nicht erreichbar ist
+				oder die Festplatte voll ist und die Datenbank keine weiteren Einträge annimmt.
+			</td>
+		</tr>
+		<tr>
+			<td>import_students</td>
+			<td>
+				Eine der beim Datenimport unter Studentendaten oder Studenten Identifikationsdaten hochgeladenen
+				Datei könnte einen unerwarteten Zeichensatz haben. Sie könnte auch Daten enthalten, die
+				so nicht erwartet wurden.
+			</td>
+		</tr>
+		<tr>
+			<td>import_exams</td>
+			<td>
+				Eine der beim Datenimport unter Prüfungsleistungsdaten hochgeladenen Dateien könnten
+				unerwartete Daten haben.
+			</td>
+		</tr>
+		<tr>
+			<td>calculate_student_exams</td>
+			<td>
+				Vermutlich ist eine Rechnung fehlgeschlagen. Eine ungewöhnliche Konstellation aus Studenten und
+				Prüfungsleistungsdaten. Dies ist allerdings sehr unwahrscheinlich.
+			</td>
+		</tr>
+		<tr>
+			<td>generate_definitions</td>
+			<td>
+				Sehr unwahrscheinlich, dass hier ein Fehler auftritt.
+			</td>
+		</tr>
+		<tr>
+			<td>generate_paths_apriori</td>
+			<td>
+				Dieser Schritt läuft in mehrerern Prozessen ab, welche die Systemhardware stark belasten.
+				Wenn es kein Problem des Programms ist, könnte es ein Hardwareproblem sein.
+			</td>
+		</tr>
+		<tr>
+			<td>calculate_student_risk</td>
+			<td>
+				Vermutlich ist eine der komplexen Berechnungen fehlgeschalgen auf Grund einer
+				unvorhergesehenen Konstellation.
+
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+
+</article>
+{% endif %}

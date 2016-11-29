@@ -1,0 +1,19 @@
+/* Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+   see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/ */
+
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 11px;
+}
+
+.active {
+	font-weight: bold;
+}
+
+.table {
+	border-collapse: collapse;
+}
+.table td,
+.table th {
+	border: 1px solid #C4C4C4;
+}

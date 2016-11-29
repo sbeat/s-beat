@@ -1,0 +1,20 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+{% set active_page = "students" %}
+{% set active_subpage = "paths" %}
+{% set website_class = "" %}
+{% extends "index.html" %}
+{% block title %}Risikokriterien{% endblock %}
+{% block content %}
+<div class="layout">
+	<article>
+		<h1>Risikokriterien <a href="docs_extended.html?page=05_02_students#risk_paths" target="_blank" class="infobtn">Beschreibung</a></h1>
+		<p><i>Hinweis: Sollten die Inhalte der farbigen Boxen nicht vollständig angezeigt werden, fahren Sie bitte einfach mit der Maus darüber. </i></p>
+
+		<div data-load="PathList"></div>
+
+	</article>
+</div>
+{% endblock %}

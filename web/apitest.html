@@ -1,0 +1,36 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>S-BEAT API Test</title>
+	<link href="css/apitest.css" rel="stylesheet">
+	<script src="js/jquery-2.1.1.min.js"></script>
+	<script src="js/apitest.js"></script>
+</head>
+<body>
+
+<h1>Students</h1>
+
+<div id="filter">
+	<div class="filters"></div>
+    <button data-action="go">Go</button>
+    <button data-action="add_filter">Add Filter</button>
+</div>
+
+<p>
+	Count: <span data-students="count"></span>
+</p>
+<p data-pages=""></p>
+<table id="studentsTable" class="table">
+	<thead>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+
+</body>
+</html>

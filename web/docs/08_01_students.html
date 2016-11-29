@@ -1,0 +1,139 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<article>
+	<h1 id="data_analysis_students">Berechnete Studentendaten</h1>
+
+	<p>
+		Im Schritt <code>import_students</code> werden zum ersten Mal Werte für einen Studenten berechnet und
+		abgespeichert.
+	</p>
+
+	<table class="tbl spaced">
+		<tbody>
+		<tr>
+			<td>Studiengangsgruppe (stg)</td>
+			<td>Kann keine Studiengangsgruppe gefunden werden, wird der Student nicht in die Datenbank aufgenommen. Ein
+				Beispiel hierfür wäre ein Master Student.
+			</td>
+		</tr>
+		<tr>
+			<td>Alter (age)</td>
+			<td>Das Alter wird aus dem Geburtsdatum für den Zeitpunkt der Immatrikulation berechnet.</td>
+		</tr>
+		<tr>
+			<td>Anzahl Semester (semesters)</td>
+			<td>Wenn ein Exmatrikulationsdatum vorhanden ist, wird die Differenz zwischen Im- und Exmatrikulation in Semestern berechnet.
+			</td>
+		</tr>
+		<tr>
+			<td>Start Semester (start_semester)</td>
+			<td>Aus dem Immatrikulationsdatum wird das Einstiegssemester des Studierenden festgestellt.</td>
+		</tr>
+		<tr>
+			<td>HZB Gruppe (hzb_type)</td>
+			<td>Aus der Hochschulzugangsberechtigungsart ID wird die HZB Gruppe mit Hilfe der data/hzbart.csv
+				festgestellt.
+			</td>
+		</tr>
+		<tr>
+			<td>Zeit seit HZB (hzb_imm_time)</td>
+			<td>Berechnet die Anzahl der Monate zwischen HZB und Immatrikulation</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<p>
+		Ist der Student befristet immatrikuliert (z.B. Student im Auslandssemester), wird er nicht in die Datenbank aufgenommen.
+	</p>
+	<p>
+		Im Schritt <code>calculate_student_exams</code> des Updateprozesses werden Werte auf Basis der Prüfungsleistungsdaten des Studenten berechnet.
+	</p>
+
+	<table class="tbl spaced">
+		<tbody>
+		<tr>
+			<td>exam_count</td>
+			<td>Anzahl der eingetragenen Prüfungsleistungen</td>
+		</tr>
+		<tr>
+			<td>exam_count_finish</td>
+			<td>Anzahl der Prüfungsleistungen, die nicht den Status angemeldet (AN) haben</td>
+		</tr>
+		<tr>
+			<td>exam_count_success</td>
+			<td>Anzahl der Prüfungsleistungen mit dem Status bestanden (BE)</td>
+		</tr>
+		<tr>
+			<td>exam_count_failed</td>
+			<td>Anzahl der Prüfungsleistungen mit dem Status nicht bestanden (NB) oder entgültig nicht bestanden (EN)</td>
+		</tr>
+		<tr>
+			<td>exam_count_resigned</td>
+			<td>Anzahl der Prüfungsleistungen welche einen Rücktritt darstellen. status=AN und comment kann U,G oder RT sein.
+			</td>
+		</tr>
+		<tr>
+			<td>bonus_total</td>
+			<td>Gesamtanzahl der <span data-config="cp_label"></span></td>
+		</tr>
+		<tr>
+			<td>study_time_real</td>
+			<td>Anzahl Semester mit abgeschlossenen Prüfungsleistungen</td>
+		</tr>
+		<tr>
+			<td>semesters</td>
+			<td>Wenn es kein Exmatrikulationsdatum gibt, wird hier die Anzahl der Semester mit Prüfungsleistungen eingesetzt</td>
+		</tr>
+		<tr>
+			<td>study_semesters</td>
+			<td>Eine Liste aller SemesterIds</td>
+		</tr>
+		<tr>
+			<td>semester_data</td>
+			<td>Statistiken für jedes einzelne Semester</td>
+		</tr>
+		<tr>
+			<td>phase_data</td>
+			<td>Statistiken für Studiumsphasen (Grundstudium/Hauptstudium)</td>
+		</tr>
+		<tr>
+			<td>grade_basic_studies</td>
+			<td>Note aller bestandenen Prüfungen im Grundstudium</td>
+		</tr>
+		<tr>
+			<td>grade_main_studies</td>
+			<td>Note aller bestandenen Prüfungen im Hauptstudium</td>
+		</tr>
+		<tr>
+			<td>grade_current</td>
+			<td>Aktuelle Note des Gesamtstudiums</td>
+		</tr>
+		<tr>
+			<td>grade_total</td>
+			<td>Falls das Studium abgeschlossen wurde, die berechnete Gesamtnote</td>
+		</tr>
+		<tr>
+			<td>cnt_delayed_exams</td>
+			<td>Entschuldigte Rücktritte</td>
+		</tr>
+		<tr>
+			<td>cnt_unauthorized_delayed_exams</td>
+			<td>Unentschuldigte Rücktritte</td>
+		</tr>
+		<tr>
+			<td>current_semester</td>
+			<td>Aktuelles Semester</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h2>Notenberechnung</h2>
+	<p>
+		Eine Note wird immer nach <span data-config="cp_label"></span> gewichtet berechnet.
+	</p>
+	<img src="img/docs/grade_calc_formula.png" alt="Notenberechnung">
+
+</article>
+

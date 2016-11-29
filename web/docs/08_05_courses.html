@@ -1,0 +1,172 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<article>
+	<h1 id="data_analysis_courses">Berechnete Studiengangsdaten</h1>
+
+	<p>
+		Für einen Studiengang werden einige Statistiken berechnet. Dazu gehören allgemeine Statistiken zu einem
+		Studiengang welche direkt in <code>Course</code> gespeichert werden. In <code>CourseSemesterInfo</code> werden
+		dagegen Statistiken nach <code>start_semester</code> der Studenten gespeichert.
+	</p>
+
+	<p>
+		Diese Statistiken werden im Updateprozess während des Schritts <code>calculate_student_risk</code> berechnet.
+	</p>
+
+	<p>
+		Folgende Statistiken werden direkt zum Course berechnet:
+	</p>
+
+	<table class="tbl spaced">
+		<tbody>
+		<tr>
+			<td>count_finished</td>
+			<td>Anzahl der Studenten, die ihr Studium abgeschlossen haben</td>
+		</tr>
+		<tr>
+			<td>count_successful</td>
+			<td>Anzahl der Studenten, die ihr Studium erfolgreich abgeschlossen haben</td>
+		</tr>
+		<tr>
+			<td>count_failed</td>
+			<td>Anzahl der Studenten, die ihr Studium nicht erfolgreich abgeschlossen haben</td>
+		</tr>
+		<tr>
+			<td>count_students</td>
+			<td>Anzahl der Studenten</td>
+		</tr>
+		<tr>
+			<td>success_perc</td>
+			<td>Prozentsatz der Studenten, welche erfolgreich abgeschlossen haben.</td>
+		</tr>
+		<tr>
+			<td>failed_perc</td>
+			<td>Prozentsatz der Studenten, welche nicht erfolgreich abgeschlossen haben.</td>
+		</tr>
+		<tr>
+			<td>risk_data</td>
+			<td>Risikowerte der Studenten mit minimalem bzw. maximalem Wert und Werteverteilung.</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<p>
+		Folgendes wird für einen Studiengang mit gegebenem Startsemester berechnet und in
+		<code>CourseSemesterInfo</code> gespeichert:
+	</p>
+
+	<table class="tbl spaced">
+		<tbody>
+		<tr>
+			<td colspan="2"><b>students</b></td>
+		</tr>
+		<tr>
+			<td>count</td>
+			<td>Anzahl der Studenten</td>
+		</tr>
+		<tr>
+			<td>finished</td>
+			<td>Anzahl der Studenten, die ihr Studium abgeschlossen haben</td>
+		</tr>
+		<tr>
+			<td>successful</td>
+			<td>Anzahl der Studenten, die ihr Studium erfolgreich abgeschlossen haben</td>
+		</tr>
+		<tr>
+			<td>failed</td>
+			<td>Anzahl der Studenten, die ihr Studium nicht erfolgreich abgeschlossen haben</td>
+		</tr>
+		<tr>
+			<td>success_perc</td>
+			<td>Prozentsatz der Studenten, welche erfolgreich abgeschlossen haben.</td>
+		</tr>
+		<tr>
+			<td>failed_perc</td>
+			<td>Prozentsatz der Studenten, welche nicht erfolgreich abgeschlossen haben.</td>
+		</tr>
+		<tr>
+			<td colspan="2"><b>exams</b></td>
+		</tr>
+		<tr>
+			<td>count</td>
+			<td>Anzahl der Leistungen</td>
+		</tr>
+		<tr>
+			<td>finished</td>
+			<td>Anzahl der Leistungen, die nicht den Status AN haben</td>
+		</tr>
+		<tr>
+			<td>successful</td>
+			<td>Anzahl der bestandenen Leistungen</td>
+		</tr>
+		<tr>
+			<td>failed</td>
+			<td>Anzahl der nicht bestandenen Leistungen</td>
+		</tr>
+		<tr>
+			<td>applied</td>
+			<td>Anzahl der Leistungen mit dem Status AN</td>
+		</tr>
+		<tr>
+			<td>delayed</td>
+			<td>Entschuldigte Rücktritte</td>
+		</tr>
+		<tr>
+			<td>delayed_u</td>
+			<td>Unentschuldigte Rücktritte</td>
+		</tr>
+		<tr>
+			<td>success_perc</td>
+			<td>Prozentanteil der Leistungen mit dem Status BE von den Leistungen mit Status BE, EN, NB</td>
+		</tr>
+		<tr>
+			<td>failed_perc</td>
+			<td>Prozentanteil der Leistungen mit dem Status EN oder NB von den Leistungen mit Status BE, EN, NB.</td>
+		</tr>
+		<tr>
+			<td>min</td>
+			<td>Minimale Anzahl Leistungen, die ein Student hat</td>
+		</tr>
+		<tr>
+			<td>max</td>
+			<td>Maximale Anzahl Leistungen, die ein Student hat</td>
+		</tr>
+		<tr>
+			<td>mean</td>
+			<td>Durchschnittliche Anzahl Leistungen, die ein Student hat</td>
+		</tr>
+		<tr>
+			<td>values</td>
+			<td>Verteilung der Leistungsanzahl</td>
+		</tr>
+		<tr>
+			<td>exams_per_student</td>
+			<td>Anzahl der Leistungen per Student</td>
+		</tr>
+		<tr>
+			<td>bonus_data</td>
+			<td><span data-config="cp_label"></span> Statistiken und Verteilung</td>
+		</tr>
+		<tr>
+			<td>grade_data</td>
+			<td>Noten Statistiken und Notenverteilung</td>
+		</tr>
+		<tr>
+			<td>risk_data</td>
+			<td>Risikowert Statistiken und Risikoverteilung</td>
+		</tr>
+		<tr>
+			<td>semester_data</td>
+			<td>Alle zuvor beschriebenen Statistiken für ein Semester unabhängig vom Startsemester des Studenten</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<p>
+		Mittels dieser Statistiken können zum einen Kohorten verfolgt werden. Zum anderen kann auch nachvollzogen werden,
+		wie sich die Werte in einem Semester unabhängig von den	Kohorten verhalten.
+	</p>
+
+</article>

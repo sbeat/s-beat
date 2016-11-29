@@ -1,0 +1,15 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<nav class="navigation">
+	{% for href, id, label, sub_navi in navigation %}
+	{% if id!='admin' or g.has_right('admin_access') %}
+	<a href="{{ href|e }}"{% if id == active_page %} class="active"{% endif %}>{{ label|e }}</a>
+	{% if id == active_page %}
+		{% set side_navigation = sub_navi %}
+	{% endif %}
+	{% endif %}
+	{% endfor %}
+	<a href="javascript:openLogoutDialog()" class="right">Ausloggen</a>
+</nav>

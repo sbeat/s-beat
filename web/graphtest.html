@@ -1,0 +1,78 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+{% set active_page = "courses" %}
+{% extends "index.html" %}
+{% block title %}Graph Test{% endblock %}
+{% block content %}
+<div class="layout">
+	<article>
+		<h1>Studiengänge Übersicht</h1>
+
+		<div id="graph1"></div>
+		<div id="graph2"></div>
+		<script type="text/javascript">
+
+			$.ajax({
+				url: '/api/GetCourseSemesterInfos?stg=MIB'
+			}).success(function (data) {
+
+				function chart1() {
+					var entry = data.list[0];
+					var chart = new HBarChart($('#graph1'));
+					chart.addBar('bonus', CONFIG.cp_label);
+
+					for (var val in entry.bonus_data.values) {
+						var valueId = Math.floor(val / 10) * 10;
+						chart.addValue('bonus', valueId + ' - ' + (valueId + 9), entry.bonus_data.values[val]);
+					}
+
+					chart.addBar('exams', 'Exams');
+					chart.addValue('exams', 'Angemeldet', entry.exams.applied);
+					//chart.addValue('exams', 'resigned', entry.exams.resigned);
+					chart.addValue('exams', 'Nicht bestanden', entry.exams.failed);
+					chart.addValue('exams', 'Bestanden', entry.exams.successful);
+
+					chart.draw();
+				}
+
+				chart1();
+
+
+				function chart2() {
+					var chart = new HBarChart($('#graph2'));
+					chart.firstLegend = true;
+
+					for (var i = 0; i < data.list.length; i++) {
+						var entry = data.list[i];
+
+						chart.addBar(entry.semester_id, getSemesterText(entry.semester_id));
+
+						chart.addValue(entry.semester_id, 'Studierend', entry.students.count-entry.students.finished);
+						chart.addValue(entry.semester_id, 'Abgebrochen', entry.students.failed);
+						chart.addValue(entry.semester_id, 'Erfolgreich', entry.students.successful);
+
+
+
+					}
+
+
+
+					chart.draw();
+				}
+
+				chart2();
+
+
+
+
+			}).fail(function () {
+
+			});
+
+		</script>
+
+	</article>
+</div>
+{% endblock %}

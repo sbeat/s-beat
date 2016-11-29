@@ -1,0 +1,36 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+{% set active_page = "admin" %}
+{% set active_subpage = "settings" %}
+{% extends "index.html" %}
+{% set website_class = "" %}
+{% block title %}Einstellungen{% endblock %}
+{% block content %}
+<div class="layout">
+	{% if not g.has_right('admin_access') %}
+	<article>
+		<h1>Zugriff verweigert</h1>
+		<p>
+			Sie haben keine Berechtigung.
+		</p>
+	</article>
+	{% else %}
+	<article>
+		<h1>Einstellungen</h1>
+		<p>
+			Nachfolgend können einige Einstellungen für das S-BEAT System
+			konfiguriert werden.<br>
+			<small>(In den Klammern stehen die Standardwerte)</small>
+		</p>
+		<p>
+			Manche Einstellungen können für Studiengänge spezialisiert werden. Ist ein Wert für einen Studiengang
+			angegeben, wird der allgemeine Wert beim Einsatz der Einstellung ignoriert.
+		</p>
+		<div data-load="SettingsManager"></div>
+
+	</article>
+	{% endif %}
+</div>
+{% endblock %}

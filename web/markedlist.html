@@ -1,0 +1,68 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+{% set active_page = "students" %}
+{% set active_subpage = request.args.get('preset',"marked") %}
+{% set preset = request.args.get('preset',"mlist") %}
+{% set mlist = request.args.get('mlist',"default") %}
+{% set website_class = "" %}
+{% extends "index.html" %}
+{% block title %}Vormerkungsliste{% endblock %}
+{% block content %}
+<div class="layout">
+	<h1>Vormerkungsliste</h1>
+	<div class="col2_50">
+		<article>
+			<table class="tbl detailTable">
+				<colgroup>
+					<col width="40%">
+					<col width="60%">
+				</colgroup>
+				<tr>
+					<td>Listenname</td>
+					<td data-mlistdata="name"></td>
+				</tr>
+				<tr>
+					<td>Besitzer</td>
+					<td data-mlistdata="owner"></td>
+				</tr>
+				<tr>
+					<td>Erlaubte Benutzerrollen</td>
+					<td><span data-mlistdata="user_roles"></span></td>
+				</tr>
+			</table>
+
+		</article>
+	</div>
+	<div class="col2_50">
+		<article>
+			<table class="tbl detailTable">
+				<colgroup>
+					<col width="40%">
+					<col width="60%">
+				</colgroup>
+				<tr>
+					<td>Erstellt</td>
+					<td><span data-mlistdata="date_insert"></span> von <span data-mlistdata="created_by"></span></td>
+				</tr>
+				<tr>
+					<td>Letzte Änderung</td>
+					<td><span data-mlistdata="date_update"></span> von <span data-mlistdata="updated_by"></span></td>
+				</tr>
+			</table>
+
+			<p data-mlistdata="modify_button"></p>
+
+		</article>
+	</div>
+	<div class="clear"></div>
+
+	<article>
+		<h1>Vorgemerkte Studenten</h1>
+
+		<div data-load="StudentList" data-preset="{{preset|e}}" data-mlist="{{mlist|e}}"></div>
+
+	</article>
+</div>
+{% endblock %}

@@ -1,0 +1,144 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+{% set active_page = active_page|default('start') %}
+{% set active_subpage = active_subpage|default('start') %}
+{% set side_navigation = side_navigation|default([]) %}
+{% set website_class = website_class|default('noside') %}
+{% set display_top_nav = true %}
+{% set navigation = [
+	('index.html', 'start', 'Startseite', ()),
+	('courses.html', 'courses', 'Studiengänge', ()),
+	('students.html', 'students', 'Studenten',(
+		('students.html', 'students', 'Studentenübersicht'),
+		('students.html?preset=risk', 'risk', 'Risikofälle'),
+		('paths.html', 'paths', 'Risikokriterien'),
+		('markedlists.html', 'marked', 'Vormerkungen')
+
+	)),
+	('exams.html', 'exams', 'Prüfungsleistungen', ()),
+	('import.html', 'admin', 'Administration', (
+		('import.html', 'import', 'Datenimport'),
+		('update.html', 'update', 'Update'),
+		('users.html', 'users', 'Benutzer'),
+		('settings.html', 'settings', 'Einstellungen'),
+		('definitions.html', 'definitions', 'Definitionen'),
+	)),
+	('docs_extended.html?page=01_introduction', 'docs', 'Dokumentation', ()),
+] %}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	{% block head %}
+	<title>{% block title %}S-BEAT (Studentenberatungs- &amp; Analysetool){% endblock %}</title>
+	<meta charset="utf-8">
+	<link rel="icon" href="favicon.ico">
+	<link rel="stylesheet" href="css/sbeat-theme/jquery-ui.min.css">
+	<link rel="stylesheet" href="js/nvd3/nv.d3.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/docstyle.css">
+	<script src="js/jquery-2.1.1.min.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
+	<script src="js/jquery.fileupload.js"></script>
+	<script src="js/jquery.ui.datepicker-de.js"></script>
+	<script src="js/nvd3/lib/d3.v3.js"></script>
+	<script src="js/nvd3/nv.d3.min.js"></script>
+	<script src="js/config.js"></script>
+	<script src="js/pagination.js"></script>
+	<script src="js/filterlist.js"></script>
+	<script src="js/pathlist.js"></script>
+	<script src="js/studentlist.js"></script>
+	<script src="js/studentdetails.js"></script>
+	<script src="js/examlist.js"></script>
+	<script src="js/examinfolist.js"></script>
+	<script src="js/courseslist.js"></script>
+	<script src="js/coursesemesterlist.js"></script>
+	<script src="js/updateprocess.js"></script>
+	<script src="js/datafilebrowser.js"></script>
+	<script src="js/usermanager.js"></script>
+	<script src="js/settingsmanager.js"></script>
+	<script src="js/docindex.js"></script>
+	<script src="js/examdetails.js"></script>
+	<script src="js/coursedetails.js"></script>
+	<script src="js/infograph.js"></script>
+	<script src="js/markedlists.js"></script>
+	<script src="js/definitionsmanager.js"></script>
+	<script src="js/s-beat.js"></script>
+	<script type="text/javascript">
+		CONFIG.cp_label = "{{ g.get_setting('cp_label') }}";
+	</script>
+	{% endblock %}
+</head>
+<body data-user-role="{{ g.user_role|e }}" data-user-name="{{ g.username|e }}">
+<div id="website" class="{{ website_class }}">
+	{% if g.license_is_expired %}
+	<div class="toperror">
+		Ihre Lizenz ist abgelaufen. Verlängern Sie diese, um S-BEAT weiterhin nutzen zu dürfen!
+	</div>
+	{% endif %}
+	<section class="header">
+		<div class="logo">
+			<img src="img/sbeat_logo_232x115.png" width="232" height="115"
+				 alt="S-BEAT Studenten Beratungs- &amp; Analysetool">
+		</div>
+		<div class="hslogo">
+			{% include 'inc/hslogo.html' %}
+		</div>
+		<div class="top_nav">
+			{% if display_top_nav %}
+			{% include 'inc/navigation.html' %}
+			{% endif %}
+		</div>
+	</section>
+	<aside id="side">
+		<nav class="side_nav" data-scrollVisible>
+			{% block side_nav %}
+			{% for href, id, label, sub_navi in navigation %}
+			{% if id == active_page %}
+			{% for href, id, label in sub_navi %}
+			<a href="{{ href|e }}"{% if id == active_subpage %} class="active"{% endif %}>{{ label|e }}</a>
+			{% endfor %}
+			{% endif %}
+			{% endfor %}
+			{% endblock %}
+		</nav>
+
+	</aside>
+	<section id="content">
+		{% block content %}
+		<div class="layout">
+			<article>
+				<h1>Studenten Beratungs- &amp; Analysetool (S-BEAT)</h1>
+				<p id="beschreibung">
+					Das Studenten Beratungs- &amp; Analysetool S-BEAT ist ein Werkzeug, das sich
+					insbesondere an Studiendekane
+					sowie Mitarbeiter des
+					Didaktikzentrums richtet.
+					Es soll Möglichkeiten bieten,
+					kritische Studienverläufe frühzeitig
+					zu erkennen, um die Studenten
+					gezielt beraten zu können und
+					Gegenmaßnahmen zu ergreifen.
+				</p>
+				<p>
+					Es ist hilfreich, sich vor der ersten Benutzung eine Einführung geben zu lassen oder die
+					<a href="docs_extended.html?page=06_use_cases">Anleitung in der Dokumentation</a> zu lesen.
+				</p>
+				<p style="text-align: center">
+					<img src="img/sbeat_logo_700.png" width="700" height="346" alt="sbeat">
+				</p>
+
+
+			</article>
+		</div>
+		{% endblock %}
+	</section>
+	<footer id="footer">
+		{% block footer %}
+		S-BEAT (Studentenberatungs- und Analysetool) Version {{ g.version|e }}. <a href="LICENSE.md" target="license_info">Lizenzinformationen</a>
+		{% endblock %}
+	</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<article>
+	<h1 id="ui_students">Studenten</h1>
+
+	<p>
+		Ist in der horizontalen Navigationsleiste der Menüpunkt Studenten ausgewählt (sichtbar an dessen grauen
+		Hinterlegung),
+		zeigt der linke Rand eine vertikale Navigationsleiste bestehend aus den Punkten Studentenübersicht,
+		Risikofälle, Risikokriterien und Vormerkungen. Standardmäßig ist die Studentenübersicht ausgewählt.
+		Besonders deutlich sei hier darauf hingewiesen, dass bis auf die Risikokriterien alle drei ein und
+		dieselbe Studentenliste zeigen, jedoch mit unterschiedlichen voreingestellten Filtern!
+		<br>
+		Alle vier Ansichten können jeweils über die von der Schaltfläche "Filter hinzufügen" bereitgestellten Filter
+		individualisiert betrachtet werden.
+		Beachten Sie bitte auch unterhalb dieser die "Einstellungen", zur Festlegung des Limits der angezeigten
+		Tabellenzeilen pro Seite
+		und zur Konfiguration der Sortierung, und die "Spaltenauswahl", um die angestrebten anzuzeigenden Spalten
+		auszuwählen.
+	</p>
+</article>
+
+
+<article>
+	<h2>Studentenübersicht</h2>
+
+	<p>
+		Die Studentübersicht zeigt eine Liste aller Studenten aus allen (Bachelor-)Studiengängen einer Hochschule.
+		Standardmäßig besitzt diese folgende Spalten: Interne anonyme Identifikationsnummer Ident
+		(bei entsprechender Berechtigung Umsetzung in Matrikel-Nr. möglich, siehe
+		<a href="docs_extended.html?page=04_data_access"> Zugriffsberechtigungen</a>),
+		Studiengang, Startsemester, Status in Bezug auf Studium (abgebrochen, erfolgreich, studiert),
+		Alter bei Immatrikulation, Geschlecht, Summe <span data-config="cp_label"></span> aktuell, Gesamtanzahl
+		Prüfungsleistungen und die aktuelle Note (gewichtet nach <span data-config="cp_label"></span>).
+		<br>
+		Über die Schaltfläche "Filter hinzufügen" können den/die Studenten/Studentin betreffende Filter ausgewählt
+		werden,
+		wie z.B. Hochschulzugangsberechtigungsgruppe (für eine genaue Beschreibung des Begriffs siehe <a
+			href="docs_extended.html?page=03_data_source#hzb_group">hier</a>), erreichte
+		<span data-config="cp_label"></span> nach dem 1. Semester ...
+		oder Filter für eine Vorhersage in Bezug auf die Risiko-Einstufung ("Risiko-Ampel").
+		Unterhalb der Schaltfläche "Filter hinzufügen" befindet sich neben "Einstellungen" und "Spaltenauswahl"
+		der Punkt "Berechnungen". Wählt man letzteren aus, öffnet sich ein Fenster,
+		in welchem innerhalb einer Tabelle die durchschnittlichen Charakteristiken aller Studenten aufschlüsselt sind.
+		Zu diesem gehören unter anderem Angaben zu Alter bei Immatrikulation, Monate seit HZB,
+		Anzahl bestandene Prüfungsleistungen, Abschlussnote, Dauer des Studiums in Semestern,
+		<span data-config="cp_label"></span> Punkte gesamt.
+		<br>
+		Wählt man per Mausklick die unterstrichene Identifikationsnummer Ident oder das Symbol unmittelbar daneben aus,
+		gelangt man zur Detailseite eines Studierenden.
+		Diese gewährt durch vielfältige Daten einen Einblick in den Studienverlauf (genauere Beschreibung siehe unten).
+	</p>
+
+	<h2>Risikofälle</h2>
+
+	<p>
+		In der Ansicht der Risikofälle sind standardmäßig die folgenden Filter aktiviert:
+		<i>Studium abgeschlossen</i> Nein und <i>Semester mit Prüfungsleistungen</i> größer oder gleich 1.
+		Im Vergleich zur Studentenübersicht sind hier die zusätzlichen Spalten <i>Semester mit Prüfungsleistungen</i>
+		und <i>Risiko</i> bereits standardmäßig eingeblendet.
+		Um unmittelbar die kritischsten Studienverläufe erkennen zu können, erfolgt die Standardsortierung hier nach der
+		Spalte <i>Risiko</i> in absteigender Reihenfolge.
+		Zur grafischen Veranschaulichung des Misserfolgs kommt hier eine sogenannte "Risiko-Ampel" zum Einsatz.
+		Dabei gelten standardmäßig folgende Stufen:
+		- grün: 0-39% Risikowahrscheinlichkeit
+		- gelb: 40-69% Risikowahrscheinlichkeit
+		- rot: ab 70% Risikowahrscheinlichkeit
+		Die Stufen können jedoch vom Administrator auch anders gesetzt worden sein.
+	</p>
+
+	<h2 id="risk_criterias">Risikokriterien</h2>
+
+	<p>
+		Die Risikokriterien zeigen, welche Konstellationen von Pfaden einem Studienverlauf kritischen Charakter
+		verleihen.
+		Sie sind absteigend nach ihrer Relevanz bzw. Aussagekraft sortiert.
+		Auf der Detailseite eines Studierenden kann jeweils eingesehen werden, welche Pfade individuell auf ihn
+		zutreffen.
+		Durch Klick auf eine Box (Pfadelement) gelangt man zu einer Studentenliste, welche nach diesem Pfadelement
+		gefiltert ist.
+	</p>
+
+	<h2>Vormerkungen</h2>
+
+	<p>
+		Auf dieser Seite finden sich Listen vorgemerkter Studierender, die auf deren Detailseite
+		über einen entsprechenden Dialog vorgenommen und gegebenenfalls um eigene Kommentare ergänzt wurden.
+		Hier lassen sich neue Listen erstellen oder per Klick auf einen Listennamen die Einzellistenansicht aufrufen.
+		Standardmäßig sind hier die gleichen Spalten wie in der Studentenübersicht voreingestellt:<br>
+		Ident, Studiengang, Startsemester, Status, Alter bei Immatrikulation, Geschlecht,
+		<span data-config="cp_label"></span> und Risiko.
+		Zum Editieren oder Löschen einer Vormerkung ist es erforderlich die Identifikationsnummer des Studierenden
+		per Mausklick zu selektieren. Dadurch gelangt man auf die Detailseite des Studenten/der Studentin, auf welcher
+		sich links unter der Überschrift "Vormerkungen"
+		der Punkt "Vormerkungen bearbeiten" befindet.
+	</p>
+</article>
+
+<article>
+	<h1 id="ui_studentdetails">Student Details</h1>
+
+	<p>
+		Die Detailseite eines Studierenden gliedert sich jeweils immer in drei Abschnitte.
+	</p>
+
+	<h2>I. Abschnitt: Anmeldedaten bei Immatrikulation, persönliche Daten und kompakte generelle Leistungsübersicht</h2>
+
+	<p>
+		Auf der Detailseite findet man im ersten Abschnitt zunächst einige Eckdaten/Stammdaten zur/zum
+		Studierenden in tabellarischer Ausführung. Dazu gehören:
+	</p>
+
+	<ul class="spacedlist">
+		<li>
+			allgemeine Daten zum Studium wie Studiengang und dazugehöige Studiengangsgruppe, Datum von Im- und
+			Exmatrikulation,
+			Startsemester und Status, d.h. ob der/die Studierende noch studiert, das Studium bereits abgebrochen oder
+			abgeschlossen hat.
+			<br>
+			<br>
+			Durch einen Klick auf Studiengangsgruppe gelangt man auf die Detailseite dieser (für eine genauere
+			Beschreibung siehe <a href=docs_extended.html?page=05_01_courses#ui_courses_details>Studiengangsgruppe
+			Details</a>).
+		</li>
+		<li>
+			persönliche Daten zur Studentin/zum Studenten, wie Geschlecht, Alter, Geburtsdatum, Alter bei der
+			Immatrikulation, Matrikel-Nummer*, Vor-/Nachname* und E-Mail* (zur Kontaktaufnahme)<br>
+			<i>
+				<small>*Diese Felder sind allerdings nur im Fall einer entsprechenden Zugriffsberechtigung einsehbar!
+				</small>
+			</i>
+		</li>
+		<li>
+			Gruppe (u.a. Abitur, Kolleg, Ausland, für weitere siehe <a
+				href="docs_extended.html?page=03_data_source#hzb_group">hier</a>), Note und Datum der
+			Hochschulzugangsberechtigung
+		</li>
+		<li>
+			Leistungsdatenübersicht mit Anzahl aller bestandenen, nicht bestandenen und zurückgetretnen
+			Prüfungsleistungen, sowie Durchschnittsnoten von Grund-, Hauptstudium und bis zum aktuellen Semester
+		</li>
+		<li>
+			Risiko-Ampel (rot-gelb-grün) zur schnellen optischen Einschätzung der Misserfolgswahrscheinlichkeit.
+		</li>
+		<li>
+			<strong>skalierte Misserfolgswahrscheinlichkeit</strong> (für eine genauere Beschreibung des Begriffs siehe
+			<a href="#risk">Risiko eines Studenten</a>) - kann im Adminmenü für die einzelnen Gruppen deaktiviert werden:
+
+			<div class="redbox">
+				Wichtiger Hinweis - ein unbegründet hoher Wert der skalierten Misserfolgswahrscheinlichkeit hat meist
+				folgende Ursachen:<br>
+				<ol type="a" class="spacedlist">
+					<li>
+						Studierende des ersten und zweiten Semesters konnten aufgrund des noch wenig
+						fortgeschrittenen Studiums bisher noch nicht ausreichend <span data-config="cp_label"></span>
+						erwerben.
+					</li>
+					<li>
+						Der/die Studierende gehört zur Gruppe der Erstsemester und es liegen noch keine Benotungen
+						für abgelegte Prüfungsleistungen im aktuellen Semester vor.
+					</li>
+				</ol>
+			</div>
+		</li>
+	</ul>
+
+	<p>
+		Am Ende dieses ersten Abschnitts kann die Vormerkung einer/eines Studierenden
+		vorgenommen und optional mit einem Kommentar versehen werden,
+		indem die Schaltfläche <i>Vormerkungen bearbeiten</i> ausgewählt wird.
+	</p>
+
+	<h2>II. Abschnitt: Prüfungsleistungen</h2>
+
+	<p>
+		An erster Stelle dieses Abschnitts findet sich eine sogenannte <strong>Semestertabelle</strong>.
+		Diese schlüsselt jeweils pro Semester die erworbenen <span data-config="cp_label"></span>,
+		die aktuelle <span data-config="cp_label"></span> Gesamtsumme,
+		die Durchschnittsnote
+		(gewichtet nach <span data-config="cp_label"></span>)
+		und die Anzahl erbrachter Prüfungsleistungen, sowie
+		die davon bestandenen, nicht bestandenen und genehmigt zurückgetretnen, auf. Wenn grüne und rote
+		Indikatoren neben den Zahlen angezeigt werden, zeigen diese an wie der betrachtete Student im Vergleich
+		zum Durchschnitt seiner Kohorte abschneidet. Fährt man mit der Maus über eine Zahl wird der entsprechende
+		Durchschnittswert angezeigt.
+		<br>
+		Als nächstes folgt eine <strong><span id="performance_record">Übersicht der angemeldeten Prüfungsleistungen im aktuellen Semester</span></strong>.
+		Aus dieser lässt sich entnehmen, ob die Anzahl der zu erbringenden Leistungen unter- oder überdurchschnittlichen
+		Charakter hat und inwiefern diese in letzterem Fall realistisch zu bewältigen ist.<br>
+		Das abschließende Element dieses Bereichs bildet eine Tabelle welche quasi einen
+		<strong>Notenspiegel</strong> darstellt.
+		Darin ist jede absolvierte Prüfungsleistung mit EDV-Nummer,
+		Prüfungssemester, entstammendem Studiengang, Name,
+		Status (AN, BE, NB, EN),
+		Pflicht (P, W, WA, Z),
+		Versuch, Art (PL, PV, VS),
+		<span data-config="cp_label"></span> und Note aufgeführt.
+		Bei einem Klick auf die EDV-Nummer einer Prüfungsleistung gelangt man zur Detailansicht derselben.
+		Dort kann für die Prüfungsleistung unter anderem eine Notenverteilung für alle verfügbaren Semester eingesehen
+		werden (für eine genauere Beschreibung siehe <a
+			href="docs_extended.html?page=05_03_exams">Prüfungsleistungen</a>).
+		<br>
+		Für die in diesem Abschnitt verwendeten Abkürzungen, z.B. NB, PV, WA, Z ... siehe
+		<a href="docs_extended.html?page=03_data_source#studienleistungsdaten">Studienleistungsdaten</a>.
+	</p>
+
+	<h2>III. Abschnitt: Risikokriterien</h2>
+
+	<p>
+		Dieser Abschnitt beschäftigt sich mit der Ausprägung der skalierten Misserfolgswahrscheinlichkeit. Dazu gehören
+		die Risikokriterien und die -verteilung.
+	</p>
+</article>
+
+<article>
+	<h3 id="risk">Risiko eines Studenten</h3>
+
+	<p>
+		Das Risiko, auch Risiko- oder Misserfolgswahrscheinlichkeit genannt, ist ein Prozentwert, der vom
+		S-BEAT System für jeden Studenten berechnet wird, der sein Studium noch nicht abgeschlossen hat.
+		Dieser Wert soll Studenten untereinander vergleichbar machen und helfen kritische Fälle früh zu erkennen.<br>
+		Der Risikowert entstammt dem Median aus allen Pfaden auf die ein Student zutrifft.<br>
+		Die skalierte Misserfolgswahrscheinlichkeit ist der berechnete Risikowert skaliert von 0 bis 100 zur besseren
+		Veranschaulichung.
+	</p>
+
+</article>
+
+<article>
+	<h3 id="risk_distribution">Risikoverteilung</h3>
+
+	<p>
+		Die grafische Ansicht der Risikoverteilung ist letztlich nur eine kompakte zusammengefasste Darstellung
+		der im vorigen beschriebenen Risikokriterien. Sie zeigt in einem Säulendiagramm, mit welcher Häufigkeit
+		Riskokriterien (Pfade) einer bestimmten Misserfolgswahrscheinlichkeit, jeweils immer in 10er Schritten,
+		auf den/die Student/in zutreffen. Steht über der Säule mit der Bezeichnung 10% die Zahl 8, so gibt es
+		8 Risikokriterien im Bereich zwischen 10% und 19.9%.
+		Ein kritischer Studienverlauf liegt dann vor, wenn im Diagramm rechtsseitig
+		ein Fokus auf Säulen mit größerer Höhe besteht.
+	</p>
+
+	<h3 id="risk_paths">Risikokriterien (Pfade)</h3>
+
+	<p>
+		Die Darstellung der Risikokriterien dient dazu, die Tendenz der Risikowahrscheinlichkeit nachzuvollziehen.
+		Dabei stellt jede Zeile der Pfadansicht dar, welche Eigenschaften auf den jeweils betrachteten Studierenden
+		zutreffen.
+	</p>
+
+	<p>Beispiel:</p>
+
+	<div class="path">
+		<div class="counters">
+			<div class="mainc" title="Konfidenz (Support)"><b>76.0%</b> (13.3%)</div>
+			<span title="Anzahl passende Studenten für gesamten Pfad/ Anzahl auf Bedingung passende Studenten / Anzahl aller beachteten Studenten">861 / 1133 / 6485</span>
+		</div>
+		<div class="filter">
+			<div class="pe dependee ui-draggable" title="Semester mit Prüfungsleistungen &gt;= 1">
+				<div class="query">Semester mit Prüfungsleistungen</div>
+				<div class="cond">&gt;= 1</div>
+			</div>
+			<div class="pe ui-draggable" title="HZB Gruppe Kolleg">
+				<div class="query">HZB Gruppe</div>
+				<div class="cond">Kolleg</div>
+			</div>
+			<div class="pe depender ui-draggable" title="Nicht bestanden im 1. Semester &gt; 2">
+				<div class="query">Nicht bestanden im 1. Semester</div>
+				<div class="cond">&gt; 2</div>
+			</div>
+		</div>
+		<div class="success">
+			<div class="pe false ui-draggable" title="Studium erfolgreich Nein">
+				<div class="query">Studium erfolgreich</div>
+				<div class="cond">Nein</div>
+			</div>
+		</div>
+	</div>
+	<p>
+		<i>
+			Sollten die Inhalte der Boxen nicht vollständig angezeigt werden, fahren Sie bitte einfach mit der Maus
+			darüber.
+		</i>
+	</p>
+
+	<p>
+		Durch Klick auf eine Box (Pfadelement) gelangt man zu einer Studentenliste, welche nach diesem Pfadelement
+		gefiltert ist.
+	</p>
+
+	<p>
+		Im obigen Beispiel haben Studierende eine Wahrscheinlichkeit von 76,0% das Studium nicht
+		erfolgreich abzuschließen (Risikokriterium: rot hinterlegte Box), wenn auf sie die folgenden Filterkriterien
+		(weiß, blau oder grau hinterlegte Boxen) zutreffen:
+	</p>
+
+	<ul>
+		<li>genau 1 oder mehr Semester mit Prüfungsleistungen</li>
+		<li>Zugehörigkeit zu Hochschulzugangsberechtigungsgruppe Kolleg (für weitere Details zu den Gruppen siehe <a
+				href="docs_extended.html?page=03_data_source#hzb_group">hier</a>)
+		</li>
+		<li>im ersten Semester mehr als 2 Prüfungsleistungen nicht bestanden</li>
+	</ul>
+	<p>Die Zahlen in der ersten Box haben folgende Bedeutung:</p>
+
+	<p>
+		<b>76.0% (Konfidenz)</b>: Misserfolgswahrscheinlichkeit
+		<br>
+		13.3% (Support): Häufigkeit eines Falles dieser Konstellation (Filterkriterien &amp; Risikokriterium)
+		<br>
+		861: Anzahl der Studierenden, auf welche die Filterkriterien und das Risikokriterium zutreffen
+		<br>
+		1133: Anzahl der Studierenden, auf welche ausschließlich die Filterkriterien zutreffen
+		<br>
+		6485: Anzahl der betrachteten Studierenden
+	</p>
+
+	<p>
+		Ist ein Filterkriterium blau hinterlegt, hängen die grau hinterlegten Filterkriterien davon ab.
+		Die Anzahl der betrachteten Studierenden reduziert sich in diesem Fall von allen Studierenden zu jenen,
+		die auf das blau hinterlegte Filterkriterium zutreffen. Der Support wird dann auf dieser reduzierten Basis
+		berechnet.
+	</p>
+
+	<p>
+		Da ein Student nicht nur auf einen Pfad passt,
+		vermindert sich das hier dargestellte Risiko auf den Median der Risikowerte aller passenden Pfade.
+	</p>
+
+	<p>
+		<i>
+			Hinweis: Die Konfidenz berechnet sich auf Grundlage des Supports.
+			Für den Support ist ein minimaler Schwellwert eingestellt.
+		</i>
+	</p>
+
+	<h3>Risikokriterien: Pfad Statistik</h3>
+	<p>
+		Die Pfad Statistik zeigt eine Auswertung aller Pfade nach ihren Bedingungen. Damit kann man erkennen
+		welche durchschnittliche Abbruchwahrscheinlichkeit (Konfidenz) jeder Bedingung zu Grunde liegt.<br>
+		Zudem wird für jede Bedingung die Anzahl der Pfade und der durchschnittliche Support angezeigt.
+		Die Zahlen beziehen sich dabei nur auf den aktuell betrachteten Studenten.
+
+	</p>
+</article>

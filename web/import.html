@@ -1,0 +1,107 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+{% set active_page = "admin" %}
+{% set active_subpage = "import" %}
+{% extends "index.html" %}
+{% set website_class = "" %}
+{% block title %}Datenimport{% endblock %}
+{% block content %}
+<div class="layout">
+	{% if not g.has_right('admin_access') %}
+	<article>
+		<h1>Zugriff verweigert</h1>
+		<p>
+			Sie haben keine Berechtigung.
+		</p>
+	</article>
+	{% else %}
+	<div class="col2_50">
+		<article>
+			<h1>Studentendaten</h1>
+			<div data-load="DataFileBrowser" data-type="students"></div>
+			<p>
+				Eine CSV Datei mit Studentendaten muss folgende Spalten enthalten:<br>
+				<code>
+				identnr, stg, immdat, exmdat, sperrart1, pnr, pdatum, geschl, gebdat, hzbdatum, hzbart, hzbnote
+				</code><br>
+				Statt <code>hzbart</code> ist auch <code>hzbgrp</code> mit der Bezeichnung der hzbart-Nummer möglich.
+				<br>
+				Die Datumsfelder
+				<code>immdat, exmdat, pdatum, gebdat, hzbdatum</code>
+				müssen das Format TT-MMM-YY haben. TT steht hierbei für den zweistelligen Tag des Monats. MMM bezeichnet die ersten drei
+				Buchstaben des deutschen Monatsnamens, wobei Umlaute übersprungen werden. YY steht für die zweistellige Schreibweise der Jahreszahl.
+
+			</p>
+		</article>
+
+		<article>
+			<h1>Studenten Identifikationsdaten</h1>
+			<div data-load="DataFileBrowser" data-type="studentidents"></div>
+			<p>
+				Eine CSV Datei mit Identifikationsdaten der Studenten muss folgende Spalten enthalten:
+				<code>
+				identnr, matrikelnr, vorname, nachname, email
+				</code><br>
+				Folgende Spalte ist optional:
+				<code>kuerzel</code>
+
+			</p>
+		</article>
+	</div>
+	<div class="col2_50">
+		<article>
+			<h1>Prüfungsleistungsdaten</h1>
+			<div data-load="DataFileBrowser" data-type="exams"></div>
+			<p>
+				Eine CSV Datei mit Prüfungsleistungsdaten muss folgende Spalten enthalten:<br>
+				<code>IDENTNR, PNR, PDTXT, ABSCHL, STG, PSEM, BONUS, PSTATUS, PART, PNOTE, PVERMERK, PVERSUCH,
+					PFORM, PPFLICHT, PABSCHN</code><br>
+				Statt <code>ABSCHL</code> ist auch <code>ABSCHLART</code> mit der Bezeichnung der ABSCHL-Nummer möglich.<br>
+				Folgende Spalten sind optional:
+				<code>NACHNAME, PANERK, VORNAME, PDATUM</code>
+				<br>
+				Vor dem Import jeder Datei, wird geprüft welche Semester in der Datei vorkommen. Die Anmeldungen dieser
+				Semester werden vor dem Import aus der Datenbank gelöscht.
+			</p>
+		</article>
+
+		<article>
+			<h1>Studiengangsdaten</h1>
+
+			<div data-load="DataFileBrowser" data-type="courses"></div>
+			<p>
+				Eine CSV Datei mit Studiengangsdaten muss folgende Spalten enthalten:<br>
+				<code>STG, ABSCHL, LTXT, KTXT, FB, REGELSTZ</code><br>
+				Statt <code>ABSCHL</code> ist auch <code>ABSCHLART</code> mit der Bezeichnung der ABSCHL-Nummer möglich.<br>
+				Folgende Spalten sind optional:
+				<code>GRUPPE</code>
+
+			</p>
+		</article>
+	</div>
+	<div class="clear"></div>
+	<article>
+		<p>
+			Alle CSV Dateien verwenden ; (Semikolon) als Trennzeichen für die Spalten. Die Zeilen werden mit einem
+			Windows-Zeilenumbruch CR-LF (\r\n) getrennt. Als Textbegrenzungszeichen werden " (Double quotes) verwendet.
+			Die Feldnamen müssen in der ersten Zeile stehen. Die Groß-/Kleinschreibung der Feldnamen muss dabei nicht
+			beachtet werden. Die CSV Dateien sind im ANSI Format mit Windows-1252 Zeichenkodierung formatiert. Diese
+			Zeichenkodierung wird üblicherweise von deutschen Microsoft Access und Excel Programmen beim Export von CSV
+			bzw. Textdaten verwendet.
+		</p>
+	</article>
+	<article>
+		<p>
+			Durch einen Klick auf das rote X bzw. den grünen Haken können Dateien für den Updateprozess aktiviert bzw.
+			deaktiviert werden. Per Drag&Drop können die Dateien für den Updateprozess geordnet werden. Diese werden
+			dann von oben nach unten abgearbeitet. Inkrementelle Daten sollten immer den Basisdaten folgen.
+			Bei Überschneidungen werden alte mit neuen Daten überschrieben.
+		</p>
+	</article>
+	{% endif %}
+
+</div>
+{% endblock %}
+

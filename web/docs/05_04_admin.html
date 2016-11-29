@@ -1,0 +1,279 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<article>
+	<h1 id="ui_admin">Administration</h1>
+
+	<p>
+		Die Administration ist nur für Anwender mit der Benutzerrolle <b>admin</b> sichtbar und verwendbar.<br>
+		Hier können Daten importiert, der Updateprozess gestartet und Benutzer verwaltet werden.
+	</p>
+
+
+	<h2 id="ui_dataimport">Datenimport</h2>
+
+	<p>
+		Auf der Datenimportseite in der Administration können Studentendaten,
+		Prüfungsleistungsdaten, Identifikationsdaten und Studiengangsdaten hochgeladen werden.
+		Diese Daten werden im Updateprozess in das System eingelesen und analysiert.<br>
+		Der Datenimport dient zur reinen Ablage von CSV Dateien. Die CSV Dateien werden dabei überprüft,
+		hochgeladen und auf dem S-BEAT Server abgelegt.
+	</p>
+
+	<h3>Dateiliste</h3>
+
+	<p>
+		Es gibt vier verschiedene Dateilisten für die jeweiligen CSV Dateien. Darin können Dateien per Drag&amp;Drop
+		sortiert werden. Die Sortierung ist wichtig für den Datenimport. Dateien, die weiter unten stehen werden später
+		importiert und überschreiben bei Überschneidungen, die vorher importierten Daten.
+	</p>
+
+	<div class="fileitem active" style="width: 400px">
+		<div class="main">
+			<div class="name">dateiname.csv
+				<div class="opt"></div>
+			</div>
+			<div class="info">Größe: 600.2KB Datum: 22.05.2014 23:11:51</div>
+		</div>
+		<div class="status" title="Ist aktiv"></div>
+		<div class="order" title="Ordnungsnummer der Reihenfolge">↕1</div>
+	</div>
+
+	<p>
+		Jede Datei in der Dateiliste wird angezeigt mit Dateiname, Dateigröße und Datum.
+		Dazu gibt es die Möglichkeit eine Datei zu aktivieren oder zu deaktivieren. Wenn eine Datei deaktiviert ist,
+		wird sie beim Datenimport nicht berücksichtigt.<br>
+		Durch einen Klick auf das graue Zahnradsymbol öffnet sich ein Dialog, welcher Buttons zum Löschen sowie zum
+		Deaktivieren bzw. Aktivieren der Datei enthält.
+		Klickt man auf Löschen erscheint eine letzte Nachfrage. Wird diese bestätigt ist die Datei endgültig gelöscht
+		und kann nicht wiederhergestellt werden.
+	</p>
+
+	<h3>Datei hochladen</h3>
+
+	<p>
+		Damit eine CSV Datei hochgeladen werden kann, muss diese auf dem Computer des Benutzers vorhanden sein.
+		Mit einem Klick auf 'CSV Datei von Computer auswählen' öffnet sich ein Dialogfenster in dem eine CSV Datei
+		ausgewählt werden kann.
+		Nach der Dateiauswahl, wird diese automatisch geprüft und bei erfolgreicher Prüfung hochgeladen.<br>
+		Während der Dateiübertragung wird ein Fortschrittsbalken angezeigt. Danach erscheint die Datei an letzter
+		Position in der Dateiliste und ist automatisch aktiviert.
+	</p>
+
+	<p>
+		Sollte die Dateiprüfung nach der Auswahl nicht erfolgreich sein, wird ein Fehler angezeigt und die Datei wird
+		nicht
+		übertragen. Es kann mit dem Button 'CSV Datei von Computer auswählen' eine andere Datei ausgewählt werden.<br>
+	</p>
+
+	<p>
+		Der Dateiname einer Datei darf nur Buchstaben, Zahlen, - und _ enthalten und muss mit .csv enden.<br>
+		Die Datei muss mindestens eine Datenzeile enthalten. Zudem müssen die Daten in der CSV Datei den angegebenen
+		inhaltlichen Voraussetzungen entsprechen. Dazu gehören benötigte Spalten und Datenformate.
+	</p>
+
+	<p>
+		Wurden neue Daten hochgeladen, kann der Updateprozess gestartet werden, damit die neuen Daten in das System
+		einfließen.
+	</p>
+
+	<h2 id="ui_updateprocess">Updateprozess</h2>
+
+	<p>
+		Mit dem Updateprozess werden die zuvor hochgeladenen CSV Dateien in die Datenbank geladen und einige
+		Berechnungen durchgeführt.<br>
+		Der Updateprozess kann längere Zeit in Anspruch nehmen. Das hängt von der Menge der Daten und den eingestellten
+		Berechnungsparametern ab. Man sollte mit ca. 15 Minuten rechnen. (Stand: August 2014)<br>
+	</p>
+
+	<p>
+		Durch einen Klick auf 'Updateprozess starten' wird der Start angefordert. Danach dauert es bis zu einer Minute
+		bis der Updateprozess tatsächlich startet. Wenn der Prozess gestartet wurde, kann er nicht wieder gestartet
+		oder gestoppt werden bis der aktuell laufende Prozess abgeschlossen wurde.
+	</p>
+
+	<h3>Update Schritte</h3>
+
+	<p>
+		Der Updateprozess ist in mehrere aufeinanderfolgende und voneinander abhängige Schritte strukturiert. Der
+		Fortschritt kann während der Updateprozes läuft verfolgt werden.<br>
+		Für jeden Schritt wird der Fortschritt in Prozent angezeigt, die Dauer wie lange er schon läuft bzw. wie lange
+		er bei der letzten Ausführungs gelaufen ist, wann er zuletzt gestartet wurde und wann er zuletzt beendet wurde.
+	</p>
+
+	<table class="tbl spaced">
+		<thead>
+		<tr>
+			<th>Schritt</th>
+			<th>Beschreibung</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>import_courses</td>
+			<td>
+				Hierbei werden generelle Daten der einzelnen Studiengänge in die Datenbank eingelesen.
+			</td>
+		</tr>
+		<tr>
+			<td>import_students</td>
+			<td>
+				In diesem Schritt werden die beim Datenimport unter Studentendaten aktiven CSV Dateien in die Datenbank
+				eingelesen und erste Berechnungen durchgeführt, die allein mit diesen Daten möglich sind. Z.B. Alter aus
+				Geburtsdatum, Zeit zwischen Hochschulzugangsberechtigung und Immatrikulation.<br>
+				Zudem werden die beim Datenimport unter Studenten Identifikationsdaten aktiven CSV Dateien in die
+				Datenbank eingelesen.<br>
+				Der Fortschrittsbalken läuft für jede Datei einmal von 0 bis 100% durch. Zudem wird die Anzahl
+				der importierten Studenten angezeigt.
+			</td>
+		</tr>
+		<tr>
+			<td>import_exams</td>
+			<td>
+				In diesem Schritt werden die beim Datenimport unter Prüfungsleistungsdaten aktiven CSV Dateien in die
+				Datenbank eingelesen. Unter Anzahl wird angezeigt wie viele Zeilen eingelesen wurden. Unter Doppelte
+				wird angezeigt wie viele Einträge bereits in der Datenbank waren. Z.B., wenn in einer CSV Datei auf
+				einer vorherigen Position bereits der gleiche Eintrag vorhanden war. In diesem Fall überschreiben
+				die später eingelesenen Daten die zuvor eingelesenen Daten.
+			</td>
+		</tr>
+		<tr>
+			<td>calculate_student_exams</td>
+			<td>
+				In diesem Schritt wird jeder Student aus den zuvor eingelesenen Daten betrachtet. Dabei werden
+				die Prüfungsleistungdaten für diesen Studenten analysiert und verschiedene Werte berechnet, welche
+				dann gespeichert werden.
+			</td>
+		</tr>
+		<tr>
+			<td>generate_definitions</td>
+			<td>
+				Auf Basis der zuvor berechneten Daten werden die im System bekannten Datendefinitionen aktualisiert.
+				Dazu gehören, z.B. die Filter nach welchen Studenten in der Studentenliste gefiltert werden können und
+				auch alle Bedingungen für die intelligente Analysie der Risiken.
+			</td>
+		</tr>
+		<tr>
+			<td>generate_paths_apriori</td>
+			<td>
+				In diesem Schritt wird der Apriori Algorithmus durchlaufen und herausgefunden welche Konstellation aus
+				Risikokriterien welches Risiko birgt.<br>
+				Dieser Prozessschritt wird so oft durchlaufen, bis keine Risikokriterien mehr gefunden werden.
+				Temporär angezeigte Werte geben hier einen Anhaltspunkt, woran der Algorithmus aktuell arbeitet.
+				Dies sind im Detail die jeweilige Dimension, die Anzahl der Features, welche in den Prozessschritt eingebracht wurden
+				sowie die Anzahl der Features welche verwendet wurden.<br>
+				Die Nr./Gesamt-Anzeige zeigt, wie viele	Konstellationen	geprüft wurden und noch geprüft werden müssen. In jedem Schritt wird hierbei die Dimension
+				um eins nach oben gezählt, wobei die unter Einstellungen gesetzte "Maximale Dimension" das Limit darstellt.<br>
+				Gespeichert/Gesamt, zeigt wie viele Risikokriterien insgesamt bereits gespeichert wurden und wie viele
+				davon im aktuellen Schritt.
+			</td>
+		</tr>
+		<tr>
+			<td>calculate_student_risk</td>
+			<td>
+				Aus den zuvor berechneten Risikowerten, wird für jeden Studenten ein Risikowert berechnet.
+				Zudem werden allgemeine Statistikdaten für jeden Studiengang und jede Prüfungsleistung berechnet.
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<p>
+		Ist der komplette Updateprozess durchgelaufen, können die aktuellen Daten in S-BEAT genutzt werden.
+	</p>
+
+
+	<h2 id="ui_users">Benutzer</h2>
+
+	<p>
+		Hier können alle Benutzer betrachtet werden, welche Zugang zum S-BEAT System haben.
+		Benutzer können eingetragen, bearbeitet und gelöscht werden.<br>
+		Jedem Benutzer ist eine Benutzerrolle zugeordnet. Diese beschreibt, welche Berechtigungen der Benutzer hat
+		und welche Features der Benutzer nutzen kann. <a href="docs_extended.html?page=04_data_access">Genaue
+		Beschreibung der Berechtigungen</a>
+	</p>
+
+	<p>
+		Die Benutzerliste zeigt jeden Benutzer mit Name, Benutzerrolle und zugewiesenen Studiengangsgruppen an.
+		Durch einen Klick auf das graue Zahnrad kann der Benutzer bearbeitet werden.
+		Dann öffnet sich ein Dialog, welcher eine Auswahl der Benutzerrollen und eine Auswahl der Studiengangsgruppen
+		zeigt. Es gibt Buttons zum Speichern und Löschen des Benutzers.<br>
+		Der eigene Benutzer kann jedoch nicht bearbeitet werden.
+	</p>
+	<p>
+		Unter der Benutzerliste befindet sich der Button 'Benutzer hinzufügen'. Durch einen Klick auf den Button
+		öffnet sich ein Dialog zur Eingabe des Benutzernamens. Der Benutzername muss mit dem LDAP-Login Namen
+		exakt übereinstimmen. Nach Eingabe des Benutzernamens, können die Benutzerrolle und die Studiengangsgruppen
+		ausgewählt werden.
+		(Anmerkung: Sollte ein anderes Authentifizierungsverfahren zum Einsatz kommen, sind die genaue Funktionsweise
+		sowie Namensregeln für die Benutzer von S-BEAT zwischen den Vertragspartnern zu klären.)
+	</p>
+
+	<h2 id="ui_settings">Einstellungen</h2>
+
+	<p>
+		In diesem Bereich können einige Werte für die Berechnungen (Konfidenz, min. Support und max. Anzahl Dimensionen - <a href="docs_extended.html?page=08_03_risk_calc">Genaueres auf der Informationsseite zu den Berechnungen</a>.) eingestellt werden.
+		Außerdem können die Grenzwerte für die "Risiko-Ampel" und Berechtigungen für den numerischen Risiko-Wert ("skalierte Misserfolgswahrscheinlichkeit") gesetzt werden.<br>
+		Die Einstellungen zur Pfadgenerierung und zur Risikoberechnung wirken sich insbesondere auf den Update-Prozess aus und können bei falscher Konfiguration
+		zu sehr langen Updatezeiten oder unrealistischen Risikoberechnungen führen.
+
+	</p>
+
+	<h2 id="ui_definitions">Definitionen</h2>
+
+	<p>
+		Auf dieser Seite können die Studentendatendefinitonen für die Risikoberechnung und die Ausgabe konfiguriert werden.<br>
+		Die Kategorien, Datenfelder und Bedingungen sind hierbei hierarchisch geordnet.
+		Datenfelder gehören dabei immer zu einer Kategorie. Die Kategorien haben ihre eigene Hierarchie, die auch
+		auf der Studentenliste in der Filterauswahl abgebildet wird.
+		Datenfelder, welche nicht in der Risikoberechnung beachtet werden, haben ausgegraute Details. Dies gilt für
+		Datenfelder, welche keine Bedingungen definiert haben oder für welche die "Ignorieren"-Einstellung explizit gewählt wurde.
+	</p>
+
+	<p>
+		Werden die Definitionen bearbeitet, sind diese erst nach dem nächsten Datenupdate aktiv. Die Filter
+		auf den Studentenlisten werden dabei spätestens eine Minute nach Beendigung eines Datenupdates
+		aktualisiert.
+	</p>
+
+	<h3>Datenfeld hinzufügen</h3>
+	<p>
+		Über den Button "Datenfeld hinzufügen" öffnet sich ein Dialog mit welchem ein neues Datenfeld angelegt werden kann.
+		Dabei lässt sich der Anzeigename, die Kategorie und die Formatierung festlegen.<br>
+		Die Query- und Formatierungsangabe muss der programmatischen Datenstruktur von S-BEAT entsprechen. Deswegen sollten
+		Datenfelder nur von S-BEAT Entwicklern angelegt werden.<br>
+		Ist die automatische Generierung von Bedingungen aktiviert, werden alle bei den Studenten vorkommenden Werte
+		als Bedingungen angelegt und es können manuell keine Bedingungen für dieses Datenfeld erstellt werden.<br>
+		Ein Datenfeld kann für die Risikoberechnung eine oder mehrere Abhängigkeiten haben, die erfüllt sein müssen, bevor
+		eine Bedingung des Datenfelds für die Risikoberechnung beachtet wird. So sollten beispielsweise Datenfelder, die nur ab dem 2.
+		Semester befüllt sind, die entsprechende Abhängigkeit aufweisen.<br>
+		Die Kategorie mit der Bezeichnung "ignore" führt dazu, dass diese Datenfelder nicht in den
+		Filtern auswählbar sind.
+	</p>
+
+	<h3>Bedingung hinzufügen</h3>
+	<p>
+		Die Bedingungen werden bei der Pfadgegenierung für die Risikoberechnung miteinander kombiniert, um aussagekräftige Kombinationen zu finden.
+		Für jedes Datenfeld, welches keine automatische Bedingungsgenerierung hat, können über den
+		"Bedingung hinzufügen"-Link neue Bedingungen hinzugefügt werden.<br>
+		Die wählbaren Optionen für eine Bedingung hängen dabei von der Formatierung bzw. dem Datentyp des Feldes ab.<br>
+		Der Name sollte im Regelfall leer gelassen werden. Die wenigen bereits bestehenden Namen sollten nicht geändert werden, da diese intern im System und insbesondere bei der Risikoberechnung verwendet werden.<br>
+		Beim Datenfeld "Studium erfolgreich" wird zum Beispiel die Bedingung "Nein" mit "failed" bezeichnet.
+		Hat diese Bedingung nicht mehr diesen Namen, schlägt die Risikoberechnung fehl.<br>
+
+		Das Level wird nur dann beachtet, wenn in den S-BEAT Einstellungen "Risiko auf Basis bevorzugter Risikokriterien
+		berechnen" aktiviert ist. Hier wird bei der Risikoberechnung im Falle, dass ein Student auf mehrere Pfade
+		zutrifft welche dieselben Datenfelder aber unterschiedliche Bedingungen haben, der Pfad mit dem höchsten
+		Level, respektive dem niedrigsten Zahlenwert (0 = höchstes Level) ausgewählt. Ist das Level bei allen Bedingungen gleichwertig, wird
+		auf Grund des Zahlenwerts der Bedingungen entschieden.
+	</p>
+
+	<h3>Statistiken berechnen</h3>
+	<p>
+		Durch einen Klick auf diesen Button wird für jede Bedigungen die Anzahl der Studierenden berechnet,
+		welche darauf zutreffen. So kann schon bei der Konfiguration die Relevanz der Bedingungen eingeschätzt werden.
+	</p>
+
+
+</article>

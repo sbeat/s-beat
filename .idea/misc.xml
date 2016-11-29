@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" default="false" project-jdk-name="Python 2.7.6 (C:\Python27\python.exe)" project-jdk-type="Python SDK" />
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://svn.p-stats.com:8120/pstats_usvn/svn/sbeat/branches/hdm_1" />
+                  <option value="https://svn.p-stats.com:8120/pstats_usvn/svn/sbeat/branches/hft_1" />
+                  <option value="https://svn.p-stats.com:8120/pstats_usvn/svn/sbeat/branches/hfwu_1" />
+                  <option value="https://svn.p-stats.com:8120/pstats_usvn/svn/sbeat/branches/hses_1" />
+                  <option value="https://svn.p-stats.com:8120/pstats_usvn/svn/sbeat/branches/opensource" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://svn.p-stats.com:8120/pstats_usvn/svn/sbeat/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+</project>

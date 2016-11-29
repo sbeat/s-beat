@@ -1,0 +1,12 @@
+[Unit]
+Description=S-BEAT Webserver
+After=network.target
+
+[Service]
+User=sbeat
+Group=sbeat
+WorkingDirectory=/home/sbeat/s-beat
+ExecStart=/usr/bin/python httpserver.py
+
+[Install]
+WantedBy=multi-user.target

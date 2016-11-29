@@ -1,0 +1,131 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+{% set active_page = "exams" %}
+{% extends "index.html" %}
+{% block title %}Prüfungsleistung: {{ request.args.get('exam_info_id',0) }}{% endblock %}
+{% block content %}
+<div class="layout" data-load="ExamDetails" data-id="{{ request.args.get('exam_info_id',0) }}">
+	<h1>Prüfungsleistung Details: <span data-exam="exam_id"></span> - <span data-exam="name"></span></h1>
+
+	<div class="col2_50">
+		<article>
+			<h2>Allgemein</h2>
+			<table class="tbl detailTable">
+				<tr>
+					<td>Art der Prüfungsleistung</td>
+					<td data-exam="type"></td>
+				</tr>
+				<tr data-exam="exam_associated">
+				</tr>
+				<tr>
+					<td>Prüfungsform</td>
+					<td data-exam="formlist"></td>
+				</tr>
+				<tr>
+					<td>Studiengang</td>
+					<td>
+						<span data-exam="stg_original"></span>
+						(Gruppe: <span data-exam="stg"></span>)
+					</td>
+				</tr>
+			</table>
+		</article>
+	</div>
+	<div class="clear"></div>
+
+
+	<article>
+		<div data-exam="has_grade_graph">
+			<h2>Notenverteilung</h2>
+			<svg data-exam="grades_nb" style="height: 200px"></svg>
+			<hr class="gradeline">
+			<br>
+		</div>
+		<div data-exam="no_grade_graph">
+			<h2>Erfolgsquote</h2>
+			<svg data-exam="success_graph" style="height: 200px"></svg>
+			<hr class="gradeline">
+			<br>
+		</div>
+
+	</article>
+
+	<article>
+		<h2>Semester</h2>
+		<table class="tbl">
+			<thead>
+			<tr>
+				<th>
+					<div><span>Semester</span></div>
+				</th>
+				<th>
+					<div><span>Leistungen</span></div>
+				</th>
+				<th>
+					<div><span>Bestanden</span></div>
+				</th>
+				<th>
+					<div><span>Nicht bestanden</span></div>
+				</th>
+				<th>
+					<div><span>Rücktritte</span></div>
+				</th>
+				<th>
+					<div><span>Angemeldet</span></div>
+				</th>
+				<th>
+					<div><span>&Oslash; Note</span></div>
+				</th>
+				<th>
+					<div><span>&Oslash; Note inkl. NB, EN</span></div>
+				</th>
+				<th>
+					<div><span>% Bestanden</span></div>
+				</th>
+				<th>
+					<div><span>% Rücktritte</span></div>
+				</th>
+			</tr>
+			</thead>
+			<tbody data-exam="semester_data" data-columns="
+				id:semester,
+				exams:int,
+				successful:int,
+				failed:int,
+				resigned:int,
+				applied:int,
+				grades.mean:grade,
+				grades_nb.mean:grade,
+				success_perc:percent,
+				resign_perc:percent
+			">
+			</tbody>
+			<tfoot>
+			<tr class="summary">
+				<td>Alle Semester</td>
+				<td data-exam="count_exams"></td>
+				<td data-exam="count_successful"></td>
+				<td data-exam="count_failed"></td>
+				<td data-exam="count_resigned"></td>
+				<td data-exam="count_applied"></td>
+				<td data-exam="grades.mean"></td>
+				<td data-exam="grades_nb.mean"></td>
+				<td data-exam="success_perc"></td>
+				<td data-exam="resign_perc"></td>
+			</tr>
+			</tfoot>
+		</table>
+	</article>
+
+	<article>
+		<h2 data-toggle="examlist_details" class="toggle">Notenspiegel</h2>
+
+		<div style="display: none" id="examlist_details">
+			<div data-load="ExamList" data-preset="exam" data-examinfoid="{{ request.args.get('exam_info_id',0) }}"></div>
+		</div>
+		{% include 'inc/tooltips_exam.html' %}
+	</article>
+</div>
+{% endblock %}

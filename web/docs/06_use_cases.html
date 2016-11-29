@@ -1,0 +1,216 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<article>
+	<h1 id="use_cases">Anleitung</h1>
+
+	<p>
+		S-BEAT wurde vorrangig mit dem Ziel entwickelt, kritische Studienverläufe zu finden.
+		Nachfolgend soll ein Einstieg in die Arbeit mit eben diesen gegeben werden.
+	</p>
+</article>
+
+<article>
+	<h2 id="uc_find_risk_cases">Auffinden bestimmter Risikofälle</h2>
+
+	<p>
+		Startpunkt für die Suche nach gefährdeten Studenten ist immer der Menüpunkt <i>Risikofälle</i> im Bereich <i>Studenten</i>.
+		Hier liegt der Fokus bereits standardmäßig auf noch aktiven Studenten, die mindestens ein Semester mit
+		bewerteten Prüfungsleistungen abgelegt haben.
+	</p>
+
+	<h3>Allgemeine Suche</h3>
+
+	<p>
+		Für eine generelle Suche ist die Standardansicht bereits ein guter Startpunkt - die Spalten <i>Risiko</i> und
+		<i>Misserfolg in %</i>
+		zeigen durch die absteigende Sortierung nach letzterer bereits gut ersichtlich die kritischsten Kandidaten
+		an.<br>
+		Interessant könnten hier unter anderem noch die folgenden Filter und Spalten sein:<br><br>
+		<i>Filter</i>
+		<ul>
+			<li>Student -> Studium -> Prüfungsleistungen -> Anzahl nicht bestandene Prüfungsleistungen</li>
+			<li>Student -> Studium -> Prüfungsleistungen -> Anzahl Rücktritte</li>
+			<li>Student -> Studium -> Prüfungsleistungen -> Unentschuldigte Rücktritte</li>
+			<li>Student -> Studium -> Note -> Note im Grundstudium</li>
+			<li>Student -> Studium -> <span data-config="cp_label"></span> ->
+				Erreichte <span data-config="cp_label"></span> nach x.tem Semester</li>
+		</ul>
+		<i>Spalten</i>
+		<ul>
+			<li>HZB Gruppe</li>
+			<li>HZB Note</li>
+			<li>PL nicht bestanden</li>
+			<li>Entschuldigte Rücktritte</li>
+			<li>Unentschuldigte Rücktritte</li>
+		</ul>
+	</p>
+
+	<h3>Suche innerhalb eines Studiengangs</h3>
+
+	<p>
+		Um gezielt nach kritischen Studierenden innerhalb eines Studiengangs zu suchen, setzt man als Filter den
+		gewünschten Studiengang via
+		Filter hinzufügen -> Student -> Studium -> Studiengang.
+		Weitere interessante Betrachtungen diesbezüglich ergeben sich durch die Sortierung nach dem Start-Semester, um
+		eine bessere Einsicht in die Unterschiede hierzu zu erhalten.
+		<!-- Interessante Spalten / Filter? -->
+	</p>
+
+	<h3>Konkrete Betrachtung eines Studenten</h3>
+
+	<p>
+		Über einen Klick auf die Ident-Nr. gelangt man auf die Detailseite eines Studenten.
+		Bei kritischen Fällen sind hier vor allem die folgenden Bereiche wichtig:
+	<ul>
+		<li><i>Leistungsdaten</i></li><br>
+			die wichtigsten Daten zu den abgelegten Prüfungsleistungen auf einen Blick.
+		<li><i>Semester</i> und <i>Notenspiegel</i><br>
+			wichtig um zu sehen, ob der Student über alle Semester kritisch
+			war, oder sich die Kritikalität schlagartig in einem Semester erhöht hat.
+			In letzterem Fall könnte man den Studierenden gezielt auf veränderte Umstände außerhalb des Hochschullebens
+			ansprechen und gegebenenfalls auch eine psychologische Betreuung
+			oder anderweitige Hilfsangebote außerhalb des Zugriffsbereichs der Hochschule vermitteln, falls dies
+			relevant sein könnte.
+		</li>
+		<li><i>Risikokriterien</i><br>
+			In der Entwicklung von S-BEAT war immer eine größtmögliche Nachvollziehbarkeit
+			wichtig.
+			Dieser Bereich gibt der beratenden Person Anhaltspunkte weshalb der Studierende als kritisch eingestuft
+			wurde und hilft diesem zu vermitteln, was zu seiner Einstufung geführt hat.
+		</li>
+	</ul>
+	</p>
+
+	<h3>Vormerkung eines Studenten</h3>
+
+	<p>
+		Hat man die Berechtigung Studenten vorzumerken (<a href="docs_extended.html?page=04_data_access">Genaue
+		Beschreibung der Berechtigungen</a>),
+		kann man auf der Detailseite eines Studenten im Bereich Vormerkungen durch Klick auf <i>Vormerkungen bearbeiten</i> Listen ähnlich den
+		Favoriten im Browser anlegen.<br>
+		Im sich öffnenden Dialog besteht die Möglichkeit Studenten einer oder mehrerer bereits bestehender Listen hinzuzufügen.
+		Alternativ kann man auch durch Klick auf <i>Neue Vormerkungsliste anlegen</i> eine neue Liste erstellen.
+		Für jede Liste lassen sich zu dem jeweiligen Studierenden Kommentare hinzufügen.<br>
+		Sobald ein Student einer Liste hinzugefügt wurde, wird diese Liste ebenfalls im Bereich Vormerkungen aufgeführt und der gespeicherte Kommentar als MouseOver beim überfahren des Listennamens mit der Maus angezeigt.
+		Ein Klick auf den Listennamen bringt einen zur Einzellistenansicht wie auch im nächsten Abschnitt erläutert.
+	</p>
+
+	<p>
+		Einmal erstellte Vormerkungslisten lassen sich direkt über den Menüpunkt <i>Studenten -> Vormerkungen</i> aufrufen.
+		Hier erhält man eine Übersicht über bisher angelegte Listen mit Angaben über die Anzahl der enthaltenen Studenten sowie den Besitzer (Ersteller) der Liste. Auch neue Listen lassen sich hier anlegen.
+		Ein Klick auf eine Liste bringt einen zur Einzellistenansicht, die sich in der standardmäßigen Spaltenauswahl an der Seite <i>Risikofälle</i> orientiert, sich aber auf die gespeicherten Studenten beschränkt und zusätzlich die hinterlegten Kommentare darstellt.
+	</p>
+
+	<p>
+		Darüber finden sich Angaben über die Liste wie Name, Besitzer und Erstellungsdatum. Außerdem hat man hier die Möglichkeit über den Link <i>Einstellungen der Vormerkungsliste bearbeiten</i> den Namen der Liste zu ändern, vor allem aber die Zugriffsrechte zu definieren.
+		Standardmäßig wird die Liste nur für den User selbst angelegt. Über die Auswahlfelder lässt sie sich für die einzelnen Berechtigungsgruppen freigeben.
+		Will man nur lesenden Zugriff gestatten, setzt man zusätzlich den Haken bei <i>Andere dürfen die Liste nur sehen</i>.
+	</p>
+
+	<p>
+		Um die Vormerkung zu bearbeiten oder zu löschen muss man wieder die Detailseite des Studenten aufrufen und dort
+		im Bereich Vormerkung auf <i>Vormerkungen bearbeiten</i> klicken.
+	</p>
+
+	<h2>Notenverteilung einer Prüfungsleistung</h2>
+
+	<p>
+		Zur Notenverteilung einer bestimmten Prüfungsleistung kann man auf zwei unterschiedliche Arten gelangen.
+		<br>
+		Befindet man sich auf der Detailseite eines Studenten (siehe Abschnitt "Konkrete
+		Betrachtung eines Studenten" oberhalb) wählt man in der Notenspiegel Tabelle die EDV-Nummer der
+		gewünschten Prüfungsleistung aus. Dadurch erfolgt ein Wechsel auf die Seite <i>Prüfungsleistung Details</i>.
+		Diese enthält unter anderem den Notenspiegel der Prüfungsleistung für alle Semester, in denen diese abgelegt
+		wurde. Für Ausführungen über weitere Bestandteile der Seite siehe <a href="docs_extended.html?page=05_03_exams#ui_exam_details">Prüfungsleistung Details</a>.
+		<br>
+		Alternativ kann man auch direkt über die Seite <i>Prüfungsleistungen</i> nach der gewünschten Prüfung suchen, indem man nach
+		Name, EDV-Nummer oder auch <span data-config="cp_label"></span> filtert.
+		Per Klick auf die EDV-Nummer erreicht man dann die <i>Prüfungsleistung Details</i>-Seite.
+	</p>
+
+	<h2>Durchschnittsberechnungen</h2>
+
+	<p>
+		Auf der Seite <i>Studenten</i> befindet sich unterhalb der Schaltfläche "Filter hinzufügen" neben
+		"Einstellungen" und "Spaltenauswahl" der Punkt "Berechnungen". Wählt man letzteren aus, öffnet sich ein Dialog,
+		in welchem innerhalb einer Tabelle die durchschnittlichen Charakteristika aller aufgelisteten Studenten aufgeschlüsselt sind.
+		Hierzu gehören unter anderem:
+		<ul>
+			<li>Skalierte Misserfolgswahrscheinlichkeit</li>
+			<li>Alter bei Immatrikulation</li>
+			<li>Monate seit HZB</li>
+			<li>Anzahl bestandener Prüfungsleistungen</li>
+			<li>Abschlussnote</li>
+			<li>Dauer des Studiums in Semestern</li>
+			<li><span data-config="cp_label"></span> gesamt</li>
+		</ul>
+	</p>
+
+
+</article>
+{% if not g.has_right('admin_access') %}
+
+{% else %}
+<article>
+	<h2 id="uc_data_import_update">Datenimport und Update</h2>
+
+	<p>
+		Nachfolgend werden Schritt-für-Schritt Anleitungen zur Aktualisierung der Daten in S-BEAT gegeben.
+	</p>
+
+	<h3>Datenimport</h3>
+
+	<p>
+	<ol>
+		<li>Als Benutzer mit Administrationsberechtigung einloggen und die Seite Administration -> Datenimport
+			aufrufen
+		</li>
+		<li>Je nachdem welche Daten aktualisiert werden sollen auf die jeweilige Schaltfläche <i>CSV Datei von Computer
+			auswählen</i> klicken
+		</li>
+		<li>Im aufgehenden Dialog die gewünschte CSV-Datei auswählen und auf <i>Öffnen</i> klicken*</li>
+	</ol>
+	<div class="redbox">* Hinweis: Sollte nach dem Öffnen eine Fehlermeldung kommen, wurde höchstwahrscheinlich entweder
+		eine Datei für einen jeweils anderen Bereich (also z.B. Studentendaten statt Prüfungsleistungsdaten) oder eine
+		Datei mit fehlerhaften Daten versucht hochzuladen.
+		Letzteres betrifft jedoch nur fehlende / fehlerhafte Spalten. Fehlende Einträge durch Unvollständigkeit einer
+		Datei werden nicht erkannt!
+	</div>
+	</p>
+	<p>
+		War der Upload erfolgreich, kann man anschließend die Reihenfolge der hochgeladenen Dateien per Drag and Drop
+		ändern.<br>
+		Mittels Klick auf das Zahnrad-Symbol gelangt man in einen Dialog, in welchem sich die Datei wieder löschen lässt
+		oder sofern nötig auch zeitweise deaktivieren lässt (z.B. zur Fehlersuche wenn ein Update fehlgeschlagen ist).
+	</p>
+
+	<p>
+		Der Datenimport ist unter <a href="docs_extended.html?page=05_04_admin#ui_dataimport">Administration</a> genauer
+		beschrieben.
+	</p>
+
+	<h3>Update</h3>
+
+	<p>
+		Nachdem neue Dateien hochgeladen wurden, muss das System aktualisiert werden.<br>
+		Hierfür wählt man den Menüpunkt <i>Administration -> Update</i> aus und klickt auf die Schaltfläche <i>Updateprozess
+		starten</i>.
+	</p>
+
+	<p>
+		Anschließend kann man auf dieser Seite sehen, bei welchem Schritt der Aktualisierung das System derzeit ist und
+		Rückschlüsse über die verbleibende Zeit ziehen.
+		Desweiteren findet man bei manchen Schritten Angaben über die jeweils zu verarbeitende Anzahl an Einträgen (z.B.
+		Anzahl Studenten bei <i>import_students</i>).
+		Der Updateprozess ist komplett durchgelaufen, wenn bei allen Teilschritten unter Status <i>Abgeschlossen</i>
+		steht.
+	</p>
+
+	<p>
+		Der Updateprozess ist unter <a href="docs_extended.html?page=05_04_admin#ui_updateprocess">Administration</a>
+		genauer beschrieben.
+	</p>
+</article>
+{% endif %}

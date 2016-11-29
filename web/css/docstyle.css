@@ -1,0 +1,26 @@
+/* Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+   see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/ */
+
+figure {
+	margin: 0;
+	display: block;
+}
+
+figcaption {
+	font-size: 11px;
+	font-style: italic;
+}
+
+article h2, article h3 {
+	padding-top: 3px;
+}
+
+.redbox {
+	border:2px solid #9D0124;
+	padding: 10px;
+	margin: 10px 0;
+}
+
+.spacedlist li {
+	margin: 10px 0;
+}

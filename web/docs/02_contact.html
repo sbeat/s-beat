@@ -1,0 +1,27 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+{% set contact_software = g.get_setting('contact_software') %}
+{% set contact_hosting = g.get_setting('contact_hosting') %}
+{% set contact_data = g.get_setting('contact_data') %}
+
+<article>
+	<h1 id="contact">Ansprechpartner</h1>
+
+	{% if contact_software %}
+	<h2>Fragen zur Software</h2>
+	<a href="mailto:{{ contact_software.split(',')[0]|e }}">{{ contact_software.split(',')[1]|e }}</a><br>
+	{% endif %}
+
+	{% if contact_hosting %}
+	<h2>Fragen zum Hosting</h2>
+	<a href="mailto:{{ contact_hosting.split(',')[0]|e }}">{{ contact_hosting.split(',')[1]|e }}</a><br>
+	{% endif %}
+
+	{% if contact_data %}
+	<h2>Fragen zu Datenbankabfragen über HIS</h2>
+	<a href="mailto:{{ contact_data.split(',')[0]|e }}">{{ contact_data.split(',')[1]|e }}</a><br>
+	{% endif %}
+
+</article>

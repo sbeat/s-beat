@@ -1,0 +1,80 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+<article>
+	<h1 id="data_analysis_exams">Berechnete Prüfungsleistungsdaten</h1>
+
+	<p>
+		Prüfungsleistungen werden einerseits für jeden Studenten als ein Ereignis <code>Exam</code> gespeichert und
+		andererseits als <code>ExamInfo</code> für die Statistikberechnung erhoben.
+	</p>
+
+	<p>
+		Bei <code>Exam</code> handelt es sich um die einzelnen Leistungen, welche ein Student angemeldet hat. Diese
+		werden identifiziert durch <code>student_id</code>, <code>exam_id</code>, <code>semester</code> und
+		<code>try_nr</code>.
+	</p>
+
+	<p>
+		<code>ExamInfo</code> identifiziert sich durch die <code>exam_id</code> und speichert einige Statistiken zu der
+		Prüfungsleistung. Für die gesamte Prüfungsleistung werden folgende Werte berechnet:
+	</p>
+
+	<table class="tbl spaced">
+		<tbody>
+		<tr>
+			<td>has_grade</td>
+			<td>Gibt an ob diese Leistung eine Note vergibt<br>
+				True wenn eine Leistung mit Noteneintrag gefunden wurde
+			</td>
+		</tr>
+		<tr>
+			<td>bonus</td>
+			<td>Anzahl der <span data-config="cp_label"></span>, welche für diese Leistung vergeben werden</td>
+		</tr>
+		<tr>
+			<td>stg</td>
+			<td>Liste der Studiengangsgruppen in welchen diese Leistung angemeldet wurde</td>
+		</tr>
+		<tr>
+			<td>stg_original</td>
+			<td>Liste der Studiengänge in welchen die Leistung angemeldet wurde</td>
+		</tr>
+		<tr>
+			<td>count_exams</td>
+			<td>Anzahl der Leistungen</td>
+		</tr>
+		<tr>
+			<td>count_successful</td>
+			<td>Anzahl der bestandenen Leistungen</td>
+		</tr>
+		<tr>
+			<td>count_failed</td>
+			<td>Anzahl der nicht bestandenen Leistungen</td>
+		</tr>
+		<tr>
+			<td>count_applied</td>
+			<td>Anzahl der Leistungen mit dem Status AN</td>
+		</tr>
+		<tr>
+			<td>success_perc</td>
+			<td>prozentualer Anteil der Leistungen mit dem Status BE an den Leistungen mit Status BE, EN, NB</td>
+		</tr>
+		<tr>
+			<td>failed_perc</td>
+			<td>prozentualer Anteil der Leistungen mit dem Status EN oder NB an den Leistungen mit Status BE, EN, NB
+			</td>
+		</tr>
+		<tr>
+			<td>grades</td>
+			<td>Statistiken zu Durchschnitts-, bester und schlechtester Note sowie Notenverteilung</td>
+		</tr>
+		<tr>
+			<td>semester_data</td>
+			<td>Statistiken für jedes einzelne Semester</td>
+		</tr>
+		</tbody>
+	</table>
+
+</article>
