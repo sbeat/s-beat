@@ -35,6 +35,10 @@ Run the following commands to setup a default configuration:
 
 	python dev-support\support.py default_setup
 	
+Create the default folders structure:
+
+	python sbeat.py create_default_folders
+	
 After you have started the MongoDB, import the initial setting into the database:
 
 	python sbeat.py initial_settings

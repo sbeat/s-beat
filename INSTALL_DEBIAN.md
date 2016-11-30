@@ -122,6 +122,10 @@ Copy the file with the default files to become used files:
 	cp data/definitions.default.json data/definitions.json
 	cp data/mappings.default.json data/mappings.json
 
+Create the default folders structure:
+
+	python sbeat.py create_default_folders
+
 Import the initial setting into the database:
 
 	python sbeat.py initial_settings

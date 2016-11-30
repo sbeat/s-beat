@@ -22,7 +22,6 @@ import sys
 sys.path.append('lib')
 
 from DB import *
-import DataDefinitions
 import ImportTools
 import time
 import math
@@ -182,6 +181,7 @@ def apply_data():
 
 
 def save_defintions_to_db():
+    import DataDefinitions
     DataDefinitions.save_defintions_to_db()
     print 'Done'
 
@@ -190,6 +190,7 @@ def generate_definitions():
     """
     Generated definitions
     """
+    import DataDefinitions
     ProcessTracking.process_start('generate_definitions')
     # DataDefinitions.create_definitions()
     DataDefinitions.generate_definitions_in_db()
@@ -249,6 +250,7 @@ def structures_test():
 
 
 def test_definitions_db():
+    import DataDefinitions
     run_on_temp_data()
     DataDefinitions.load_definitions_from_db()
     print 'loaded'
@@ -307,7 +309,6 @@ def path_test():
 
 
 def path_aggregate_test():
-    from bson.code import Code
 
     def get_student_matching_elements(student_id):
         student = Student.find_one({'_id': student_id})
@@ -328,8 +329,6 @@ def path_aggregate_test():
 
     preferred = Path.get_preferred_paths(ret)
     print 'preferred', len(preferred)
-
-
 
 
 def import_courses():
@@ -458,6 +457,7 @@ def find_values():
 
 
 def get_definitions():
+    import DataDefinitions
     hashes = set()
     for path_el in DataDefinitions.get_elements():
         if path_el.md5_id() in hashes:
@@ -477,6 +477,7 @@ def get_definitions():
 
 
 def export_definitions():
+    import DataDefinitions
     json = DataDefinitions.export_definitions_from_db()
     with open('data/definitions.json', 'w') as fd:
         fd.write(json.encode('utf-8'))
@@ -484,6 +485,7 @@ def export_definitions():
 
 
 def import_definitions():
+    import DataDefinitions
     with open('data/definitions.json', 'r') as fd:
         json_data = fd.read().decode('utf-8')
         DataDefinitions.import_definitions_into_db(json_data, True)
@@ -503,12 +505,14 @@ def generate_exam_conditons():
 
 
 def find_path_elements():
+    import DataDefinitions
     for pe in DataDefinitions.get_elements_by_query(Query('success')):
         print hash(pe)
         print pe.get_dict()
 
 
 def generate_paths_apriori():
+    import DataDefinitions
     ProcessTracking.process_start('generate_paths_apriori')
     run_on_temp_data()
     try:
@@ -523,6 +527,7 @@ def generate_paths_apriori():
 
 
 def generate_paths_apriori_mp():
+    import DataDefinitions
     ProcessTracking.process_start('generate_paths_apriori')
     run_on_temp_data()
     try:
@@ -552,6 +557,7 @@ def generate_paths_apriori_mp():
 
 
 def test_generate_paths_apriori_mp():
+    import DataDefinitions
     ProcessTracking.process_start('generate_paths_apriori')
     run_on_temp_data()
     try:
@@ -579,14 +585,6 @@ def test_generate_paths_apriori_mp():
     except:
         ProcessTracking.process_failed('generate_paths_apriori', {'error': traceback.format_exc()})
         raise
-
-
-def calculate_paths_mt():
-    ProcessTracking.process_start('calculate_paths_mt')
-    start = time.clock()
-    Path.update_path_counts_mt(100, 6)
-    print 'time: ', time.clock() - start
-    ProcessTracking.process_done('calculate_paths_mt')
 
 
 def db_eval():
@@ -630,6 +628,7 @@ def calculate_student_exams():
 
 
 def permutations():
+    import DataDefinitions
     elements = DataDefinitions.get_elements()[0:91]
 
     k = 7
@@ -691,6 +690,7 @@ def get_delayed():
 
 
 def check_path_counts():
+    import DataDefinitions
     run_on_temp_data()
     all_paths = Path.find({})
     elements = [pe for pe in DataDefinitions.get_elements() if not pe.query.ignore and pe.condition.name != 'success']
@@ -721,6 +721,7 @@ def check_path_counts():
 
 
 def test_bit_array_stability():
+    import DataDefinitions
     run_on_temp_data()
     db_query = {'ignore': False, 'finished': True}
     elements = [pe for pe in DataDefinitions.get_elements() if not pe.query.ignore and pe.condition.name != 'success']
@@ -754,6 +755,7 @@ def test_bit_array_stability():
 
 
 def test_student_bit_array():
+    import DataDefinitions
     run_on_temp_data()
     elements = set(
         [pe for pe in DataDefinitions.get_elements() if not pe.query.ignore and pe.condition.name != 'success'])
@@ -801,6 +803,7 @@ def test_student_bit_array():
 
 
 def test_bitmapchecker():
+    import DataDefinitions
     import bitmapchecker
     import pickle
 
@@ -981,6 +984,7 @@ def get_pv_pl():
                     print str(entry.exam_id) + ' ' + entry.name + ' -> ' + str(ei.exam_id) + ' ' + ei.name + ' ' + (
                         ','.join(entry.stg_original))
 
+
 def get_hash_id():
     import hashlib
     import base64
@@ -1002,6 +1006,24 @@ def get_hash_id():
     m.update(unicode(str(5674)))
     m.update(unicode(str(5674)))
     print base64.urlsafe_b64encode(m.digest())[0:8]
+
+
+def create_default_folders():
+    default_folders = [
+        'data/courses',
+        'data/exams',
+        'data/studentidents',
+        'data/students',
+        'data/temp',
+        'logs'
+    ]
+    import os
+    for folder in default_folders:
+        try:
+            os.makedirs(folder)
+        except OSError:
+            pass
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
