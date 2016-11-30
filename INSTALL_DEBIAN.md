@@ -124,6 +124,7 @@ Copy the file with the default files to become used files:
 
 Create the default folders structure:
 
+	mkdir logs
 	python sbeat.py create_default_folders
 
 Import the initial setting into the database:

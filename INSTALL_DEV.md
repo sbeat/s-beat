@@ -20,6 +20,16 @@ This guide describes the setup on a Windows system.
 2. Clone S-BEAT:
 
 		git clone https://github.com/[USER]/s-beat
+		
+3. Switch into the S-BEAT folder:
+
+		cd s-beat
+	
+4. Configure your git author project:
+
+		git config user.name "My name"
+		git config user.email "...@...."
+
 
 ## Setup MongoDB
 
@@ -41,6 +51,7 @@ Create the default folders structure:
 	
 After you have started the MongoDB, import the initial setting into the database:
 
+	mkdir logs
 	python sbeat.py initial_settings
 	
 Import the definitions into the database:

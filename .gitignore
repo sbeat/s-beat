@@ -1,5 +1,5 @@
 _dev
-mongodb/
+/mongodb/
 lib/bitmapchecker.so
 config/access_users.txt
 config/main.cfg
@@ -16,3 +16,4 @@ logs/*
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/dictionaries/*
+*.pyc
