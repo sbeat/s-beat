@@ -200,17 +200,19 @@ class CourseSemesterInfo(DBDocument):
             else:
                 d.risk_data['values'][risk_id] += 1
 
-        hzb_grade_id = str(student.hzb_grade)
-        if hzb_grade_id not in d.hzb_grade_data['values']:
-            d.hzb_grade_data['values'][hzb_grade_id] = 1
-        else:
-            d.hzb_grade_data['values'][hzb_grade_id] += 1
+        if student.hzb_grade is not None:
+            hzb_grade_id = str(student.hzb_grade)
+            if hzb_grade_id not in d.hzb_grade_data['values']:
+                d.hzb_grade_data['values'][hzb_grade_id] = 1
+            else:
+                d.hzb_grade_data['values'][hzb_grade_id] += 1
 
-        age_id = str(student.age)
-        if age_id not in d.age_data['values']:
-            d.age_data['values'][age_id] = 1
-        else:
-            d.age_data['values'][age_id] += 1
+        if student.age is not None:
+            age_id = str(student.age)
+            if age_id not in d.age_data['values']:
+                d.age_data['values'][age_id] = 1
+            else:
+                d.age_data['values'][age_id] += 1
 
         if student.gender == 'W':
             d.students['female'] += 1

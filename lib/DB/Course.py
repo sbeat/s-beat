@@ -16,12 +16,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
+import logging
 
 import ImportTools
 from Db import DBDocument
 from ProcessTracking import ProcessTracking
 
 encoding = 'windows-1252'
+logger = logging.getLogger(__name__)
 
 
 class Course(DBDocument):
@@ -124,17 +126,19 @@ class Course(DBDocument):
             else:
                 self.risk_data['values'][risk_id] += 1
 
-        hzb_grade_id = str(student.hzb_grade)
-        if hzb_grade_id not in self.hzb_grade_data['values']:
-            self.hzb_grade_data['values'][hzb_grade_id] = 1
-        else:
-            self.hzb_grade_data['values'][hzb_grade_id] += 1
+        if student.hzb_grade is not None:
+            hzb_grade_id = str(student.hzb_grade)
+            if hzb_grade_id not in self.hzb_grade_data['values']:
+                self.hzb_grade_data['values'][hzb_grade_id] = 1
+            else:
+                self.hzb_grade_data['values'][hzb_grade_id] += 1
 
-        age_id = str(student.age)
-        if age_id not in self.age_data['values']:
-            self.age_data['values'][age_id] = 1
-        else:
-            self.age_data['values'][age_id] += 1
+        if student.age is not None:
+            age_id = str(student.age)
+            if age_id not in self.age_data['values']:
+                self.age_data['values'][age_id] = 1
+            else:
+                self.age_data['values'][age_id] += 1
 
         if student.gender == 'W':
             self.count_female += 1
@@ -288,7 +292,7 @@ class Course(DBDocument):
             try:
                 course = create_course_from_entry(entry, settings)
             except:
-                print 'Failed to create Course from entry ' + str(num)
+                logger.warning('Failed to create Course from entry %d', num)
                 raise
 
             if allowed_degree_types and course.degree_type not in allowed_degree_types:

@@ -24,10 +24,12 @@ import csv
 import re
 from datetime import datetime
 import json
+import logging
 
 allowed_directories = ('exams', 'students', 'studentidents', 'courses')
 data_path = 'data'
 mappings = None
+logger = logging.getLogger(__name__)
 
 
 def get_files_info(directory, data_list=None):
@@ -111,7 +113,7 @@ def read_csv(info, delimiter=';'):
     with open(get_file_path(info['dir'], info['file']), 'rb') as fd:
         exam_reader = csv.DictReader(fd, delimiter=delimiter)
         exam_reader.fieldnames = map(lambda x: x.lower(), exam_reader.fieldnames)
-        print 'read_csv', exam_reader.fieldnames
+        logger.info('read_csv %s', exam_reader.fieldnames)
 
         for entry in exam_reader:
             pos = fd.tell()

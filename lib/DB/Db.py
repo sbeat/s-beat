@@ -42,7 +42,7 @@ def get_db():
     config.read('config/main.cfg')
 
     try:
-        client = MongoClient(config.get('mongodb', 'host'), config.getint('mongodb', 'port'))
+        client = MongoClient(config.get('mongodb', 'host'), config.getint('mongodb', 'port'), connect=False)
 
         _open_db = client[config.get('mongodb', 'name')]
         # _open_db.add_son_manipulator(_DBTransform())

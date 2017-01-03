@@ -28,6 +28,7 @@ from Settings import Settings
 from ImportTools import get_date_from_csv, get_int, get_unicode
 
 encoding = 'windows-1252'
+logger = logging.getLogger(__name__)
 
 
 class Exam(DBDocument):
@@ -154,6 +155,7 @@ class Exam(DBDocument):
 
         settings = Settings.load_dict([
             'grade_exam_number',
+            'final_exam_numbers_ba',
             'ignore_exam_numbers',
             'min_semester',
             'unique_exam_id',
@@ -165,13 +167,15 @@ class Exam(DBDocument):
         ignore_exam_numbers_stg = Settings.load_dict_for_key('ignore_exam_numbers')
         min_semester_stg = Settings.load_dict_for_key('min_semester')
         grade_exam_number_stg = Settings.load_dict_for_key('grade_exam_number')
+        final_exam_numbers_ba_stg = Settings.load_dict_for_key('final_exam_numbers_ba')
 
         grade_exam_number = settings['grade_exam_number']
+        final_exam_numbers_ba = settings['final_exam_numbers_ba']
         ignore_exam_numbers = settings['ignore_exam_numbers']
 
         first_semester = None
         last_semester = None
-        print 'Check CSV File for min and max semester'
+        logger.info('Check CSV File for min and max semester')
         num = 0
         for entry, curr, total in ImportTools.read_csv(file_info):
             num += 1
@@ -183,7 +187,7 @@ class Exam(DBDocument):
 
             sem = get_int(entry['psem'])
             if sem is None or sem < min_semester or sem > 21000:
-                logging.error(
+                logger.error(
                     "Exam.import_from_file " + file_info['file'] + ": ivalid psem entry: " + repr(num) + " : " + repr(
                         entry))
                 continue
@@ -193,7 +197,7 @@ class Exam(DBDocument):
             if last_semester is None or last_semester < sem:
                 last_semester = sem
 
-        print 'Remove all status=AN exams between ', first_semester, 'and', last_semester
+        logger.info('Remove all status=AN exams between %s and %s', first_semester, last_semester)
         Exam.get_collection().remove({'status': 'AN', 'semester': {'$gte': first_semester, '$lte': last_semester}})
 
         num = 0
@@ -205,18 +209,26 @@ class Exam(DBDocument):
 
             if exam is not None:
                 grade_exam_number = grade_exam_number_stg.get(exam.stg, settings['grade_exam_number'])
+                final_exam_numbers_ba = final_exam_numbers_ba_stg.get(exam.stg, settings['final_exam_numbers_ba'])
                 ignore_exam_numbers = ignore_exam_numbers_stg.get(exam.stg, settings['ignore_exam_numbers'])
 
-            if exam is not None and exam.exam_id == grade_exam_number:
+            if exam is not None and (
+                            exam.exam_id == grade_exam_number
+                    or unicode(exam.exam_id) in final_exam_numbers_ba and exam.status == 'BE'):
 
-                if student:
+                if student and exam.exam_id == grade_exam_number:
                     student.final_grade = exam.grade
-                    student.db_update(['final_grade'])
+                    student.success = True
+                # if student and unicode(exam.exam_id) in final_exam_numbers_ba and exam.status == 'BE':
+                #     student.success = True
+                if student:
+                    student.db_update(['final_grade', 'success'])
                     # ExamInfo.update_by_exam(exam)
 
             elif exam is not None and not ImportTools.is_int_in_ranges(exam.exam_id, ignore_exam_numbers):
                 result = exam.db_insert()  # returns none if exam is a duplicate or db has a problem
                 if result is None:
+                    logger.warning('duplicate exam %s', exam)
                     exam.update_existing()
                     failed_num += 1
 
@@ -226,7 +238,7 @@ class Exam(DBDocument):
                 # ExamInfo.update_by_exam(exam)  # problem with duplicates, now called in Student.calculate_from_exams
 
             else:
-                logging.warning(
+                logger.warning(
                     "Exam.import_from_file " + file_info['file'] + ": ignored entry: " + repr(num) + " : " + repr(
                         entry))
 

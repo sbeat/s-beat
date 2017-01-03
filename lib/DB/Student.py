@@ -38,6 +38,7 @@ from Settings import Settings
 from ImportTools import get_date_from_csv, get_int, get_unicode
 
 encoding = 'windows-1252'
+logger = logging.getLogger(__name__)
 
 
 class Student(DBDocument):
@@ -267,6 +268,8 @@ class Student(DBDocument):
             num += 1
             stg = get_unicode(entry['stg'], encoding)
             if stg is None:
+                logger.error(
+                    "Student at line " + str(num) + " has no STG")
                 continue
 
             student_settings = {
@@ -452,6 +455,9 @@ class Student(DBDocument):
             # calculate_student_from_exams(student)
             student.calculate_from_exams(settings=settings)
             if student.bonus_total > 220 or student.exm_date is None and student.finished:
+                logger.warning(
+                    "Student has a bonus over 220 (%s) or (no exm_date %s and is finished): %s ID: %s",
+                    student.bonus_total, student.exm_date, student.stg_original, student.ident)
                 student.db_remove()
 
             if num % 100 == 0:
@@ -750,6 +756,8 @@ def create_student_from_entry(data, settings):
     student.stg_original = get_unicode(data['stg'], encoding)
     student.stg = Course.get_mapped_short(student.stg_original)
     if not student.stg:
+        logger.error(
+            "Student has no known STG group for: " + student.stg_original + " ID: " + repr(student.ident))
         return None
 
     student.imm_date = get_date_from_csv(data['immdat'])
@@ -766,7 +774,7 @@ def create_student_from_entry(data, settings):
         student.hzb_type = get_unicode(data['hzbgrp'], encoding)
 
     if student.hzb_type == '':
-        logging.warning('No hzb_type for ' + student.stg + " ID: " + repr(student.ident))
+        logger.warning('No hzb_type for ' + student.stg + " ID: " + repr(student.ident))
 
     student.hzb_date = get_date_from_csv(data['hzbdatum'])
     if student.imm_date is not None and student.hzb_date is not None:
@@ -780,8 +788,8 @@ def create_student_from_entry(data, settings):
     if pnr is not None and pnr in final_exam_numbers and student.exm_date is not None and CalcTools.semester_delta(
             student.imm_date,
             student.exm_date) < 5:
-        logging.warning(
-            "FEHLER! Student in 4 oder weniger Semestern erfolgreich: " + student.stg + " ID: " + repr(student.ident))
+        logger.warning(
+            "Student in 4 or less semesters successful: " + student.stg + " ID: " + repr(student.ident))
 
     # Status 1=Finished, 2=Aborted, 3=Successful, 4=Studying
     if student.finished:
@@ -799,7 +807,9 @@ def create_student_from_entry(data, settings):
     if data['sperrart1'] == '01' \
             or course is None or course.ignore \
             or student.start_semester < settings['min_semester']:
-        student.ignore = True
+        logger.error(
+            "sperrart1 is 01 or course is ignored or start semester too early: %s ID: %s Sperrart: %s Start: %s",
+            student.stg_original, student.ident, data['sperrart1'], student.start_semester)
         return None
 
     student.age = CalcTools.calculate_age(student.birth_date, student.imm_date)

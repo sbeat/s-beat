@@ -36,6 +36,8 @@ _possible_iterations = 0
 _generated = 0
 _saved = 0
 
+logger = logging.getLogger(__name__)
+
 
 class Path(DBDocument):
     """
@@ -914,7 +916,7 @@ class PathGenerator:
         self._calc_count()
 
         print 'PathGenerator run multiprocess k:', self.k, ' features:', len(self.feature_set), 'count:', self.count
-        logging.info(
+        logger.info(
             'PathGenerator run multiprocess k: ' + str(self.k) + ' features: ' + str(
                 len(self.feature_set)) + ' count: ' + str(
                 self.count))

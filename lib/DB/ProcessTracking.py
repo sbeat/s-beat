@@ -17,8 +17,12 @@ You should have received a copy of the GNU General Public License
 along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import logging
+
 from Db import DBDocument
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 
 class ProcessTracking(DBDocument):
@@ -147,6 +151,8 @@ class ProcessTracking(DBDocument):
         step.start()
         step.db_update()
 
+        logger.info('process_start ' + ident)
+
         # reset all following steps
         index = cls.process_steps.index(step.ident)
         for step_ident in cls.process_steps[index + 1:]:
@@ -179,6 +185,8 @@ class ProcessTracking(DBDocument):
         if step is None:
             return
 
+        logger.info('process_done ' + ident)
+
         step.finished()
         step.db_update()
 
@@ -187,6 +195,8 @@ class ProcessTracking(DBDocument):
         step = cls.find_one({'_id': ident})
         if step is None:
             return
+
+        logger.info('process_failed ' + ident)
 
         step.fail()
         if info is not None:

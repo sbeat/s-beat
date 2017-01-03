@@ -27,18 +27,20 @@ import time
 import math
 import pymongo
 import itertools
-import logging
+import logging.handlers
 import traceback
 from ConfigParser import RawConfigParser
 
 config = RawConfigParser()
 config.read('config/main.cfg')
-logging.basicConfig(filename=config.get('general', 'logfile'), level=logging.INFO)
+
+
+logger = None
 
 
 def version():
     import Version
-    print Version.get_string()
+    logger.info(Version.get_string())
 
 
 def initial_settings():
@@ -57,7 +59,7 @@ def initial_settings():
         Settings.insert_by_dict(settings)
 
         print settings
-        print "Settings inserted"
+        logger.info("Settings inserted")
 
 
 def remove_setting():
@@ -82,22 +84,22 @@ def run_on_temp_data():
 def reset_db():
     run_on_temp_data()
 
-    print 'drop Courses'
+    logger.info('drop Courses')
     Course.drop()
 
-    print 'drop Student'
+    logger.info('drop Student')
     Student.drop()
 
-    print 'drop Exam'
+    logger.info('drop Exam')
     Exam.drop()
 
-    print 'drop ExamInfo'
+    logger.info('drop ExamInfo')
     ExamInfo.drop()
 
-    print 'drop Path'
+    logger.info('drop Path')
     Path.drop()
 
-    print 'drop CourseSemesterInfo'
+    logger.info('drop CourseSemesterInfo')
     CourseSemesterInfo.drop()
 
 
@@ -120,22 +122,22 @@ def run_import():
     start = time.clock()
     run_on_temp_data()
 
-    print '####### import courses #######'
+    logger.info('####### import courses #######')
     import_courses()
 
-    print '####### import students #######'
+    logger.info('####### import students #######')
     import_students()
 
-    print '####### import exams #######'
+    logger.info('####### import exams #######')
     import_exams()
 
     # DataDefinitions.create_definitions()
     # reload(DataDefinitions)
-    # print '####### generate paths #######'
+    # logger.info('####### generate paths #######')
     # generate_paths()
 
     end = time.clock()  # took 259s for 6768 paths
-    print 'time: ', end - start
+    logger.info('time: %i', end - start)
 
 
 def run_calculations():
@@ -145,19 +147,19 @@ def run_calculations():
 
     run_on_temp_data()
 
-    print '####### calculate exams #######'
+    logger.info('####### calculate exams #######')
     calculate_student_exams()
 
-    print '####### generate_definitions #######'
+    logger.info('####### generate_definitions #######')
     generate_definitions()
 
-    print '####### generate_paths_apriori paths #######'
+    logger.info('####### generate_paths_apriori paths #######')
     generate_paths_apriori_mp()
 
-    # print '####### calculate_scaled_paths #######'
+    # logger.info('####### calculate_scaled_paths #######')
     # calculate_scaled_paths()
 
-    print '####### calculate_student_risk #######'
+    logger.info('####### calculate_student_risk #######')
     calculate_student_risk()
 
     if not Settings.load('update_manual_apply'):
@@ -340,9 +342,9 @@ def import_courses():
         file_list = ImportTools.get_files_info('courses')
         for info in file_list:
             if not info['active']:
-                print 'Skip file:', info
+                logger.info('Skip file: %s', info)
                 continue
-            print 'Import file:', info
+            logger.info('Import file: %s', info)
             Course.import_from_file(info)
 
         ProcessTracking.process_done('import_courses')
@@ -369,9 +371,9 @@ def import_students():
             })
 
             if not info['active']:
-                print 'Skip file:', info
+                logger.info('Skip file: %s', info)
                 continue
-            print 'Import file:', info
+            logger.info('Import file: %s', info)
             Student.import_from_file(info)
 
         # import identity data
@@ -382,9 +384,9 @@ def import_students():
                 'file_count': file_count
             })
             if not info['active']:
-                print 'Skip file:', info
+                logger.info('Skip file: %s', info)
                 continue
-            print 'Import file:', info
+            logger.info('Import file: %s', info)
             Student.import_identity_from_file(info)
 
         ProcessTracking.process_done('import_students')
@@ -408,9 +410,9 @@ def import_exams():
                 'file_count': len(file_list)
             })
             if not info['active']:
-                print 'Skip file:', info
+                logger.info('Skip file: %s', info)
                 continue
-            print "import_exams from " + info['file']
+            logger.info("import_exams from " + info['file'])
             Exam.import_from_file(info)
             if not max_mtime or max_mtime < info['mtime']:
                 max_mtime = info['mtime']
@@ -1026,8 +1028,20 @@ def create_default_folders():
 
 
 if __name__ == '__main__':
+    log_formatter = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(log_formatter)
+    file_handler = logging.handlers.RotatingFileHandler(
+        filename=config.get('general', 'logfile'), maxBytes=1024 * 1024 * 10, backupCount=20)
+    file_handler.setFormatter(log_formatter)
+    logging.getLogger('').addHandler(console_handler)
+    logging.getLogger('').addHandler(file_handler)
+    logging.getLogger('').setLevel(logging.INFO)
+
+    logger = logging.getLogger(__name__)
+
     if len(sys.argv) < 2:
-        print 'please provide a command as first argument'
+        logger.info('please provide a command as first argument')
 
     elif sys.argv[1] in dir():
         eval(sys.argv[1] + '()')
