@@ -31,7 +31,7 @@ S-BEAT kann sowohl auf Windows als auch auf Linux ausgeführt werden. Für den p
 * Python 2.x
 * MongoDB 3+
 
-Für den produktiven Beterieb muss ein Webserver als Reverse-Proxy vorgeschlatet werden. Z.B. Apache2. Dieser übernimmt die SSL Verschlüsselung und die Authentifizierung der Benutzer.
+Für den produktiven Betrieb muss ein Webserver als Reverse-Proxy vorgeschaltet werden. Z.B. Apache2. Dieser übernimmt die SSL Verschlüsselung und die Authentifizierung der Benutzer.
 
 Für den Zugriff auf die Weboberfläche wird ein moderner Web-Browser, welcher mit HTML5, CSS3 & JavaScript umgehen kann, benötigt.
 

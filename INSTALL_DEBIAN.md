@@ -115,7 +115,7 @@ Add an alias in `~/.bashrc`
 
 ## Initial setup
 
-Copy the file with the default files to become used files:
+Copy the default files so they become used files:
 
 	cp config/access_users.default.txt config/access_users.txt
 	cp config/main.default.cfg config/main.cfg
@@ -126,6 +126,9 @@ Create the default folders structure:
 
 	mkdir logs
 	python sbeat.py create_default_folders
+
+In case the name of the user_roles in the `main.cfg` file were changed,
+the user role specific settings in the `config/initialSettings.json` need to be changed before the following step.
 
 Import the initial setting into the database:
 
