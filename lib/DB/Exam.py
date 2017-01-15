@@ -237,6 +237,11 @@ class Exam(DBDocument):
 
                 # ExamInfo.update_by_exam(exam)  # problem with duplicates, now called in Student.calculate_from_exams
 
+            elif exam is None:
+                logger.warning(
+                    "Exam.import_from_file " + file_info['file']
+                    + ": mandatory field missing or stg not found ignored entry: " + repr(num)
+                    + " : " + repr(entry))
             else:
                 logger.warning(
                     "Exam.import_from_file " + file_info['file'] + ": ignored entry: " + repr(num) + " : " + repr(
@@ -281,11 +286,12 @@ def create_exam_from_entry(data, student, settings):
         exam.degree_type = ImportTools.map_by_definiton('abschl', data['abschl'], True)
 
     exam.stg_original = get_unicode(data['stg'])  # Short of the degree course
-    exam.stg = Course.get_mapped_short(exam.stg_original)
 
     course = Course.get_by_stg_original(exam.stg_original)
     if course is None or course.ignore:
         return None
+
+    exam.stg = course.stg
 
     if 'vorname' in data:
         exam.by_forename = get_unicode(data['vorname'])  # Forename of examinant

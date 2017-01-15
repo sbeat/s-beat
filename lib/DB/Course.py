@@ -225,53 +225,12 @@ class Course(DBDocument):
             course.db_save()
 
     @classmethod
-    def get_all_by_stg(cls, cached=True):
-        result = {}
-        for stg_o, course in cls.get_all_by_stg_original(cached).iteritems():
-            if course.stg not in result:
-                result[course.stg] = {}
-            result[course.stg][course.stg_original] = course
-        return result
-
-    @classmethod
-    def get_by_stg(cls, stg, cached=True):
-        return cls.get_all_by_stg(cached).get(stg)
-
-    @classmethod
     def get_by_stg_original(cls, stg_original, cached=True):
-        stg = cls.get_mapped_short(stg_original)
-        all_originals = cls.get_by_stg(stg, cached)
+        all_originals = cls.get_all_by_stg_original(cached)
         if all_originals is not None and stg_original in all_originals:
             return all_originals.get(stg_original)
         else:
-            return cls.create_by_stg_original(stg_original)
-
-    @classmethod
-    def create_by_stg_original(cls, stg_original, cached=True):
-        stg = cls.get_mapped_short(stg_original)
-        if stg is None:
             return None
-        base_course = cls.get_by_stg(stg)
-        if base_course is None:
-            print 'no base course for', stg_original
-            return None
-        base_course = base_course[base_course.keys()[0]]
-
-        course = Course()
-        course.stg_original = stg_original
-        course.stg = stg
-        course.name = base_course.name
-        course.degree_type = base_course.degree_type
-        course.semesters = base_course.semesters
-        course.faculty = base_course.faculty
-        if stg_original[-1] == '7':
-            course.semesters = 7
-        if course.degree_type != 'Bachelor':
-            course.ignore = True
-        if course.db_save() is not None:
-            cls.all_original_cached[course.stg_original] = course
-
-        return course
 
     @staticmethod
     def import_from_file(file_info):

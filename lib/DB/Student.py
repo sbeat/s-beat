@@ -754,11 +754,14 @@ def create_student_from_entry(data, settings):
     student.birth_date = get_date_from_csv(data['gebdat'])
 
     student.stg_original = get_unicode(data['stg'], encoding)
-    student.stg = Course.get_mapped_short(student.stg_original)
-    if not student.stg:
+
+    course = Course.get_by_stg_original(student.stg_original)
+    if course is None or course.ignore:
         logger.error(
             "Student has no known STG group for: " + student.stg_original + " ID: " + repr(student.ident))
         return None
+
+    student.stg = course.stg
 
     student.imm_date = get_date_from_csv(data['immdat'])
     student.exm_date = get_date_from_csv(data['exmdat'])
@@ -774,7 +777,7 @@ def create_student_from_entry(data, settings):
         student.hzb_type = get_unicode(data['hzbgrp'], encoding)
 
     if student.hzb_type == '':
-        logger.warning('No hzb_type for ' + student.stg + " ID: " + repr(student.ident))
+        logger.warning('No hzb_type for ' + student.stg_original + " ID: " + repr(student.ident))
 
     student.hzb_date = get_date_from_csv(data['hzbdatum'])
     if student.imm_date is not None and student.hzb_date is not None:
@@ -789,7 +792,7 @@ def create_student_from_entry(data, settings):
             student.imm_date,
             student.exm_date) < 5:
         logger.warning(
-            "Student in 4 or less semesters successful: " + student.stg + " ID: " + repr(student.ident))
+            "Student in 4 or less semesters successful: " + student.stg_original + " ID: " + repr(student.ident))
 
     # Status 1=Finished, 2=Aborted, 3=Successful, 4=Studying
     if student.finished:
@@ -802,15 +805,14 @@ def create_student_from_entry(data, settings):
     else:
         student.status = 4
 
-    course = Course.get_by_stg_original(student.stg_original)
-
     if data['sperrart1'] == '01' \
-            or course is None or course.ignore \
             or student.start_semester < settings['min_semester']:
         logger.error(
-            "sperrart1 is 01 or course is ignored or start semester too early: %s ID: %s Sperrart: %s Start: %s",
+            "sperrart1 is 01 or start semester too early: %s ID: %s Sperrart: %s Start: %s",
             student.stg_original, student.ident, data['sperrart1'], student.start_semester)
         return None
+
+    student.stg = course.stg
 
     student.age = CalcTools.calculate_age(student.birth_date, student.imm_date)
 

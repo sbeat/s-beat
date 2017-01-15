@@ -184,7 +184,7 @@ def get_date_from_csv(input_date):
 
         return datetime(year, months[m.group(2)], int(m.group(1)))
 
-    m = re.search(r'^(\d\d)\.(\d\d)\.(\d\d\d\d)', input_date)
+    m = re.search(r'^(\d\d?)\.(\d\d?)\.(\d\d\d\d)', input_date)
     if m:
         return datetime(int(m.group(3)), int(m.group(2)), int(m.group(1)))
 
