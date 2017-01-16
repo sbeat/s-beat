@@ -836,7 +836,7 @@ def create_student_from_entry(data, settings):
 
 
 def get_hzbgrp(hzbart):
-    return ImportTools.map_by_definiton('hzbart', hzbart, True, '')
+    return ImportTools.map_by_definiton('hzbart', int(hzbart), True, u'Unbekannt')
 
 
 def get_progress(num, count, start):
