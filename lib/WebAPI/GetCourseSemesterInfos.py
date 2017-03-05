@@ -50,6 +50,11 @@ def handle():
         'sort': None
     }
 
+    settings = DB.Settings.load_dict([
+        'hide_resigned',
+        'always_display_all_courses'
+    ])
+
     db_query = dict()
     db_sort = []
     if len(sort1) == 2 and DB.CourseSemesterInfo.db_is_sortable(sort1[0]):
@@ -73,7 +78,7 @@ def handle():
             return respond({'error': 'invalid_filter', name: name}, 400)
 
     allowed_stgs = UserTools.get_allowed_stgs(g.user)
-    if allowed_stgs:
+    if allowed_stgs and not settings['always_display_all_courses']:
         db_query['stg'] = {'$in': allowed_stgs}
 
     cursor = DB.CourseSemesterInfo.find(db_query, limit=limit, skip=start, sort=db_sort)
@@ -83,7 +88,7 @@ def handle():
     ret['query'] = repr(db_query)
     ret['sort'] = repr(db_sort)
 
-    ret['hide_resigned'] = DB.Settings.load('hide_resigned')
+    ret['hide_resigned'] = settings['hide_resigned']
 
     return respond(ret, 200)
 

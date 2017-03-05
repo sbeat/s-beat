@@ -219,6 +219,13 @@ function SettingsManager(parentDOM) {
 			desc: 'Sollen die Datumsspalte bei Prüfungsleistungsdaten ausgeblendet werden?',
 			defaultVal: true,
 			group: 'Anzeige'
+		},
+		"always_display_all_courses": {
+			type: 'boolean',
+			name: 'Alle Stg für eingeschr. User',
+			desc: 'Sollen alle Studiengänge für eingeschränkte Benutzer angezeigt werden? Studenten von eingeschränkten Studiengangsgruppen bleiben nicht sichtbar.',
+			defaultVal: false,
+			group: 'Anzeige'
 		}
 	};
 
