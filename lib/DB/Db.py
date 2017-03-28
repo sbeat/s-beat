@@ -120,6 +120,9 @@ def get_db_query_by_type(value, data_type):
         parts = value.split(',')
         result = {'$in': [int(i) for i in parts]}
 
+    elif data_type == 'exists':
+        result = {'$exists': True}
+
     elif data_type == 'datetime':
         result = datetime.utcfromtimestamp(value)
 

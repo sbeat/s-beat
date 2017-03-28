@@ -55,6 +55,8 @@ class ExamInfo(DBDocument):
         self.semester_data = {}  # for every semester_id {exams, successful, failed, applied, grades}
         self.form_data = {}  # for every form {exams, successful, failed, applied, grades}
 
+        self.semesters = set()  # semester ids in which the exam was written
+
     def __repr__(self):
         return 'ExamInfo(' + repr(self.__dict__) + ')'
 
@@ -109,6 +111,7 @@ class ExamInfo(DBDocument):
         data = self.__dict__.copy()
         del data['exam_info_id']
         data['_id'] = self.exam_info_id
+        data['semesters'] = list(self.semesters)
         return data
 
     @staticmethod
@@ -120,6 +123,7 @@ class ExamInfo(DBDocument):
         p = ExamInfo()
         p.exam_info_id = son['_id']
         del son['_id']
+        son['semesters'] = set(son['semesters'])
         p.__dict__.update(son)
         return p
 
@@ -169,6 +173,8 @@ class ExamInfo(DBDocument):
             return
 
         ei = cls.get_by_exam(exam)
+
+        ei.semesters.add(exam.semester)
 
         semid = str(exam.semester)
         if semid not in ei.semester_data:

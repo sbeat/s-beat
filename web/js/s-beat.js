@@ -525,7 +525,18 @@ function getFormattedHTML(value, formatting) {
 		ret.appendChild(document.createTextNode(value));
 		return ret;
 	}
-	if (formatting == 'semester') {
+	if (formatting == 'semester' && Array.isArray(value)) {
+		ret = document.createElement('span');
+		var ranges = getSemesterRanges(value).map(function(range){
+			if(Array.isArray(range)) {
+				return getSemesterText(range[0])+' - '+getSemesterText(range[1]);
+			} else {
+				return getSemesterText(range);
+			}
+		});
+		ret.appendChild(document.createTextNode(ranges.join(', ')));
+		return ret;
+	} else if (formatting == 'semester') {
 		value = Math.floor(value);
 		ret = document.createElement('span');
 		ret.className = 'semester ' + (value % 10 == 1 ? 'ss' : 'ws');
@@ -596,6 +607,40 @@ function drawRiskLights(value, setting) {
 	lights.find('.' + color).addClass('active');
 
 	return lights;
+}
+
+function getSemesterRanges(semesters) {
+	if(!semesters || !semesters.length) {
+		return [];
+	}
+	semesters.sort();
+	var last = semesters[0];
+	var lastStart = last;
+	var ranges = [];
+	for(var i=1; i<semesters.length; i++) {
+		var value = semesters[i];
+		var year = Math.floor(value / 10);
+		var semnr = value % 10;
+		var lastYear = Math.floor(last / 10);
+		var lastSemnr = last % 10;
+		if(year === lastYear && semnr === lastSemnr + 1 || year === lastYear+1 && semnr === 1) {
+			last = value;
+			continue;
+		}
+		if(lastStart === last) {
+			ranges.push(last);
+		} else {
+			ranges.push([lastStart, last])
+		}
+		lastStart = value;
+		last = value;
+	}
+	if(lastStart === last) {
+		ranges.push(last);
+	} else {
+		ranges.push([lastStart, last])
+	}
+	return ranges;
 }
 
 function getSemesterText(value) {

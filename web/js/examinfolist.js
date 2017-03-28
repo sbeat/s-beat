@@ -63,7 +63,8 @@ function ExamInfoList(parentDOM) {
 		'semester_data.LAST.failed': {id: 'semester_data.LAST.failed', label: 'Nicht bestanden letztes Semester', title: 'Anzahl nicht bestandene Leistungen im letzten Semester', formatting: 'int',group:'Leistung.Nicht bestanden'},
 		'semester_data.LAST.applied': {id: 'semester_data.LAST.applied', label: 'Status=AN letztes Semester', title: 'Anzahl Leistungen mit dem Status=AN im letzten Semester', formatting: 'int',group:'Leistung.Anmeldungen'},
 		'semester_data.LAST.success_perc': {id: 'semester_data.LAST.success_perc', label: 'Bestanden letztes Semester in %', title: 'Prozentanteil bestandender Leistungen im letzten Semester', formatting: 'percent',group:'Leistung.Bestanden'},
-		'semester_data.LAST.failed_perc': {id: 'semester_data.LAST.failed_perc', label: 'Nicht bestanden letztes Semester in %', title: 'Prozentanteil nicht bestandender Leistungen im letzten Semester', formatting: 'percent',group:'Leistung.Nicht bestanden'}
+		'semester_data.LAST.failed_perc': {id: 'semester_data.LAST.failed_perc', label: 'Nicht bestanden letztes Semester in %', title: 'Prozentanteil nicht bestandender Leistungen im letzten Semester', formatting: 'percent',group:'Leistung.Nicht bestanden'},
+		'semesters': {id: 'semesters', label: 'Semester', title: 'Semester in welchen die Leistung geschrieben wurde', formatting: 'semester', group:'Leistung'}
 
 	};
 	this.columns = this.settings.default.columns;

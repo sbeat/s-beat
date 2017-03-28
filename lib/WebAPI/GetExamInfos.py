@@ -44,6 +44,7 @@ def handle():
         'count_applied': 'int',
         'success_perc': 'float',
         'failed_perc': 'float',
+        'semesters': 'int',
         'semester_data.CURRENT.exams': 'int',
         'semester_data.CURRENT.successful': 'int',
         'semester_data.CURRENT.failed': 'int',
