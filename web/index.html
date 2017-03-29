@@ -38,6 +38,9 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 	<link rel="stylesheet" href="js/nvd3/nv.d3.min.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/docstyle.css">
+	{% if g.web_config['custom_css'] %}
+	<link rel="stylesheet" href="{{ g.web_config['custom_css'] }}">
+	{% endif %}
 	<script src="js/jquery-2.1.1.min.js"></script>
 	<script src="js/jquery-ui.min.js"></script>
 	<script src="js/jquery.fileupload.js"></script>
@@ -72,11 +75,6 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 </head>
 <body data-user-role="{{ g.user_role|e }}" data-user-name="{{ g.username|e }}">
 <div id="website" class="{{ website_class }}">
-	{% if g.license_is_expired %}
-	<div class="toperror">
-		Ihre Lizenz ist abgelaufen. Verlängern Sie diese, um S-BEAT weiterhin nutzen zu dürfen!
-	</div>
-	{% endif %}
 	<section class="header">
 		<div class="logo">
 			<img src="img/sbeat_logo_232x115.png" width="232" height="115"

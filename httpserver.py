@@ -41,6 +41,10 @@ host = config.get('http', 'host')
 debug = True if config.get('http', 'debug') == 'true' else False
 document_root = config.get('http', 'document_root')
 upload_folder = config.get('http', 'upload_folder')
+if config.has_section('web'):
+    web_config = dict(config.items('web'))
+else:
+    web_config = dict()
 
 # check which authentication methods should be used
 authentication_header = True
@@ -73,6 +77,7 @@ def before_request():
     g.has_right = has_right
     g.user = None
     g.username = ''
+    g.web_config = web_config
 
     g.get_setting = get_setting
 
