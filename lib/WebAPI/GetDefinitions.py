@@ -74,6 +74,7 @@ def get_definitions():
         risk_values_allowed_key,
         'generate_risk_group_all',
         'generate_risk_group_stg',
+        'generate_risk_group_degree',
         'main_risk_group',
         'compare_averages',
         'cp_label',
@@ -86,6 +87,7 @@ def get_definitions():
     data['lights'] = settings['lights']
     data['generate_risk_group_all'] = settings['generate_risk_group_all']
     data['generate_risk_group_stg'] = settings['generate_risk_group_stg']
+    data['generate_risk_group_degree'] = settings['generate_risk_group_degree']
     data['main_risk_group'] = settings['main_risk_group']
     data['risk_value_allowed'] = settings[risk_values_allowed_key]
     data['compare_averages'] = settings['compare_averages']

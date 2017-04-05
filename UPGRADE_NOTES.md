@@ -9,6 +9,17 @@ Run the following command to integrate new settings:
     python sbeat.py initial_settings
     
 
+Add new Definition under Administration -> Definitionen:
+
+    Student » Studium
+        Name: Abschluss
+        Query: degree_type
+        Formatierung: String
+        Ignorieren: Ja
+        Bedingungsgenerierung: Ja
+
+Run a data update.
+
 ## Upgrade 1.3 to 1.4
 
 In the `main.cfg` `http` section add:

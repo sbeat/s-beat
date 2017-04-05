@@ -111,6 +111,7 @@ function StudentList(parentDOM) {
 		'ident': {id: 'ident', label: 'Ident', title: 'Identifikationsnummer', formatting: 'str', sortBy: '_id'},
 		'stg': {id: 'stg', label: 'STG', title: 'Studiengangsgruppe', formatting: 'stg'},
 		'stg_original': {id: 'stg_original', label: 'Studiengang', title: 'Studiengang', formatting: 'stg'},
+		'degree_type': {id: 'degree_type', label: 'Abschluss', title: 'Abschluss', formatting: 'str'},
 		'start_semester': {id: 'start_semester', label: 'Start', title: 'Start semester', formatting: 'semester'},
 		'finishstatus': {
 			id: 'finishstatus',
@@ -174,6 +175,12 @@ function StudentList(parentDOM) {
 			id: 'risk_stg.median_scaled',
 			label: 'Studiengangsrisiko in %',
 			title: 'Skalierte Misserfolgswahrscheinlichkeit im Studiengang in %',
+			formatting: 'percent'
+		},
+		'risk_degree.median_scaled': {
+			id: 'risk_degree.median_scaled',
+			label: 'Risiko im Abschluss in %',
+			title: 'Skalierte Misserfolgswahrscheinlichkeit im Abschluss in %',
 			formatting: 'percent'
 		},
 		'exam_count': {
@@ -822,14 +829,25 @@ StudentList.prototype.initDefinitions = function (definitions) {
 		self.definitions.restricted.push('risk_stg.median_scaled');
 		self.removeColumn('risk_stg.median_scaled');
 
+		self.definitions.restricted.push('risk_degree.median_scaled');
+		self.removeColumn('risk_degree.median_scaled');
+
 	} else {
 		this.filter.addAttributeFilter('risk.median_scaled', 'Risiko in %', 'Vorhersage', 'percent', 0);
 		if (self.definitions['generate_risk_group_all'] && self.definitions['generate_risk_group_stg']) {
 			this.filter.addAttributeFilter('risk_all.median_scaled', 'Gesamtrisiko in %', 'Vorhersage', 'percent', 0);
-			this.filter.addAttributeFilter('risk_stg.median_scaled', 'Studiengangsrisiko in %', 'Vorhersage', 'percent', 0);
 		} else {
 			self.removeColumn('risk_all.median_scaled');
+		}
+		if (self.definitions['generate_risk_group_stg']) {
+			this.filter.addAttributeFilter('risk_stg.median_scaled', 'Studiengangsrisiko in %', 'Vorhersage', 'percent', 0);
+		} else {
 			self.removeColumn('risk_stg.median_scaled');
+		}
+		if (self.definitions['generate_risk_group_degree']) {
+			this.filter.addAttributeFilter('risk_degree.median_scaled', 'Risiko im Abschluss in %', 'Vorhersage', 'percent', 0);
+		} else {
+			self.removeColumn('risk_degree.median_scaled');
 		}
 	}
 
@@ -887,6 +905,13 @@ StudentList.prototype.initDefinitions = function (definitions) {
 	}
 	if (self.definitions['generate_risk_group_stg'] && self.definitions['main_risk_group'] != 'stg') {
 		self.filter.addValueFilter('risk_stg', 'Studiengangsrisikobereich Ampel', 'Vorhersage', 'risk', {
+			'red': 'Rot',
+			'yellow': 'Gelb',
+			'green': 'Grün'
+		}, null);
+	}
+	if (self.definitions['generate_risk_group_degree'] && self.definitions['main_risk_group'] != 'degree') {
+		self.filter.addValueFilter('risk_degree', 'Risikobereich im Abschluss Ampel', 'Vorhersage', 'risk', {
 			'red': 'Rot',
 			'yellow': 'Gelb',
 			'green': 'Grün'

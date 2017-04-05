@@ -126,12 +126,20 @@ function SettingsManager(parentDOM) {
 			group: 'Risikoberechnung',
 			defaultVal: false
 		},
+		"generate_risk_group_degree": {
+			type: 'boolean',
+			name: 'Risiko nach Abschluss berechnen',
+			desc: 'Es wird ein Risikowert für jeden Studenten in seiner Abschlussgruppe berechnet. Dies kann ' +
+			'den Updatevorgang erheblich verlängern.',
+			group: 'Risikoberechnung',
+			defaultVal: false
+		},
 		"main_risk_group": {
 			type: 'string',
 			name: 'Hauptrisikowert',
 			desc: 'Der Risikowert, welcher als Risiko in den Studentendaten verwendet wird.',
 			group: 'Risikoberechnung',
-			selectItems: ['all', 'stg'],
+			selectItems: ['all', 'stg', 'degree'],
 			defaultVal: 'all'
 		},
 		"min_stg_students": {

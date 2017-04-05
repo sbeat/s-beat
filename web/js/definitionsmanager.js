@@ -339,7 +339,7 @@ DefinitionsManager.prototype.openQueryDialog = function (query_id, query) {
 		form.ignore.setValue(query.ignore);
 	}
 
-	form.auto_generate = drawFormLine('checkbox', 'Bedingungsenerierung', 'Bedingungen werden automatisch generiert');
+	form.auto_generate = drawFormLine('checkbox', 'Bedingungsgenerierung', 'Bedingungen werden automatisch generiert');
 	dialogBox.append(form.auto_generate);
 	if (query) {
 		form.auto_generate.setValue(query.auto_generate);

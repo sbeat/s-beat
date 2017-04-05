@@ -262,16 +262,6 @@
                 "order": 0
             }
         },
-        "232614459968216": {
-            "query_id": "28722832388109",
-            "condition": {
-                "negate": false,
-                "compare_value": 30,
-                "name": null,
-                "comparator": "lower",
-                "order": 0
-            }
-        },
         "164230372323082": {
             "query_id": "239731493788010",
             "condition": {
@@ -279,6 +269,16 @@
                 "compare_value": 2,
                 "name": null,
                 "comparator": "greater",
+                "order": 0
+            }
+        },
+        "97965078322510": {
+            "query_id": "28722832388109",
+            "condition": {
+                "negate": false,
+                "compare_value": 60,
+                "name": null,
+                "comparator": "lower",
                 "order": 0
             }
         },
@@ -780,6 +780,16 @@
                 "compare_value": 9,
                 "name": "sem_9",
                 "comparator": "greater_equal",
+                "order": 0
+            }
+        },
+        "232614459968216": {
+            "query_id": "28722832388109",
+            "condition": {
+                "negate": false,
+                "compare_value": 30,
+                "name": null,
+                "comparator": "lower",
                 "order": 0
             }
         },
@@ -1382,16 +1392,6 @@
                 "order": 0
             }
         },
-        "97965078322510": {
-            "query_id": "28722832388109",
-            "condition": {
-                "negate": false,
-                "compare_value": 60,
-                "name": null,
-                "comparator": "lower",
-                "order": 0
-            }
-        },
         "87567761051688": {
             "query_id": "147082045167704",
             "condition": {
@@ -1649,6 +1649,18 @@
             "q": "semester_data.sem_4.count_KL",
             "_id": 86644067394598
         },
+        "258561660837746": {
+            "category": "Student.Studium",
+            "auto_generate": true,
+            "name": "Abschluss",
+            "success": false,
+            "query_type": "dict",
+            "ignore": true,
+            "depends": null,
+            "formatting": "str",
+            "q": "degree_type",
+            "_id": 258561660837746
+        },
         "61190239120118": {
             "category": "Student.Studium.{cp_label}",
             "auto_generate": false,
@@ -1875,19 +1887,17 @@
             "q": "study_time_real",
             "_id": 16306424766052
         },
-        "137876325173946": {
-            "category": "Student.Studium.Prüfungsleistungen.Aufgeschoben",
+        "256791217337391": {
+            "category": "Student.Studium.Note",
             "auto_generate": false,
-            "name": "Aufgeschoben im 2. Semester",
+            "name": "Note aktuell inkl. NB, EN",
             "success": false,
             "query_type": "dict",
             "ignore": false,
-            "depends": [
-                "92014879646133"
-            ],
-            "formatting": "int",
-            "q": "semester_data.sem_2.delayed",
-            "_id": 137876325173946
+            "depends": null,
+            "formatting": "grade",
+            "q": "grade_nb_current",
+            "_id": 256791217337391
         },
         "239191696477107": {
             "category": "Student.Studium.Note",
@@ -1950,6 +1960,20 @@
             "formatting": "int",
             "q": "count",
             "_id": 93821011273590
+        },
+        "137876325173946": {
+            "category": "Student.Studium.Prüfungsleistungen.Aufgeschoben",
+            "auto_generate": false,
+            "name": "Aufgeschoben im 2. Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": false,
+            "depends": [
+                "92014879646133"
+            ],
+            "formatting": "int",
+            "q": "semester_data.sem_2.delayed",
+            "_id": 137876325173946
         },
         "91169225556964": {
             "category": "Student.Studium.Prüfungsleistungen.Aufgeschoben",
@@ -2078,18 +2102,6 @@
             "formatting": "int",
             "q": "semester_data.sem_1.failed",
             "_id": 106754935518026
-        },
-        "256791217337391": {
-            "category": "Student.Studium.Note",
-            "auto_generate": false,
-            "name": "Note aktuell inkl. NB, EN",
-            "success": false,
-            "query_type": "dict",
-            "ignore": false,
-            "depends": null,
-            "formatting": "grade",
-            "q": "grade_nb_current",
-            "_id": 256791217337391
         },
         "164774754277897": {
             "category": "Student.Studium.Prüfungsleistungen",

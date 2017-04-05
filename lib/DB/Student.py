@@ -69,6 +69,7 @@ class Student(DBDocument):
         self.hzb_date = None  # entrance qualification date
         self.stg = None  # Short of the degree course (already mapped!)
         self.stg_original = None  # Original unmapped course
+        self.degree_type = None  # type of degree: Diplom,Bachelor,Master
         self.imm_date = None  # Enrollment date
         self.exm_date = None  # Disenrollment date
         self.finished = False  # Whether the study is finished
@@ -122,6 +123,7 @@ class Student(DBDocument):
         self.risk = None  # dictionary with probability for success and fail
         self.risk_all = None
         self.risk_stg = None
+        self.risk_degree = None
 
     def get_student_in_semester(self, sem_nr):
         """
@@ -482,6 +484,7 @@ class Student(DBDocument):
             'use_preferred_paths',
             'generate_risk_group_all',
             'generate_risk_group_stg',
+            'generate_risk_group_degree',
             'main_risk_group'
         ])
 
@@ -516,6 +519,12 @@ class Student(DBDocument):
                 risk = student.calculate_risk(all_paths[student.stg], settings['use_preferred_paths'])
                 name = 'risk_stg'
                 set_risk_on_student(name, student.stg, student, risk, min_max)
+                names.add(name)
+
+            if settings['generate_risk_group_degree'] and student.degree_type in all_paths:
+                risk = student.calculate_risk(all_paths[student.degree_type], settings['use_preferred_paths'])
+                name = 'risk_degree'
+                set_risk_on_student(name, student.degree_type, student, risk, min_max)
                 names.add(name)
 
             student.db_update(names)
@@ -762,6 +771,7 @@ def create_student_from_entry(data, settings):
         return None
 
     student.stg = course.stg
+    student.degree_type = course.degree_type
 
     student.imm_date = get_date_from_csv(data['immdat'])
     student.exm_date = get_date_from_csv(data['exmdat'])

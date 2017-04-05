@@ -293,8 +293,6 @@ def handle():
 
     settings = DB.Settings.load_dict([
         'lights',
-        'generate_risk_group_all',
-        'generate_risk_group_stg',
         'main_risk_group',
         'hide_finished_ident_data',
         'hide_finished_after_days'

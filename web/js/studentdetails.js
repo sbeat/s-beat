@@ -16,12 +16,20 @@ function StudentDetails(parentDOM) {
 			id: 'risk_stg.median_scaled',
 			formatting: 'percent'
 		},
+		'risk_degree.median_scaled': {
+			id: 'risk_degree.median_scaled',
+			formatting: 'percent'
+		},
 		'risk_all.median': {
 			id: 'risk_all.median',
 			formatting: 'percent'
 		},
 		'risk_stg.median': {
 			id: 'risk_stg.median',
+			formatting: 'percent'
+		},
+		'risk_degree.median': {
+			id: 'risk_degree.median',
 			formatting: 'percent'
 		}
 	};
@@ -125,10 +133,12 @@ StudentDetails.prototype.drawValue = function (field, el) {
 		}
 
 	} else if (field == 'tooltip') {
+		var contentSelector = el.attr('data-tooltip-content');
+		var contentElement = contentSelector?$(contentSelector):el.find('div');
 		var hoverelement = el.find('a').first();
 		hoverelement.attr('title', '');
 		hoverelement.tooltip({
-			content: el.find('div').html(),
+			content: contentElement.html(),
 			open: function () {
 				console.log('open');
 			}
@@ -148,6 +158,10 @@ StudentDetails.prototype.drawValue = function (field, el) {
 		if (!self.definitions.risk_value_allowed || !self.student.risk_stg) {
 			el.hide();
 		}
+	} else if (field == 'display_risk_degree_value') {
+		if (!self.definitions.risk_value_allowed || !self.student.risk_degree) {
+			el.hide();
+		}
 	} else if (field == 'display_risk_all') {
 		if (!self.student.risk_all) {
 			el.hide();
@@ -156,12 +170,20 @@ StudentDetails.prototype.drawValue = function (field, el) {
 		if (!self.student.risk_stg) {
 			el.hide();
 		}
+	} else if (field == 'display_risk_degree') {
+		if (!self.student.risk_degree) {
+			el.hide();
+		}
 	} else if (field == 'display_risk_median_all') {
 		if (!self.student.risk_all || self.definitions.hide_median_risk) {
 			el.hide();
 		}
 	} else if (field == 'display_risk_median_stg') {
 		if (!self.student.risk_stg || self.definitions.hide_median_risk) {
+			el.hide();
+		}
+	} else if (field == 'display_risk_median_degree') {
+		if (!self.student.risk_degree || self.definitions.hide_median_risk) {
 			el.hide();
 		}
 	} else if (field == 'risk_all') {
@@ -177,6 +199,14 @@ StudentDetails.prototype.drawValue = function (field, el) {
 			el.text('-');
 		} else {
 			value = self.student.risk_stg.median_scaled;
+			el.append(drawRiskLights(value, self.definitions.lights));
+		}
+
+	} else if (field == 'risk_degree') {
+		if (!self.student.risk_degree || self.student.risk_degree.median === null) {
+			el.text('-');
+		} else {
+			value = self.student.risk_degree.median_scaled;
 			el.append(drawRiskLights(value, self.definitions.lights));
 		}
 

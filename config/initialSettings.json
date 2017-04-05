@@ -12,6 +12,7 @@
 	"use_preferred_paths": true,
 	"generate_risk_group_all": true,
 	"generate_risk_group_stg": false,
+	"generate_risk_group_degree": false,
 	"main_risk_group": "all",
 	"min_stg_students": 200,
 	"risk_ignore_recognized_exams": false,

@@ -368,6 +368,9 @@ class Path(DBDocument):
             elif step['type'] == 'stg':
                 pg.path_group = step['ident']
                 pg.student_query = {'finished': True, 'ignore': False, 'stg': step['ident']}
+            elif step['type'] == 'degree':
+                pg.path_group = step['ident']
+                pg.student_query = {'finished': True, 'ignore': False, 'degree_type': step['ident']}
             pg.min_support = min_support
             pg.min_confidence = min_confidence
             pg.min_students = min_students
@@ -415,6 +418,7 @@ class Path(DBDocument):
         settings = Settings.load_dict([
             'generate_risk_group_all',
             'generate_risk_group_stg',
+            'generate_risk_group_degree',
             'min_stg_students'
         ])
 
@@ -434,6 +438,17 @@ class Path(DBDocument):
                 processes.append({
                     'ident': stg,
                     'type': 'stg'
+                })
+
+        if settings['generate_risk_group_degree']:
+            degree_list = Student.get_grouped_values('degree_type', find={'finished': True, 'ignore': False})
+            for sd in degree_list:
+                if sd['count'] < settings['min_stg_students']:
+                    continue
+                degree = sd['_id']
+                processes.append({
+                    'ident': degree,
+                    'type': 'degree'
                 })
 
         return processes

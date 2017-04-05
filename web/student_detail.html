@@ -210,6 +210,12 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 				<td></td>
 			</tr>
 
+			<tr data-student="display_risk_median_degree">
+				<td>Unskalierter Risikowert im Abschluss</td>
+				<td data-student="risk_degree.median"></td>
+				<td></td>
+			</tr>
+
 			<tr data-student="display_risk_all">
 				<td>Gesamtrisiko</td>
 				<td data-student="risk_all"></td>
@@ -233,7 +239,7 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 				<td data-student="tooltip">
 					<a class="infobtn"></a>
 
-					<div style="display: none">
+					<div style="display: none" id="student_risk_tooltip">
 						Wichtiger Hinweis: Ein unbegründet hoher Wert der skalierten Misserfolgswahrscheinlichkeit kann
 						folgende
 						Ursachen haben:<br>
@@ -275,31 +281,36 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 			<tr data-student="display_risk_stg_value">
 				<td>Skalierte Misserfolgswahrscheinlichkeit im Studiengang</td>
 				<td data-student="risk_stg.median_scaled"></td>
+				<td data-student="tooltip" data-tooltip-content="#student_risk_tooltip">
+					<a class="infobtn"></a>
+				</td>
+			</tr>
+
+			<tr data-student="display_risk_degree">
+				<td>Risiko im Abschluss</td>
+				<td data-student="risk_degree"></td>
 				<td data-student="tooltip">
 					<a class="infobtn"></a>
 
 					<div style="display: none">
-						Wichtiger Hinweis: Ein unbegründet hoher Wert der skalierten Misserfolgswahrscheinlichkeit kann
-						folgende
-						Ursachen haben:<br>
-						<ol type="a" class="spacedlist">
-							<li>
-								Studierende des ersten und zweiten Semesters konnten aufgrund des noch wenig
-								fortgeschrittenen Studiums bisher noch nicht ausreichend
-								<span data-config="cp_label"></span>
-								erwerben.
-							</li>
-							<li>
-								Der/die Studierende gehört zur Gruppe der Erstsemester und es liegen noch keine
-								Benotungen
-								für abgelegte Prüfungsleistungen im aktuellen Semester vor.
-							</li>
-						</ol>
+						Die farbliche Ausprägung der Ampel ist auf die folgenden prozentualen
+						Misserfolgswahrscheinlichkeiten zurückzuführen:
+						<ul>
+							<li>Grün: ab <span data-lights="lights_0"></span></li>
+							<li>Gelb: ab <span data-lights="lights_1"></span></li>
+							<li>Rot: ab <span data-lights="lights_2"></span></li>
+						</ul>
 					</div>
 
 				</td>
 			</tr>
-
+			<tr data-student="display_risk_degree_value">
+				<td>Skalierte Misserfolgswahrscheinlichkeit im Abschluss</td>
+				<td data-student="risk_degree.median_scaled"></td>
+				<td data-student="tooltip" data-tooltip-content="#student_risk_tooltip">
+					<a class="infobtn"></a>
+				</td>
+			</tr>
 
 			<!--
 			<tr>
