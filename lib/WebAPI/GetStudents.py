@@ -199,6 +199,7 @@ def handle():
         'risk.median_scaled': 'float',
         'risk_all.median_scaled': 'float',
         'risk_stg.median_scaled': 'float',
+        'risk_degree.median_scaled': 'float',
         'risk.q25': 'float',
         'risk.q75': 'float'
     }
@@ -210,6 +211,7 @@ def handle():
         'risk.median_scaled',
         'risk_all.median_scaled',
         'risk_stg.median_scaled',
+        'risk_degree.median_scaled',
         'risk.mean',
         'risk.q25',
         'risk.q75',
@@ -297,7 +299,7 @@ def handle():
         'hide_finished_ident_data',
         'hide_finished_after_days'
     ])
-    for name in ['risk', 'risk_all', 'risk_stg']:
+    for name in ['risk', 'risk_all', 'risk_stg', 'risk_degree']:
         if name in request.args:
             if request.args[name] == 'green':
                 db_query[name + '.median_scaled'] = {'$lt': settings['lights'][1]}

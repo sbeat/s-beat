@@ -542,6 +542,8 @@ class Student(DBDocument):
                 name = mm['name']
                 if name == 'risk_stg' and student.stg != group:
                     continue
+                if name == 'risk_degree' and student.degree_type != group:
+                    continue
                 if not hasattr(student, name):
                     continue
                 r = getattr(student, name)
