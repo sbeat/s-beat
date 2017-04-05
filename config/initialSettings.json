@@ -33,5 +33,6 @@
 	"update_manual_apply": false,
 	"import_encoding": "windows-1252",
 	"hide_exam_date": true,
-	"always_display_all_courses": false
+	"always_display_all_courses": false,
+	"hide_median_risk": true
 }

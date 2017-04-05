@@ -77,7 +77,8 @@ def get_definitions():
         'main_risk_group',
         'compare_averages',
         'cp_label',
-        'hide_resigned'
+        'hide_resigned',
+        'hide_median_risk'
     ])
 
     data['queries'] = get_queries(settings)
@@ -89,6 +90,7 @@ def get_definitions():
     data['risk_value_allowed'] = settings[risk_values_allowed_key]
     data['compare_averages'] = settings['compare_averages']
     data['hide_resigned'] = settings['hide_resigned']
+    data['hide_median_risk'] = settings['hide_median_risk']
 
     return data
 

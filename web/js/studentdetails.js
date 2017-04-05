@@ -10,14 +10,18 @@ function StudentDetails(parentDOM) {
 	this.fieldData = {
 		'risk_all.median_scaled': {
 			id: 'risk_all.median_scaled',
-			label: 'Misserfolg',
-			title: 'Misserfolgswahrscheinlichkeit',
 			formatting: 'percent'
 		},
 		'risk_stg.median_scaled': {
 			id: 'risk_stg.median_scaled',
-			label: 'Misserfolg',
-			title: 'Misserfolgswahrscheinlichkeit',
+			formatting: 'percent'
+		},
+		'risk_all.median': {
+			id: 'risk_all.median',
+			formatting: 'percent'
+		},
+		'risk_stg.median': {
+			id: 'risk_stg.median',
 			formatting: 'percent'
 		}
 	};
@@ -62,7 +66,6 @@ StudentDetails.prototype.drawValue = function (field, el) {
 	var value;
 	var query = self.findQuery(field);
 	var fieldInfo = this.fieldData[field];
-	var role = getUserRole();
 	if (self.definitions.restricted.indexOf(field) != -1) {
 		el.text('***');
 		return;
@@ -151,6 +154,14 @@ StudentDetails.prototype.drawValue = function (field, el) {
 		}
 	} else if (field == 'display_risk_stg') {
 		if (!self.student.risk_stg) {
+			el.hide();
+		}
+	} else if (field == 'display_risk_median_all') {
+		if (!self.student.risk_all || self.definitions.hide_median_risk) {
+			el.hide();
+		}
+	} else if (field == 'display_risk_median_stg') {
+		if (!self.student.risk_stg || self.definitions.hide_median_risk) {
 			el.hide();
 		}
 	} else if (field == 'risk_all') {

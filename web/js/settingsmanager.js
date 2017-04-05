@@ -226,6 +226,13 @@ function SettingsManager(parentDOM) {
 			desc: 'Sollen alle Studiengänge für eingeschränkte Benutzer angezeigt werden? Studenten von eingeschränkten Studiengangsgruppen bleiben nicht sichtbar.',
 			defaultVal: false,
 			group: 'Anzeige'
+		},
+		"hide_median_risk": {
+			type: 'boolean',
+			name: 'Median Risikowert ausblenden',
+			desc: 'Soll der unskalierte median Risikowert für einen Studierenden ausgeblendet werden?',
+			defaultVal: false,
+			group: 'Anzeige'
 		}
 	};
 
