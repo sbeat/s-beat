@@ -35,7 +35,7 @@ This project contains third party code that is provided under the following lice
 
 Files:
 
-* web/js/jquery-2.1.1.min.js
+* web/js/vendor/jquery-2.1.1.min.js
 
 Source: https://github.com/jquery/jquery
 
@@ -81,7 +81,7 @@ Source: https://github.com/jquery/jquery
 
 Files:
 
-* web/js/jquery-ui.min.js
+* web/js/vendor/jquery-ui.min.js
 * web/css/sbeat-theme/*
 
 Source: https://github.com/jquery/jquery-ui
@@ -136,7 +136,7 @@ Source: https://github.com/jquery/jquery-ui
 
 Files:
 
-* web/js/jquery.fileupload.js
+* web/js/vendor/jquery.fileupload.js
 
 Source: https://github.com/blueimp/jQuery-File-Upload
 
