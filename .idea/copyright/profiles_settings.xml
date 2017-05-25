@@ -1,7 +1,17 @@
 <component name="CopyrightManager">
-  <settings default="GPLv3 S-BEAT">
+  <settings>
     <module2copyright>
+      <element module="web" copyright="GPLv3 S-BEAT short" />
       <element module="Project Files" copyright="GPLv3 S-BEAT" />
     </module2copyright>
+    <LanguageOptions name="HTML">
+      <option name="fileTypeOverride" value="3" />
+      <option name="addBlankAfter" value="false" />
+      <option name="prefixLines" value="false" />
+    </LanguageOptions>
+    <LanguageOptions name="JavaScript">
+      <option name="fileTypeOverride" value="3" />
+      <option name="block" value="false" />
+    </LanguageOptions>
   </settings>
 </component>
