@@ -1,0 +1,179 @@
+<!--
+  Copyright (c) 2017 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+  see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+  -->
+{% set active_page = "courses" %}
+{% extends "index.html" %}
+{% block title %}Kohorte {{ request.args.get('stg',0) }} {{ request.args.get('sem',0) }}{% endblock %}
+{% block content %}
+<div class="layout" data-load="CourseSemesterDetails" data-stg="{{ request.args.get('stg') }}"
+	 data-sem="{{ request.args.get('sem') }}">
+
+	<h1>
+		Kohorte: <a href="coursedetails.html?stg={{ request.args.get('stg') }}">{{ request.args.get('stg') }}</a> -
+		<span data-course="name"></span> -
+		<span data-detail="semester"></span>
+	</h1>
+
+	<div class="col2_50">
+		<article>
+			<h2>Allgemein</h2>
+			<table class="tbl detailTable">
+				<tr>
+					<td>Studenten</td>
+					<td data-detail="students.count"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Weiblich</td>
+					<td>
+						<span data-detail="students.female"></span>
+						(<span data-detail="students.female_perc"></span>)
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Männlich</td>
+					<td>
+						<span data-detail="students.male"></span>
+						(<span data-detail="students.male_perc"></span>)
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Studierend</td>
+					<td data-detail="students.studying"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Erfolgreich</td>
+					<td>
+						<span data-detail="students.successful"></span>
+						(<span data-detail="students.success_perc"></span>)
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Abgebrochen</td>
+					<td>
+						<span data-detail="students.failed"></span>
+						(<span data-detail="students.failed_perc"></span>)
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Alter</td>
+					<td>
+						<span data-detail="age_data.min"></span> bis
+						<span data-detail="age_data.max"></span>
+						(Ø <span data-detail="age_data.mean"></span>)
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>HZB Note</td>
+					<td>
+						<span data-detail="hzb_grade_data.min"></span> bis
+						<span data-detail="hzb_grade_data.max"></span>
+						(Ø <span data-detail="hzb_grade_data.mean"></span>)
+					</td>
+					<td></td>
+				</tr>
+			</table>
+		</article>
+	</div>
+
+	<div class="col2_50">
+
+		<article>
+			<h2>Prüfungsleistungen</h2>
+			<table class="tbl detailTable">
+				<tr>
+					<td>Prüfungsleistungen</td>
+					<td data-detail="exams.count"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Bestanden</td>
+					<td>
+						<span data-detail="exams.successful"></span>
+						(<span data-detail="exams.success_perc"></span>)
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Nicht bestanden</td>
+					<td>
+						<span data-detail="exams.failed"></span>
+						(<span data-detail="exams.failed_perc"></span>)
+					</td>
+					<td></td>
+				</tr>
+				<tr data-detail="hide_resigned">
+					<td>Rücktritte</td>
+					<td>
+						<span data-detail="exams.resigned"></span>
+					</td>
+					<td></td>
+				</tr>
+			</table>
+		</article>
+
+	</div>
+	<div class="clear"></div>
+
+	<article>
+		<h2>Studierte Semester der Kohorte</h2>
+
+		<table class="tbl">
+			<thead>
+			<tr>
+				<th>
+					<div><span>Semester</span></div>
+				</th>
+				<th>
+					<div><span>Anzahl Studenten mit Leistungen</span></div>
+				</th>
+				<th>
+					<div><span>Anzahl Leistungen</span></div>
+				</th>
+				<th>
+					<div><span>Ø Anzahl Leistungen pro Student</span></div>
+				</th>
+				<th>
+					<div><span>Ø <i data-config="cp_label"></i></span></div>
+				</th>
+				<th>
+					<div><span>% Studenten mit nicht bestandenen Leistungen</span></div>
+				</th>
+				<th>
+					<div><span>% Nicht bestandener Leistungen</span></div>
+				</th>
+				<th data-course="hide_resigned">
+					<div><span>Rücktritte in %</span></div>
+				</th>
+				<th>
+					<div><span>Ø Note</span></div>
+				</th>
+
+			</tr>
+			</thead>
+			<tbody data-detail="semester_data" data-columns="
+				semester:int,
+				students.count:int,
+				exams.count:int,
+				exams.mean:int,
+				bonus_data.mean:float,
+				students.failed_perc:percent,
+				exams.failed_perc:percent,
+				exams.resign_perc:percent,
+				grade_data.mean:grade
+			">
+			</tbody>
+		</table>
+
+
+	</article>
+
+</div>
+{% endblock %}

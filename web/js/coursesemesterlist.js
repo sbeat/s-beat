@@ -314,14 +314,18 @@ CourseSemesterList.prototype.drawCourse = function (course) {
 };
 CourseSemesterList.prototype.drawCellValue = function (course, col, td) {
 	var self = this;
-	var value;
+	var value = getByPath(col.id, course);
 
 	if (col.id == 'risk_data.mean') {
-		value = getByPath(col.id, course);
 		td.append(getFormattedHTML(value ? value / 100 : null, col.formatting));
 
+	} else if (col.id == 'semester_id') {
+		$(document.createElement('a'))
+			.attr('href', 'coursesemesterdetails.html?stg='+self.courseStg+'&sem='+course.semester_id)
+			.append(getFormattedHTML(value, col.formatting))
+			.appendTo(td);
+
 	} else {
-		value = getByPath(col.id, course);
 		td.append(getFormattedHTML(value, col.formatting));
 	}
 
