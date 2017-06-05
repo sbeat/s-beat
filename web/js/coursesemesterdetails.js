@@ -30,6 +30,8 @@ function CourseSemesterDetails(parentDOM) {
 
 	this.coursedetails = null;
 
+	this.semTable = null;
+
 	CourseSemesterDetails.prototype.init.call(this);
 }
 /**
@@ -64,8 +66,8 @@ CourseSemesterDetails.prototype.drawValue = function (field, el) {
 	var self = this;
 	var fieldInfo = this.fieldData[field];
 
-	if (field == 'semester_data') {
-		self.drawSemesterDataTable(el);
+	if (field == 'semester_table') {
+		self.createSemesterDataTable(el);
 
 	} else if (field == 'exam_perc_resigned' && self.data && self.data.hide_resigned) {
 		el.remove();
@@ -91,49 +93,52 @@ CourseSemesterDetails.prototype.drawValue = function (field, el) {
 
 };
 
-CourseSemesterDetails.prototype.drawSemesterDataTable = function (el) {
+CourseSemesterDetails.prototype.createSemesterDataTable = function (el) {
 	var self = this;
 
-	function addCol(tr, value, format) {
-		var td = tr.appendChild(document.createElement('td'));
-		td.appendChild(getFormattedHTML(value, format));
+	this.semTable = new DetailsTable(el, 'coursesemdetailsemesters_');
+	this.semTable.defineColumn('semester', 'Semester', null, 'int');
+	this.semTable.defineColumn('students.count', 'Anzahl Studenten mit Leistungen', null, 'int');
+	this.semTable.defineColumn('exams.count', 'Anzahl Leistungen', null, 'int');
+	this.semTable.defineColumn('exams.mean', 'Ø Anzahl Leistungen pro Student', null, 'float');
+	this.semTable.defineColumn('exams.successful', 'Bestandene Leistungen', null, 'int');
+	this.semTable.defineColumn('exams.failed', 'Nicht Bestandene Leistungen', null, 'int');
+	this.semTable.defineColumn('exams.failed_perc', '% Nicht bestandener Leistungen', null, 'percent');
+	this.semTable.defineColumn('exams.min', 'Minimale Anzahl Leistungen', null, 'int');
+	this.semTable.defineColumn('exams.max', 'Maximale Anzahl Leistungen', null, 'int');
+	this.semTable.defineColumn('bonus_data.mean', 'Ø '+CONFIG.cp_label, null, 'float');
+	this.semTable.defineColumn('bonus_total_data.mean', 'Ø '+CONFIG.cp_label+' Total', null, 'float');
+	this.semTable.defineColumn('bonus_total_data.min', 'Minimale '+CONFIG.cp_label+' Total', null, 'int');
+	this.semTable.defineColumn('bonus_total_data.max', 'Maximale '+CONFIG.cp_label+' Total', null, 'int');
+	this.semTable.defineColumn('students.failed_perc', '% Studenten mit nicht bestandenen Leistungen', null, 'percent');
+	if (self.data && self.data.hide_resigned) {
+		this.semTable.defineColumn('exams.resigned', 'Rücktritte', null, 'int');
+		this.semTable.defineColumn('exams.resign_perc', 'Rücktritte in %', null, 'percent');
 	}
+	this.semTable.defineColumn('grade_data.mean', 'Ø Note', null, 'grade');
 
-	var pos;
-	var columns = (el.attr('data-columns') || '').split(',').map(function (v) {
-		return v.trim();
-	});
-	if (this.data && this.data.hide_resigned) {
-		if ((pos = columns.indexOf('exam_perc_resigned:percent')) != -1)
-			columns.splice(pos, 1);
-		if ((pos = columns.indexOf('exam_count_resigned:int')) != -1)
-			columns.splice(pos, 1);
-	}
-	console.log('columns', columns);
+	this.semTable.settings['default'].columns = [
+		'semester', 'students.count', 'exams.count', 'exams.mean', 'bonus_data.mean', 'students.failed_perc',
+		'exams.failed_perc', 'grade_data.mean'
+	];
+	this.semTable.settings['default'].displayPagination = true;
+	this.semTable.settings['default'].sort1 = 'semester,1';
+	this.semTable.pagination.displayStats = false;
+	this.semTable.clientSort = true;
+
+	this.semTable.list = [];
 
 	var semesters = Object.keys(this.dataSem.semester_data);
 
 	for (var i = 0; i < semesters.length; i++) {
 		var semNr = 'sem_' + (i + 1);
 		var d = this.dataSem.semester_data[semNr];
-
-		var tr = document.createElement('tr');
-		for (var j = 0; j < columns.length; j++) {
-			var col = columns[j].split(':');
-			var format = col[1].trim();
-			col = col[0].trim();
-			if (col == 'semester') {
-				addCol(tr, (i + 1), format);
-			} else {
-				addCol(tr, getByPath(col, d), format);
-			}
-		}
-
-		el.append(tr);
-
+		d.semester = (i+1);
+		this.semTable.list.push(d);
 	}
 
-	adjustTableHeaders(el.parents('table'));
+	this.semTable.sortTable();
+	this.semTable.init();
 
 };
 

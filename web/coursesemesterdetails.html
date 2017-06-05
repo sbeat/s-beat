@@ -130,53 +130,7 @@
 	<article>
 		<h2>Studierte Semester der Kohorte</h2>
 
-		<table class="tbl">
-			<thead>
-			<tr>
-				<th>
-					<div><span>Semester</span></div>
-				</th>
-				<th>
-					<div><span>Anzahl Studenten mit Leistungen</span></div>
-				</th>
-				<th>
-					<div><span>Anzahl Leistungen</span></div>
-				</th>
-				<th>
-					<div><span>Ø Anzahl Leistungen pro Student</span></div>
-				</th>
-				<th>
-					<div><span>Ø <i data-config="cp_label"></i></span></div>
-				</th>
-				<th>
-					<div><span>% Studenten mit nicht bestandenen Leistungen</span></div>
-				</th>
-				<th>
-					<div><span>% Nicht bestandener Leistungen</span></div>
-				</th>
-				<th data-course="hide_resigned">
-					<div><span>Rücktritte in %</span></div>
-				</th>
-				<th>
-					<div><span>Ø Note</span></div>
-				</th>
-
-			</tr>
-			</thead>
-			<tbody data-detail="semester_data" data-columns="
-				semester:int,
-				students.count:int,
-				exams.count:int,
-				exams.mean:int,
-				bonus_data.mean:float,
-				students.failed_perc:percent,
-				exams.failed_perc:percent,
-				exams.resign_perc:percent,
-				grade_data.mean:grade
-			">
-			</tbody>
-		</table>
-
+		<div data-detail="semester_table"></div>
 
 	</article>
 
