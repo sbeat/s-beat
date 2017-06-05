@@ -6,6 +6,11 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 {% extends "index.html" %}
 {% block title %}Dokumentation{% endblock %}
 {% set website_class = "" %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="css/docstyle.css">
+<script src="js/docindex.js"></script>
+{% endblock %}
 {% block side_nav %}
 <a href="docs_extended.html?page=01_introduction" class="{{ 'active' if request.args.page=='01_introduction' }}">Einführung</a>
 <a href="docs_extended.html?page=02_contact" class="{{ 'active' if request.args.page=='02_contact' }}">Ansprechpartner</a>

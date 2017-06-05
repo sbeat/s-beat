@@ -5,6 +5,10 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 {% set active_page = "courses" %}
 {% extends "index.html" %}
 {% block title %}Studiengänge{% endblock %}
+{% block head %}
+{{ super() }}
+<script src="js/courseslist.js"></script>
+{% endblock %}
 {% block content %}
 <div class="layout">
 	<article>

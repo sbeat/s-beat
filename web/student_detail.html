@@ -6,6 +6,13 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 {% set website_class = "" %}
 {% extends "index.html" %}
 {% block title %}Student Details: {{ request.args.get('id',0) }}{% endblock %}
+{% block head %}
+{{ super() }}
+<script src="js/pathlist.js"></script>
+<script src="js/examlist.js"></script>
+<script src="js/markedlists.js"></script>
+<script src="js/studentdetails.js"></script>
+{% endblock %}
 {% block content %}
 <div class="layout" data-load="StudentDetails" data-id="{{ request.args.get('id',0) }}">
 <h1>Student Details: <span data-student="ident"></span></h1>

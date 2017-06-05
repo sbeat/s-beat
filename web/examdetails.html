@@ -5,6 +5,11 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 {% set active_page = "exams" %}
 {% extends "index.html" %}
 {% block title %}Prüfungsleistung: {{ request.args.get('exam_info_id',0) }}{% endblock %}
+{% block head %}
+{{ super() }}
+<script src="js/examdetails.js"></script>
+<script src="js/examlist.js"></script>
+{% endblock %}
 {% block content %}
 <div class="layout" data-load="ExamDetails" data-id="{{ request.args.get('exam_info_id',0) }}">
 	<h1>Prüfungsleistung Details: <span data-exam="exam_id"></span> - <span data-exam="name"></span></h1>

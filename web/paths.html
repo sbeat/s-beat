@@ -7,6 +7,10 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 {% set website_class = "" %}
 {% extends "index.html" %}
 {% block title %}Risikokriterien{% endblock %}
+{% block head %}
+{{ super() }}
+<script src="js/pathlist.js"></script>
+{% endblock %}
 {% block content %}
 <div class="layout">
 	<article>
