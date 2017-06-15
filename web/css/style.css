@@ -1206,6 +1206,26 @@ h2.toggle:hover {
 	margin: 5px 0;
 }
 
+.indentList .level2 {
+	padding-left: 20px;
+}
+.indentList .level3 {
+	padding-left: 40px;
+}
+.indentList .level4 {
+	padding-left: 60px;
+}
+
+.openable {
+	background: url('../img/icons/plus-small-white.png');
+	display: inline-block;
+	width: 16px;
+	height: 14px;
+}
+.openable.open {
+	background: url('../img/icons/minus-small-white.png');
+}
+
 @media print {
 	#side {
 		display: none;
