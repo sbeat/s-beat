@@ -263,12 +263,12 @@ function drawOptionSelector(options, sendCallb) {
 	var boxO = $(document.createElement('div'));
 	boxO.addClass('filterSelect');
 
-	if(options.length>10) {
+	if (options.length > 10) {
 		var searchLine = $('<p/>').appendTo(boxO);
 		var searchInput = $('<input type="text" class="">')
-			.attr('placeholder','Suchen')
+			.attr('placeholder', 'Suchen')
 			.appendTo(searchLine)
-			.on('keyup', function(){
+			.on('keyup', function () {
 				filterItems(searchInput.val());
 			});
 
@@ -292,9 +292,9 @@ function drawOptionSelector(options, sendCallb) {
 
 	function filterItems(term) {
 		var regexp = new RegExp(term);
-		allItems.each(function(){
+		allItems.each(function () {
 			var el = $(this);
-			if(el.text().match(regexp)) {
+			if (el.text().match(regexp)) {
 				el.show();
 			} else {
 				el.hide();
@@ -527,9 +527,9 @@ function getFormattedHTML(value, formatting) {
 	}
 	if (formatting == 'semester' && Array.isArray(value)) {
 		ret = document.createElement('span');
-		var ranges = getSemesterRanges(value).map(function(range){
-			if(Array.isArray(range)) {
-				return getSemesterText(range[0])+' - '+getSemesterText(range[1]);
+		var ranges = getSemesterRanges(value).map(function (range) {
+			if (Array.isArray(range)) {
+				return getSemesterText(range[0]) + ' - ' + getSemesterText(range[1]);
 			} else {
 				return getSemesterText(range);
 			}
@@ -569,6 +569,22 @@ function getFormattedHTML(value, formatting) {
 	}
 	if (formatting == 'int' && (value % 1).toString().length > 4) {
 		return document.createTextNode(value.toFixed(2));
+	}
+	if (formatting == 'status') {
+		// Status 1=Finished, 2=Aborted, 3=Successful, 4=Studying
+		if (value === 1) {
+			return document.createTextNode('Abgeschlossen');
+		}
+		if (value === 2) {
+			return document.createTextNode('Abgebrochen');
+		}
+		if (value === 3) {
+			return document.createTextNode('Erfolgreich');
+		}
+		if (value === 4) {
+			return document.createTextNode('Studierend');
+		}
+		return document.createTextNode('Unbekannt');
 	}
 
 	return document.createTextNode(value);
@@ -610,24 +626,24 @@ function drawRiskLights(value, setting) {
 }
 
 function getSemesterRanges(semesters) {
-	if(!semesters || !semesters.length) {
+	if (!semesters || !semesters.length) {
 		return [];
 	}
 	semesters.sort();
 	var last = semesters[0];
 	var lastStart = last;
 	var ranges = [];
-	for(var i=1; i<semesters.length; i++) {
+	for (var i = 1; i < semesters.length; i++) {
 		var value = semesters[i];
 		var year = Math.floor(value / 10);
 		var semnr = value % 10;
 		var lastYear = Math.floor(last / 10);
 		var lastSemnr = last % 10;
-		if(year === lastYear && semnr === lastSemnr + 1 || year === lastYear+1 && semnr === 1) {
+		if (year === lastYear && semnr === lastSemnr + 1 || year === lastYear + 1 && semnr === 1) {
 			last = value;
 			continue;
 		}
-		if(lastStart === last) {
+		if (lastStart === last) {
 			ranges.push(last);
 		} else {
 			ranges.push([lastStart, last])
@@ -635,7 +651,7 @@ function getSemesterRanges(semesters) {
 		lastStart = value;
 		last = value;
 	}
-	if(lastStart === last) {
+	if (lastStart === last) {
 		ranges.push(last);
 	} else {
 		ranges.push([lastStart, last])
@@ -799,6 +815,11 @@ function parseQuery(txt) {
 	return query;
 }
 
+function addToSet(arr, item) {
+	if (arr.indexOf(item) === -1) {
+		arr.push(item);
+	}
+}
 
 function openColumnDialog() {
 	var self = this;
@@ -1364,7 +1385,8 @@ function getSortedListSettings(prefix, callb) {
 function drawTableHead(tr, tooltipPrefix) {
 	var i;
 	for (i = 0; i < this.columns.length; i++) {
-		var col = this.columnData[this.columns[i]];
+		var cd = this.columns[i];
+		var col = cd && cd.cdId ? this.columnData[cd.cdId] : this.columnData[cd];
 		if (!col) continue;
 		var th = $(document.createElement('th'));
 		th[0].colId = col.id;
@@ -1374,7 +1396,11 @@ function drawTableHead(tr, tooltipPrefix) {
 
 		var thlabel = $(document.createElement('span'));
 		thbox.append(thlabel);
-		thlabel.text(col.label);
+		if (cd && cd.cdId && cd.type === 'group') {
+			thlabel.text(col.label + '=' + cd.grpValue);
+		} else {
+			thlabel.text(col.label);
+		}
 		thlabel.attr('title', col.title);
 
 		var extended_tooltip = $('#' + tooltipPrefix + col.id);
@@ -1461,7 +1487,7 @@ function isTempActive() {
 }
 
 function displayTempDataHeader() {
-	if(!isTempActive()) {
+	if (!isTempActive()) {
 		$('#tempMessage').remove();
 		return;
 	}
@@ -1471,7 +1497,7 @@ function displayTempDataHeader() {
 
 	$('<span/>').text('Temporärere Datenansicht aktiv. ').appendTo(box);
 	$('<a href=""/>').text('Deaktivieren').appendTo(box)
-		.click(function(e){
+		.click(function (e) {
 			e.preventDefault();
 			saveStorage('isTempActive', false);
 			location.reload();

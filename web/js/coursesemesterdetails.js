@@ -23,6 +23,7 @@ function CourseSemesterDetails(parentDOM) {
 	defineFD(this.fieldData, 'hzb_grade_data.mean', 'Durchschnittliche HZB Note', '', 'grade');
 	defineFD(this.fieldData, 'hzb_grade_data.min', 'Beste HZB Note', '', 'grade');
 	defineFD(this.fieldData, 'hzb_grade_data.max', 'Schlechteste HZB Note', '', 'grade');
+	defineFD(this.fieldData, 'exam_count.mean', 'Durchschnittliche Leistungen im Semester', '', 'float');
 
 	this.data = null; // Last loaded data
 	this.dataSem = null;
