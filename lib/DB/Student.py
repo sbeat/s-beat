@@ -174,8 +174,22 @@ class Student(DBDocument):
 
         return data
 
-    # returns semester number, real: semesters where the student took part in exams
+    @classmethod
+    def is_field_allowed(cls, field, user_role):
+        if field not in cls.restricted_fields:
+            return True
+        role = cls.restricted_fields[field]
+        if UserTools.has_right(role, user_role):
+            return True
+        return False
+
     def get_semester_number(self, semester_id, real=False):
+        """
+        returns semester number
+        :param semester_id:
+        :param real: semesters where the student took part in exams
+        :return:
+        """
         number = 0
         real_number = 0
         current = self.start_semester
@@ -643,6 +657,43 @@ class Student(DBDocument):
         return risk_values
 
     @classmethod
+    def calc_groups(cls, groups=list(), find=None, calculations=None):
+        """
+        Groups and counts values for a defined field
+        """
+        try:
+            pipeline = list()
+            if find is not None:
+                pipeline.append({'$match': find})
+
+            group_id = {}
+            for grp in groups:
+                group_id[sanitize_field(grp)] = '$' + grp
+
+            group_stage = {
+                '_id': group_id,
+                'count': {'$sum': 1}
+            }
+
+            if calculations is not None:
+                for calc_def in calculations:
+                    entry = dict()
+                    entry['$' + calc_def['op']] = '$' + calc_def['field']
+                    group_stage[calc_def['op'] + '-' + sanitize_field(calc_def['field'])] = entry
+
+            pipeline.append({'$group': group_stage})
+
+            results = cls.db_aggregate(pipeline)
+            for d in results:
+                unsanitize_dict(d)
+                unsanitize_dict(d['_id'])
+
+            return results
+
+        except errors.PyMongoError:
+            return None
+
+    @classmethod
     def calc_sums(cls, find=None):
         """
         Groups and counts values for a defined field
@@ -668,10 +719,7 @@ class Student(DBDocument):
 
             result = cls.db_aggregate(pipeline)
             for d in result:
-                for key in d:
-                    if '-' in key:
-                        d[key.replace('-', '.')] = d.pop(key)
-                return d
+                return unsanitize_dict(d)
             return None
 
         except errors.PyMongoError:
@@ -710,10 +758,7 @@ class Student(DBDocument):
 
             result = cls.db_aggregate(pipeline)
             for d in result:
-                for key in d:
-                    if '-' in key:
-                        d[key.replace('-', '.')] = d.pop(key)
-                return d
+                return unsanitize_dict(d)
             return None
 
         except errors.PyMongoError:
@@ -762,6 +807,21 @@ def set_risk_on_student(name, group, student, risk, min_max):
             r['median_scaled'] = None
     else:
         setattr(student, name, None)
+
+
+def sanitize_field(field):
+    return field.replace('.', '-')
+
+
+def unsanitize_field(field):
+    return field.replace('-', '.')
+
+
+def unsanitize_dict(d):
+    for key in d:
+        if '-' in key:
+            d[unsanitize_field(key)] = d.pop(key)
+    return d
 
 
 def create_student_from_entry(data, settings):

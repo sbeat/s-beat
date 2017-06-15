@@ -55,6 +55,13 @@ class CourseSemesterInfo(DBDocument):
             'delayed_u': 0,  # unauthorized delayed exams
             'success_perc': None,  # percentage of successful exams from finished
             'failed_perc': None,  # percentage of failed exams from finished
+            'min': None,  # minimum count of exams a student has in a semester
+            'max': None,  # maximum count of exams a student has in a semester
+            'mean': None,  # average count of exams a student has in a semester
+            'values': {}  # dict: count exams: count of students
+        }
+
+        self.exam_count = {
             'min': None,  # minimum count of exams a student has
             'max': None,  # maximum count of exams a student has
             'mean': None,  # average count of exams a student has
@@ -207,6 +214,13 @@ class CourseSemesterInfo(DBDocument):
             else:
                 d.hzb_grade_data['values'][hzb_grade_id] += 1
 
+        if student.exam_count is not None:
+            exam_count_id = str(student.exam_count)
+            if exam_count_id not in d.exam_count['values']:
+                d.exam_count['values'][exam_count_id] = 1
+            else:
+                d.exam_count['values'][exam_count_id] += 1
+
         if student.age is not None:
             age_id = str(student.age)
             if age_id not in d.age_data['values']:
@@ -257,6 +271,8 @@ class CourseSemesterInfo(DBDocument):
 
         cls.update_stat_dict_by_values(d['exams'])
         cls.update_stat_dict_by_values(d['bonus_data'])
+        if 'exam_count' in d:
+            cls.update_stat_dict_by_values(d['exam_count'])
         if 'bonus_total_data' in d:
             cls.update_stat_dict_by_values(d['bonus_total_data'])
         cls.update_stat_dict_by_values(d['grade_data'])

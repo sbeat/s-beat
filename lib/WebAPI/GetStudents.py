@@ -42,6 +42,14 @@ def get_queries():
     return queries
 
 
+def is_field_allowed(field, user_role, query_types):
+    if field not in DataDefinitions.get_queries() and field not in query_types:
+        return False
+    if not DB.Student.is_field_allowed(field, user_role):
+        return False
+    return True
+
+
 def get_db_query(value, query):
     if query.formatting in ('int', 'grade', 'semester', 'percent'):
         parts = value.split(',')
@@ -193,6 +201,7 @@ def handle():
     status = 200
     query_types = {
         'ident': 'int',
+        'status': 'int',
         'risk.mean': 'float',
         'risk.avg': 'float',
         'risk.median': 'float',
@@ -242,6 +251,8 @@ def handle():
     with_definitions = request.args.get('definitions', default='false')
     mlist = request.args.get('mlist', default=None)
     do_calc = request.args.get('do_calc', default=None)
+    groups = request.args.get('groups', default=None)
+    calculations = request.args.get('calculations', default=None)
     is_csv = request.args.get('output', default='json') == 'csv'
 
     user_role = g.user_role
@@ -267,14 +278,6 @@ def handle():
         db_sort.append((sort1[0], int(sort1[1])))
     if len(sort2) == 2 and sort2[0] in sortable:
         db_sort.append((sort2[0], int(sort2[1])))
-
-    # ident = request.args.get('ident', default=None, type=int)
-    # if ident is not None:
-    # db_query['_id'] = ident
-    # elif marked is not None and marked == 'true':
-    # if UserTools.has_right('user', g.user_role):
-    # marked_ids = [ms.ident for ms in DB.MarkedStudent.find({}, fields=['_id'])]
-    # db_query['_id'] = {'$in': marked_ids}
 
     # filter by MarkedList
     if mlist is not None:
@@ -348,8 +351,33 @@ def handle():
         db_queries.append(db_query)
         db_query = {'$and': db_queries}
 
-    if do_calc == 'sums':
+    if groups is not None:
+        allowed_groups = []
+
+        if not isinstance(groups, unicode):
+            return respond({'error': 'invalid_groups'}, 400)
+
+        for name in groups.split(','):
+            if not is_field_allowed(name, g.user_role, query_types):
+                return respond({'error': 'invalid_group', 'name': name}, 400)
+            allowed_groups.append(name)
+
+        allowed_calculations = list()
+        allowed_ops = ['sum', 'avg', 'max', 'min', 'addToSet']
+        if isinstance(calculations, unicode):
+            for full_name in calculations.split(','):
+                op, name = full_name.split('.', 2)
+                if not is_field_allowed(name, g.user_role, query_types) or op not in allowed_ops:
+                    continue
+                allowed_calculations.append({'field': name, 'op': op})
+
+        ret['groups'] = allowed_groups
+        ret['calculations'] = allowed_calculations
+        ret['group_results'] = DB.Student.calc_groups(allowed_groups, db_query, allowed_calculations)
+
+    elif do_calc == 'sums':
         ret['sums'] = DB.Student.calc_sums(db_query)
+
     elif do_calc == 'avgs':
         ret['avgs'] = None
         risk_values_allowed_key = 'risk_value_' + user_role
@@ -369,6 +397,7 @@ def handle():
     elif is_csv:
         cursor = DB.Student.find(db_query, sort=db_sort)
         return respond_csv(cursor, ret)
+
     else:
         try:
             cursor = DB.Student.find(db_query, limit=limit, skip=start, sort=db_sort)
