@@ -257,7 +257,8 @@ class Course(DBDocument):
             if allowed_degree_types and course.degree_type not in allowed_degree_types:
                 course.ignore = True
 
-            course.db_insert()
+            result = course.db_insert()
+            logger.info('course %d %s', num, (result.inserted_id if result else None))
 
             if num % 100 == 0:
                 ProcessTracking.process_update('import_courses', float(curr) / total, {

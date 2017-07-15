@@ -74,7 +74,6 @@ class Student(DBDocument):
         self.stg = None  # Short of the degree course (already mapped!)
         self.stg_original = None  # Original unmapped course
         self.degree_type = None  # type of degree: Diplom,Bachelor,Master
-        self.sem_start = None  # start semester number
         self.imm_date = None  # Enrollment date
         self.exm_date = None  # Disenrollment date
         self.finished = False  # Whether the study is finished
@@ -289,6 +288,7 @@ class Student(DBDocument):
         consulted_list = MarkedList.find_one({'_id': 'consulted'})
 
         num = 0
+        num_success = 0
         for entry, curr, total in ImportTools.read_csv(file_info):
             num += 1
             stg = get_unicode(entry['stg'], encoding)
@@ -307,15 +307,18 @@ class Student(DBDocument):
                 if consulted_list and student.ident in consulted_list.list:
                     student.consulted = True
                 result = student.db_save()
-                print num, result.upserted_id if result else None
+                logger.info('student %d %s', num, (result.upserted_id if result else None))
+                num_success += 1
 
             if num % 100 == 0:
                 ProcessTracking.process_update('import_students', float(curr) / total, {
-                    'num': num
+                    'num': num,
+                    'num_success': num_success
                 })
 
         ProcessTracking.process_update('import_students', 1.0, {
-            'num': num
+            'num': num,
+            'num_success': num_success
         })
 
     @classmethod
@@ -861,10 +864,15 @@ def create_student_from_entry(data, settings):
     if student.imm_date is not None and student.exm_date is not None:
         student.semesters = CalcTools.semester_delta(student.imm_date, student.exm_date)
 
-    if student.sem_start == '':
+    if 'sem_start' in data and len(data.sem_start) == 5:
+        student.start_semester = get_int(data['sem_start'])
+    elif student.imm_date is not None:
         student.start_semester = CalcTools.get_semester_from_date(student.imm_date)
-    else:
-        student.start_semester = student.sem_start
+
+    if student.start_semester is None:
+        logger.error(
+            "Student has no start semester ID: " + repr(student.ident))
+        return None
 
     student.hzb_grade = get_int(data['hzbnote'])
     if 'hzbart' in data:
