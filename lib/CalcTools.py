@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Copyright (c) 2016 S-BEAT GbR and others
 
@@ -37,6 +38,20 @@ def get_semester_from_date(date):
     else:
         return date.year * 10 + 2  # WS im aktuellen Jahr
 
+def get_appl_start_semester_from_date(date):
+    # Wintersemester: 01.09-28.02/29.02 [2]
+    # Sommersemester: 01.03-31.08 [1]
+    # Format: [year][1|2]
+
+    ss_start = datetime(date.year, 3, 1)
+    ws_start = datetime(date.year, 9, 1)
+
+    if date < ss_start:
+        return date.year * 10 + 1
+    elif date < ws_start:
+        return date.year * 10 + 2
+    else:
+        return (date.year + 1) * 10 + 1  # SS im nächsten Jahr
 
 def get_semester_text(value):
     year = int(math.floor(value / 10))

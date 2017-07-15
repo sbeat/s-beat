@@ -1,0 +1,428 @@
+<!--
+  Copyright (c) 2017 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+  see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+  -->
+{% set active_page = "applicants" %}
+{% set website_class = "" %}
+{% extends "index.html" %}
+{% block title %}Bewerber Details: {{ request.args.get('id',0) }}{% endblock %}
+{% block content %}
+<div class="layout" data-load="ApplicantDetails" data-id="{{ request.args.get('id',0) }}">
+<h1>Student Details: <span data-applicant="ident"></span></h1>
+
+<div class="col2_50">
+	<article>
+		<h2>Allgemein</h2>
+		<table class="tbl detailTable">
+			<!--<tr>
+				<td>Studiengangsgruppe</td>
+				<td data-applicant="stg"></td>
+				<td data-path-risk="stg"></td>
+			</tr>-->
+			<tr>
+				<td>Studiengang</td>
+				<td>
+					<span data-applicant="stg_original"></span>
+
+					 (Gruppe: <span data-applicant="stg"></span>)
+				</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Status</td>
+				<td data-applicant="admissionstatus"></td>
+				<td></td>
+			</tr>
+			<!--
+			<tr>
+				<td>Ignoriert</td>
+				<td data-applicant="ignore"></td>
+				<td></td>
+			</tr>
+			-->
+
+			<tr>
+				<td>Bewerbung</td>
+				<td>
+					<span data-applicant="appl_date"></span>
+					(<span data-applicant="hzb_appl_time"></span>)
+					<span data-applicant="zul_date"></span>
+				</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Voraussichtliches Startsemester</td>
+				<td data-applicant="start_semester"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Exmatrikulation</td>
+				<td data-applicant="exm_date"></td>
+				<td></td>
+			</tr>
+
+		</table>
+
+		<h2>Person</h2>
+		<table class="tbl detailTable">
+
+			<tr>
+				<td>Geburtsdatum</td>
+				<td data-applicant="birth_date"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Alter bei Immatrikulation</td>
+				<td data-applicant="age"></td>
+				<td data-path-risk="age"></td>
+			</tr>
+			<tr>
+				<td>Geschlecht</td>
+				<td data-applicant="gender"></td>
+				<td data-path-risk="gender"></td>
+			</tr>
+		</table>
+		<br>
+		<table class="tbl detailTable" id="identification_data" style="display: none">
+			<tr>
+				<td>Matrikel-Nr.*</td>
+				<td data-applicant="matrikelno"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Name*</td>
+				<td>
+					<span data-applicant="forename"></span>
+					<span data-applicant="surname"></span>
+				</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>E-Mail*</td>
+				<td data-applicant="email"></td>
+				<td></td>
+			</tr>
+		</table>
+
+		{% if g.has_right('identification_data') %}
+		<a href="" data-applicant="identification_link">Identifikations- und Kontaktdaten abrufen</a>
+		{% endif %}
+
+		<h2>Vormerkungen</h2>
+
+		<div data-applicant="markedlists" class="markedlists"></div>
+
+	</article>
+
+</div>
+
+<div class="col2_50">
+	<article>
+		<h2>Hochschulzugangsberechtigung</h2>
+		<table class="tbl detailTable">
+			<tr>
+				<td>HZB Gruppe</td>
+				<td data-applicant="hzb_type"></td>
+				<td data-path-risk="hzb_type"></td>
+			</tr>
+			<tr>
+				<td>HZB Note</td>
+				<td data-applicant="hzb_grade"></td>
+				<td data-path-risk="hzb_grade"></td>
+			</tr>
+			<tr>
+				<td>HZB Datum</td>
+				<td data-applicant="hzb_date"></td>
+				<td data-path-risk="hzb_date"></td>
+			</tr>
+		</table>
+
+		<h2>Leistungsdaten</h2>
+		<table class="tbl detailTable">
+			<tr>
+				<td>Anzahl Leistungen</td>
+				<td data-applicant="exam_count"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Bestandene Versuche</td>
+				<td data-applicant="exam_count_success"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Nicht bestandene Versuche</td>
+				<td data-applicant="exam_count_failed"></td>
+				<td></td>
+			</tr>
+			<tr data-applicant="hide_resigned">
+				<td>Entschuldigte Rücktritte</td>
+				<td data-applicant="cnt_delayed_exams"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><span data-config="cp_label"></span> gesamt</td>
+				<td data-applicant="bonus_total"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>&Oslash; Note aktuell<sup>1</sup></td>
+				<td data-applicant="grade_current"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>&Oslash; Note aktuell inkl. NB, EN<sup>1</sup></td>
+				<td data-applicant="grade_nb_current"></td>
+				<td></td>
+			</tr>
+			<!--<tr>
+				<td>&Oslash; Note gesamt<sup>1</sup></td>
+				<td data-applicant="grade_total"></td>
+				<td></td>
+			</tr>-->
+			<tr>
+				<td>&Oslash; Note Grundstudium<sup>1</sup></td>
+				<td data-applicant="grade_basic_studies"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>&Oslash; Note Hauptstudium<sup>1</sup></td>
+				<td data-applicant="grade_main_studies"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Abschlussnote</td>
+				<td data-applicant="final_grade"></td>
+				<td></td>
+			</tr>
+		</table>
+
+		<h2>Risiko</h2>
+		<table class="tbl detailTable">
+
+			<tr data-applicant="display_risk_median_all">
+				<td>Unskalierter Risikowert</td>
+				<td data-applicant="risk_all.median"></td>
+				<td></td>
+			</tr>
+
+			<tr data-applicant="display_risk_median_stg">
+				<td>Unskalierter Risikowert im Studiengang</td>
+				<td data-applicant="risk_stg.median"></td>
+				<td></td>
+			</tr>
+
+			<tr data-applicant="display_risk_median_degree">
+				<td>Unskalierter Risikowert im Abschluss</td>
+				<td data-applicant="risk_degree.median"></td>
+				<td></td>
+			</tr>
+
+			<tr data-applicant="display_risk_all">
+				<td>Gesamtrisiko</td>
+				<td data-applicant="risk_all"></td>
+				<td data-applicant="tooltip">
+					<a class="infobtn"></a>
+
+					<div style="display: none">
+						Die farbliche Ausprägung der Ampel ist auf die folgenden prozentualen Misserfolgswahrscheinlichkeiten zurückzuführen:
+						<ul>
+							<li>Grün: ab <span data-lights="lights_0"></span></li>
+							<li>Gelb: ab <span data-lights="lights_1"></span></li>
+							<li>Rot: ab <span data-lights="lights_2"></span></li>
+						</ul>
+					</div>
+
+				</td>
+			</tr>
+			<tr data-applicant="display_risk_all_value">
+				<td>Skalierte Misserfolgswahrscheinlichkeit</td>
+				<td data-applicant="risk_all.median_scaled"></td>
+				<td data-applicant="tooltip">
+					<a class="infobtn"></a>
+
+					<div style="display: none" id="applicant_risk_tooltip">
+						Wichtiger Hinweis: Ein unbegründet hoher Wert der skalierten Misserfolgswahrscheinlichkeit kann
+						folgende
+						Ursachen haben:<br>
+						<ol type="a" class="spacedlist">
+							<li>
+								Studierende des ersten und zweiten Semesters konnten aufgrund des noch wenig
+								fortgeschrittenen Studiums bisher noch nicht ausreichend
+								<span data-config="cp_label"></span>
+								erwerben.
+							</li>
+							<li>
+								Der/die Studierende gehört zur Gruppe der Erstsemester und es liegen noch keine
+								Benotungen
+								für abgelegte Prüfungsleistungen im aktuellen Semester vor.
+							</li>
+						</ol>
+					</div>
+
+				</td>
+			</tr>
+			<tr data-applicant="display_risk_stg">
+				<td>Studiengangsrisiko</td>
+				<td data-applicant="risk_stg"></td>
+				<td data-applicant="tooltip">
+					<a class="infobtn"></a>
+
+					<div style="display: none">
+						Die farbliche Ausprägung der Ampel ist auf die folgenden prozentualen
+						Misserfolgswahrscheinlichkeiten zurückzuführen:
+						<ul>
+							<li>Grün: ab <span data-lights="lights_0"></span></li>
+							<li>Gelb: ab <span data-lights="lights_1"></span></li>
+							<li>Rot: ab <span data-lights="lights_2"></span></li>
+						</ul>
+					</div>
+
+				</td>
+			</tr>
+			<tr data-applicant="display_risk_stg_value">
+				<td>Skalierte Misserfolgswahrscheinlichkeit im Studiengang</td>
+				<td data-applicant="risk_stg.median_scaled"></td>
+				<td data-applicant="tooltip" data-tooltip-content="#applicant_risk_tooltip">
+					<a class="infobtn"></a>
+				</td>
+			</tr>
+
+			<tr data-applicant="display_risk_degree">
+				<td>Risiko im Abschluss</td>
+				<td data-applicant="risk_degree"></td>
+				<td data-applicant="tooltip">
+					<a class="infobtn"></a>
+
+					<div style="display: none">
+						Die farbliche Ausprägung der Ampel ist auf die folgenden prozentualen
+						Misserfolgswahrscheinlichkeiten zurückzuführen:
+						<ul>
+							<li>Grün: ab <span data-lights="lights_0"></span></li>
+							<li>Gelb: ab <span data-lights="lights_1"></span></li>
+							<li>Rot: ab <span data-lights="lights_2"></span></li>
+						</ul>
+					</div>
+
+				</td>
+			</tr>
+			<tr data-applicant="display_risk_degree_value">
+				<td>Skalierte Misserfolgswahrscheinlichkeit im Abschluss</td>
+				<td data-applicant="risk_degree.median_scaled"></td>
+				<td data-applicant="tooltip" data-tooltip-content="#applicant_risk_tooltip">
+					<a class="infobtn"></a>
+				</td>
+			</tr>
+
+			<!--
+			<tr>
+				<td>Minimum</td>
+				<td data-applicant="risk.min"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Unteres Quantil</td>
+				<td data-applicant="risk.q25"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Median</td>
+				<td data-applicant="risk.median"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Oberes Quantil</td>
+				<td data-applicant="risk.q75"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Maximum</td>
+				<td data-applicant="risk.max"></td>
+				<td></td>
+			</tr>
+			-->
+		</table>
+
+	</article>
+</div>
+<div class="clear"></div>
+
+<article>
+	<h2>Semester</h2>
+	<table class="tbl">
+		<colgroup>
+			<col width="4%">
+			<col width="12%">
+			<col width="12%">
+			<col width="12%">
+			<col width="12%">
+			<col width="12%">
+			<col width="12%">
+			<col width="12%">
+			<col data-applicant="hide_resigned" width="12%">
+		</colgroup>
+		<thead>
+		<tr>
+			<th><span>Nr.</span></th>
+			<th><span>Semester</span></th>
+			<th><span><span data-config="cp_label"></span> im Semester</span></th>
+			<th><span><span data-config="cp_label"></span> im Studium</span></th>
+			<th><span>&Oslash; Note<sup>1</sup></span></th>
+			<th><span>Leistungen</span></th>
+			<th><span>Leistungen bestanden</span></th>
+			<th><span>Leistungen nicht bestanden</span></th>
+			<th data-applicant="hide_resigned"><span>Entschuldigte Rücktritte</span></th>
+		</tr>
+		</thead>
+		<tbody data-applicant="semester_data">
+		</tbody>
+	</table>
+</article>
+
+
+<article id="applied_exams">
+	<h2>Angemeldete Prüfungsleistungen im aktuellen Semester (Anzahl: <span data-applicant="exam_count_applied"></span>)</h2>
+
+	<div data-load="ExamList" data-id="{{ request.args.get('id',0) }}" data-preset="current"></div>
+</article>
+
+
+<article id="exams">
+	<h2>Notenspiegel (Stand: <span data-applicant="lastDate"></span>)</h2>
+
+	<div data-load="ExamList" data-id="{{ request.args.get('id',0) }}" data-preset="applicant"></div>
+
+
+	{% include 'inc/tooltips_exam.html' %}
+
+</article>
+
+
+<article id="riskpaths">
+	<h2 data-toggle="risk_details" class="toggle">Risikodetails</h2>
+
+	<div style="display: none" id="risk_details">
+		<h3>Risikoverteilung <a href="docs_extended.html?page=05_02_applicants#risk_distribution" target="_blank"
+								class="infobtn">Beschreibung</a></h3>
+		<svg data-applicant="risk_graph" style="height: 150px"></svg>
+
+		<h3>Risikokriterien <a href="docs_extended.html?page=05_02_applicants#risk_paths" target="_blank" class="infobtn">Beschreibung</a>
+		</h3>
+
+		<div data-load="PathList" data-id="{{ request.args.get('id',0) }}"></div>
+	</div>
+
+</article>
+
+<article>
+	* Die Matrikel-Nr., der Vor- und Nachname, die E-Mail, das Geburtsdatum, das Geschlecht und die Daten zur
+	Hochschulzugangsberechtigung sind nur sichtbar, wenn Sie die Berechtigung dafür besitzen.
+	<br>
+	<sup>1</sup> Die gekennzeichneten Durchschnittsnoten (Aktuell, Grund-/Hauptstudium, im Semester) sind jeweils nach
+	<span data-config="cp_label"></span>
+	gewichtet und wurden nach aktuellem Datenstand berechnet. Abhängig vom Datenstand zeigen diese nicht die endgültige
+	Note.
+</article>
+
+</div>
+
+{% endblock %}

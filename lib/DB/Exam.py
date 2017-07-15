@@ -25,7 +25,7 @@ import ImportTools
 from Db import DBDocument
 from ProcessTracking import ProcessTracking
 from Settings import Settings
-from ImportTools import get_date_from_csv, get_int, get_unicode
+from ImportTools import get_date_from_csv, get_int, get_unicode, get_boolean
 
 encoding = 'windows-1252'
 logger = logging.getLogger(__name__)
@@ -317,7 +317,7 @@ def create_exam_from_entry(data, student, settings):
     exam.comment = get_unicode(data['pvermerk'])  # G,U
     exam.phase = get_unicode(data['pabschn'])  # G,H
 
-    if 'panerk' in data and data['panerk'] == 'J':
+    if 'panerk' in data and get_boolean(data['panerk']) == True:
         exam.recognized = True
 
     exam.generate_exam_info_id(settings['unique_exam_info_id'])

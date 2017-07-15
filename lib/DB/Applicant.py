@@ -1,3 +1,4 @@
+# coding=utf-8
 # S-BEAT Project by Annkristin Stratmann, Niclas Steigelmann, Dominik Herbst
 
 import array
@@ -27,18 +28,20 @@ logger = logging.getLogger(__name__)
 class Applicant(DBDocument):
     collection_name = 'applicants'
 
-    # restricted_fields = {
-    #     'gender': 'personal_data',
-    #     'birth_date': 'personal_data',
-    #     'hzb_grade': 'personal_data',
-    #     'hzb_type': 'personal_data',
-    #     'hzb_date': 'personal_data',
-    #     'forename': 'identification_data',
-    #     'surname': 'identification_data',
-    #     'email': 'identification_data',
-    #     'land': 'identification_data',
-    #     'zuldat': ''
-    # }
+    restricted_fields = {
+        'gender': 'personal_data',
+        'birth_date': 'personal_data',
+        'hzb_grade': 'personal_data',
+        'hzb_type': 'personal_data',
+        'hzb_date': 'personal_data',
+        'forename': 'identification_data',
+        'surname': 'identification_data',
+        'email': 'identification_data',
+        'land': 'identification_data',
+        'plz': 'identification_data',
+        'stang': 'identification_data',
+        'eu': 'identification_data'
+    }
 
     cached_min_max = None
 
@@ -67,10 +70,11 @@ class Applicant(DBDocument):
         self.eu = None  # EU citizen (yes/no)
 
         # 1st step calculated values
-        # self.start_semester = None  # Start semester number
+        self.start_semester = None  # Start semester number
         self.age = None  # Age of applicant
         self.hzb_appl_time = None  # count of months between entrance qualification and application
-        self.consulted = False
+        self.admitted = False
+        self.consulted = False  # TODO: Should applicants be consulted as well? (Otherwise scratch that)
 
         # 2nd step calculated values
         self.ignore = False  # if data is faulty - ignore applicant
@@ -83,7 +87,7 @@ class Applicant(DBDocument):
                     del data[field]
         if hide_finished_ident_data and self.finished:
             for field, role in self.restricted_fields.iteritems():
-                if role == 'identification_data':
+                if role == 'application_data':
                     del data[field]
 
         return data
@@ -147,6 +151,7 @@ class Applicant(DBDocument):
 
         settings = Settings.load_dict([
             'import_applicants',
+            'import_ident_from_students',
             'import_encoding'
         ])
         encoding = settings['import_encoding']
@@ -164,7 +169,8 @@ class Applicant(DBDocument):
                 continue
 
             applicant_settings = {
-                "import_applicants": settings['import_applicants']
+                "import_applicants": settings['import_applicants'],
+                "import_ident_from_students": settings['import_ident_from_students']
             }
             applicant = create_applicant_from_entry(entry, applicant_settings)
             if applicant is not None:
@@ -328,8 +334,7 @@ def create_applicant_from_entry(data, settings):
     applicant.appl_date = get_date_from_csv(data['appldat'])
     applicant.zul_date = get_date_from_csv(data['zuldat'])
 
-    # TODO: benötigt?
-    # applicant.start_semester = CalcTools.get_semester_from_date(applicant.zul_date)
+    applicant.start_semester = CalcTools.get_appl_start_semester_from_date(applicant.zul_date)
 
     applicant.hzb_grade = get_int(data['hzbnote'])
     if 'hzbart' in data:
@@ -348,7 +353,7 @@ def create_applicant_from_entry(data, settings):
 
     applicant.age = CalcTools.calculate_age(applicant.birth_date, applicant.imm_date)
 
-    if settings['import_applicants']:
+    if settings['import_ident_from_students']:
         if 'vorname' in data:
             applicant.forename = get_unicode(data['vorname'], encoding)
 

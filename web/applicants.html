@@ -1,0 +1,20 @@
+<!--
+  Copyright (c) 2017 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+  see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+  -->
+{% set active_page = "applicants" %}
+{% set active_subpage = request.args.get('preset',"applicants") %}
+{% set preset = request.args.get('preset',"default") %}
+{% set website_class = "" %}
+{% extends "index.html" %}
+{% block title %}Bewerberliste{% endblock %}
+{% block content %}
+<div class="layout">
+	<article>
+		<h1 id="headline_applicants">Bewerberliste</h1>
+
+		<div data-load="ApplicantList" data-preset="{{preset|e}}" data-ssid="{{request.args.get('ssid','')|e}}"></div>
+		{% include 'inc/tooltips_studentlist.html' %}
+	</article>
+</div>
+{% endblock %}
