@@ -10,11 +10,12 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 	this.tooltipPrefix = settingsPrefix || 'tooltip_';
 	this.settings = {
 		'default': {
-			limit: 100,
+			limit: 0,
 			sort1: null,
 			sort2: null,
 			filters: [],
 			columns: [],
+			rows: ['start_semester', 'hzb_type'],
 			displayPagination: false,
 			sortable: false
 		}
@@ -34,12 +35,16 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 	this.columnData = {};
 	this.columns = [];
 	this.rows = [];
-	this.mandatoryColumns = [];
+	this.mandatoryColumns = ['group'];
+
+	this.linkBox = $(document.createElement('div'));
 
 	this.tableDOM = $(document.createElement('table'));
 
 	this.data = null; // Last loaded list
 	this.metadata = null;
+
+	this.groupStats = null;
 
 	this.drawn = false;
 
@@ -48,7 +53,8 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 	this.showGroupSummary = true;
 	this.openLevels = 0;
 
-	this.openColumnDialog = openColumnDialog;
+	this.allowedTableFormats = ['grade', 'percent', 'float', 'int'];
+
 	this.loadPresetSettings = loadPresetSettings;
 	this.loadSettings = loadSettings;
 	this.saveSettings = saveSettings;
@@ -68,27 +74,42 @@ StudentAnalytics.prototype.defineColumn = function (id, label, title, formatting
 	};
 };
 
-StudentAnalytics.prototype.addColumn = function (id, type, grpValue, calcOp) {
+StudentAnalytics.prototype.getColumnObject = function (cdId, grpValue, calcOp) {
+	var cd = this.columnData[cdId];
 	var col = {
-		id: id,
-		cdId: id, // ref to the columnData
-		type: type || 'direct', // direct, group, calc
-		grpValue: grpValue || null, // for type=group
-		calcOp: calcOp || null // for type=calc
+		id: cd.id,
+		cdId: cdId, // ref to the columnData
+		type: 'direct', // direct, group, calc
+		grpValue: null, // for type=group
+		calcOp: null // for type=calc
 	};
-	if (type === 'group') {
-		col.id = id + '=' + grpValue;
+	if (cdId === 'group') {
+		col.type = 'label';
 	}
-	if (type === 'calc') {
-		col.id = calcOp + '.' + id;
+	if (cd.groupable && grpValue !== undefined) {
+		col.grpValue = grpValue;
+		col.type = 'group';
+		col.id = cd.id + '=' + grpValue;
+
 	}
-	this.columns.push(col);
+	if (cd.calculations && calcOp !== undefined) {
+		col.calcOp = calcOp;
+		col.type = 'calc';
+		col.id = calcOp + '.' + cd.id;
+	}
 	return col;
 };
 
-StudentAnalytics.prototype.addRow = function (id) {
-	this.rows.push(id);
-	return id;
+StudentAnalytics.prototype.addLink = function (label, click) {
+	this.linkBox.append(' ');
+	var setBtn = $(document.createElement('a'));
+	setBtn.attr('href', '');
+	setBtn.text(label);
+	setBtn.click(function (e) {
+		e.preventDefault();
+		click();
+	});
+	this.linkBox.append(setBtn);
 };
 
 /**
@@ -98,17 +119,24 @@ StudentAnalytics.prototype.init = function () {
 	// Check for global context and filters
 	var self = this;
 
-	this.defineColumn('name', 'Name', null, 'str');
-	this.defineColumn('count', 'Studenten', null, 'int');
-	this.defineColumn('age', 'Alter', null, 'int', true, ['min', 'max', 'avg']);
-	this.defineColumn('gender', 'Geschlecht', null, 'str', true);
-	this.defineColumn('hzb_type', 'HZB Gruppe', null, 'str', true);
+	this.defineColumn('group', 'Gruppe', 'Gruppierung', 'str');
+	this.defineColumn('count', 'Studenten', 'Anzahl Studenten in der Gruppe', 'int');
+	this.defineColumn('age', 'Alter', 'Anzahl Studenten mit dem Alter bzw. berechnetes Alter in der Gruppe', 'int', true, ['min', 'max', 'avg']);
+	this.defineColumn('gender', 'Geschlecht', 'Anzahl Studenten mit dem Geschlecht', 'str', true);
+	this.defineColumn('hzb_type', 'HZB Gruppe', 'Anzahl Studenten mit der HZB Gruppe', 'str', true);
 	this.defineColumn('hzb_grade', 'HZB Note', null, 'grade', true, ['min', 'max', 'avg']);
 	this.defineColumn('status', 'Status', null, 'status', true);
-	this.defineColumn('semesters', 'Semester', null, 'int', true, ['min', 'max', 'avg']);
+	this.defineColumn('semesters', 'Studiumssemester', 'Länge des Studiums der Studenten mit Examatrikulation', 'int', true, ['min', 'max', 'avg']);
 	this.defineColumn('start_semester', 'Start Semester', null, 'semester', true);
 
+	this.settings.default.columns.push(this.getColumnObject('group'));
+	this.settings.default.columns.push(this.getColumnObject('count'));
+	this.settings.default.columns.push(this.getColumnObject('hzb_grade', undefined, 'avg'));
+	this.settings.default.columns.push(this.getColumnObject('gender', 'W'));
+	this.settings.default.columns.push(this.getColumnObject('gender', 'M'));
+
 	this.columns = this.settings.default.columns.slice();
+	this.rows = this.settings.default.rows.slice();
 	this.pagination.limit = this.settings.default.limit;
 	this.displayPagination = this.settings.default.displayPagination;
 	this.sortable = this.settings.default.sortable;
@@ -116,14 +144,6 @@ StudentAnalytics.prototype.init = function () {
 	this.pagination.sort1 = this.settings.default.sort1;
 	this.pagination.sort2 = this.settings.default.sort2;
 
-	this.addColumn('name', 'label');
-	this.addColumn('count', 'direct');
-	this.addColumn('hzb_grade', 'calc', null, 'avg');
-	this.addColumn('gender', 'group', 'W');
-	this.addColumn('gender', 'group', 'M');
-
-	this.addRow('start_semester');
-	this.addRow('hzb_type');
 
 	for (var colId in this.columnData) {
 		var col = this.columnData[colId];
@@ -135,7 +155,7 @@ StudentAnalytics.prototype.init = function () {
 		this.pagination.sortOptions[sf + ',-1'] = col.label + ' absteigend';
 	}
 
-	//self.loadSettings();
+	self.loadSettings();
 
 	self.draw();
 
@@ -168,13 +188,18 @@ StudentAnalytics.prototype.draw = function () {
 		this.paginationDOM.addClass('pagination');
 		this.parentDOM.append(this.paginationDOM);
 
+		this.parentDOM.append(this.linkBox);
+
 		this.tableDOM.addClass('indentList tbl sortable');
 		this.parentDOM.append(this.tableDOM);
 
-		this.pagination.addLink('Einstellungen', function () {
+		this.addLink('Einstellungen', function () {
 			self.openSettingsDialog();
 		});
-		this.pagination.addLink('Spaltenauswahl', function () {
+		this.addLink('Gruppenauswahl', function () {
+			self.openGroupDialog();
+		});
+		this.addLink('Spaltenauswahl', function () {
 			self.openColumnDialog();
 		});
 
@@ -320,11 +345,11 @@ StudentAnalytics.prototype.getEntries = function () {
 			var matched = 0;
 			for (var j = 0; j < ident.length && j < entry.ident.length; j++) {
 				var idPart = ident[j];
-				if(idPart === entry.ident[j]) {
+				if (idPart === entry.ident[j]) {
 					matched++;
 				}
 			}
-			if(matched === ident.length && entry.ident.length === ident.length + 1) {
+			if (matched === ident.length && entry.ident.length === ident.length + 1) {
 				childEntries.push(entry);
 			}
 		}
@@ -335,7 +360,7 @@ StudentAnalytics.prototype.getEntries = function () {
 		var childEntries = getChildEntries(this.ident);
 		for (var i = 0; i < childEntries.length; i++) {
 			var entry = childEntries[i];
-			if(this.open && entry.open) {
+			if (this.open && entry.open) {
 				entry.toggleOpen();
 			}
 			self.setEntryDisplay(entry.ident, !this.open);
@@ -397,11 +422,11 @@ StudentAnalytics.prototype.setEntryDisplay = function (ident, open) {
 
 };
 StudentAnalytics.prototype.findParent = function (ident) {
-	return this.entries.find(function(e) {
+	return this.entries.find(function (e) {
 		var matched = 0;
-		if(e.ident.length !== ident.length - 1) return false;
+		if (e.ident.length !== ident.length - 1) return false;
 		for (var i = 0; i < ident.length - 1; i++) {
-			if(ident[i] === e.ident[i]) matched++;
+			if (ident[i] === e.ident[i]) matched++;
 		}
 		return matched === ident.length - 1;
 	});
@@ -410,9 +435,9 @@ StudentAnalytics.prototype.drawEntry = function (entry) {
 	var tr = $(document.createElement('tr'));
 	tr.attr('id', entry.ident.join(','));
 
-	if(entry.ident.length > 1) {
+	if (entry.ident.length > 1) {
 		var parentEntry = this.findParent(entry.ident);
-		if(parentEntry && !parentEntry.open) {
+		if (parentEntry && !parentEntry.open) {
 			tr.hide();
 		}
 	}
@@ -426,9 +451,10 @@ StudentAnalytics.prototype.drawEntry = function (entry) {
 
 	return tr;
 };
-StudentAnalytics.prototype.drawCellValue = function (entry, cd, td) {
-	var col = this.columnData[cd.cdId];
-	if (cd.id === 'name') {
+StudentAnalytics.prototype.drawCellValue = function (entry, col, td) {
+	var cd = this.columnData[col.cdId];
+	if (col.id === 'group') {
+
 		if (entry.open !== undefined) {
 			var link = $('<a class="openable" href="javascript:"></a>');
 			link.click(function () {
@@ -442,23 +468,28 @@ StudentAnalytics.prototype.drawCellValue = function (entry, cd, td) {
 			td.append(link);
 		}
 
-		var level = 0, lastValue = null;
+		var level = 0, lastValue = null, rCd = null;
 		for (var i = 0; i < this.rows.length; i++) {
 			var row = this.rows[i];
 			if (entry.ident[i] === undefined) continue;
-			var rCol = this.columnData[row];
-			lastValue = getFormattedHTML(entry.ident[i], rCol.formatting);
+			rCd = this.columnData[row];
+			lastValue = getFormattedHTML(entry.ident[i], rCd.formatting);
 			level++;
+		}
+		if (rCd) {
+			td.attr('title', rCd.label);
 		}
 		td.addClass('level' + level);
 		td.append(lastValue);
 
-	} else if (col.drawValue && col.drawValue instanceof Function) {
-		col.drawValue(entry, cd, td);
+	} else if (cd.drawValue && cd.drawValue instanceof Function) {
+		cd.drawValue(entry, col, td);
 
 	} else {
-		var value = entry[cd.id];
-		td.append(getFormattedHTML(value, col.formatting));
+		var value = entry[col.id];
+		var formatting = cd.formatting;
+		if (this.allowedTableFormats.indexOf(formatting) === -1) formatting = 'int';
+		td.append(getFormattedHTML(value, formatting));
 	}
 
 };
@@ -514,7 +545,6 @@ StudentAnalytics.prototype.load = function () {
 
 	var groups = [], calculations = [];
 	self.columns.forEach(function (col) {
-		console.log('check col', col);
 		if (col.type === 'group') {
 			addToSet(groups, col.cdId);
 		}
@@ -561,5 +591,318 @@ StudentAnalytics.prototype.load = function () {
 
 		}
 	})
+
+};
+StudentAnalytics.prototype.loadGroupStatistics = function (callb) {
+	var self = this;
+	var url = '/api/GetStudents';
+
+	var params = [];
+
+	var groups = [];
+	Object.keys(self.columnData).forEach(function (id) {
+		var cd = self.columnData[id];
+		if (cd.groupable) {
+			groups.push(cd.id);
+		}
+	});
+
+	params.push('single_groups=' + encodeURIComponent(groups.join(',')));
+
+
+	if (params.length) url += '?';
+	url += params.join('&');
+
+	$.ajax({
+		url: url
+	}).success(function (data) {
+
+		if (data.group_results) {
+			self.groupStats = {};
+			for (var grp in data.group_results) {
+				if (!data.group_results.hasOwnProperty(grp)) continue;
+				var values = data.group_results[grp];
+				self.groupStats[grp] = values.map(function (d) {
+					return {
+						value: d._id[grp],
+						count: d.count
+					};
+				});
+				sortByField(self.groupStats[grp], 'value');
+			}
+			console.log('groupStats', this.groupStats);
+		}
+		callb();
+
+	}).fail(function (jqXHR) {
+		callb();
+	})
+};
+StudentAnalytics.prototype.getColumnLabel = function (col) {
+	var cd = this.columnData[col.cdId];
+	var label;
+	if (col && col.type === 'calc') {
+		if (col.calcOp === 'avg') {
+			label = 'Ø ' + cd.label;
+		}
+		if (col.calcOp === 'max') {
+			label = 'Max. ' + cd.label;
+		}
+		if (col.calcOp === 'min') {
+			label = 'Min. ' + cd.label;
+		}
+		if (col.calcOp === 'sum') {
+			label = 'Σ ' + cd.label;
+		}
+	} else if (col && col.type === 'group') {
+		var container = document.createElement('span');
+		container.appendChild(document.createTextNode(cd.label + ' = '));
+		container.appendChild(getFormattedHTML(col.grpValue, cd.formatting));
+		return container;
+	} else {
+		label = cd.label;
+	}
+	return document.createTextNode(label);
+};
+StudentAnalytics.prototype.openColumnDialog = function () {
+	var self = this;
+	var dialogBox = $(document.createElement('div'));
+	dialogBox.attr('title', 'Spaltenauswahl');
+
+	var loadingDummy = $('<div></div>').appendTo(dialogBox);
+
+	$(document.createElement('p')).text(
+		'Die ausgewählten Spalten können per Drag & Drop sortiert werden.').appendTo(dialogBox);
+
+	function indexOfCol(id, arr) {
+		if (!arr) {
+			arr = self.columns;
+		}
+		return arr.findIndex(function (col) {
+			return col.id === id;
+		});
+	}
+
+	function drawRow(col) {
+		var cd = self.columnData[col.cdId];
+		if (cd.presets && cd.presets.indexOf(self.settingId) === -1) return null;
+
+		var boxO = document.createElement('li');
+		boxO.className = 'colrow';
+		boxO.col = col;
+
+		var labelO = boxO.appendChild(document.createElement('label'));
+
+		var checkO = labelO.appendChild(document.createElement('input'));
+		checkO.className = 'name';
+		checkO.type = 'checkbox';
+
+		checkO.checked = indexOfCol(col.id) !== -1;
+		if (self.mandatoryColumns.indexOf(cd.id) !== -1) {
+			checkO.disabled = true;
+		}
+
+		if (checkO.checked) {
+			boxO.className += ' sortable';
+			var orderBox = document.createElement('div');
+			orderBox.className = 'orderbox';
+			boxO.appendChild(orderBox);
+		}
+
+		labelO.appendChild(self.getColumnLabel(col));
+
+		return boxO;
+	}
+
+	function renderColumnList() {
+		console.log('columns', self.columns);
+		console.log('columnData', self.columnData);
+
+		var ul = $(document.createElement('ul'));
+		ul.addClass('columnlist');
+		var i, col;
+		for (i = 0; i < self.columns.length; i++) {
+			col = self.columnData[self.columns[i].cdId];
+			ul.append(drawRow(self.columns[i]));
+		}
+		var columnsSorted = Object.keys(self.columnData);
+		columnsSorted.sort(function (a, b) {
+			var cola = self.columnData[a];
+			var colb = self.columnData[b];
+			if (cola.label < colb.label) return -1;
+			if (cola.label > colb.label) return 1;
+			return 0;
+		});
+		for (var j = 0; j < columnsSorted.length; j++) {
+			var colId = columnsSorted[j];
+			var cd = self.columnData[colId];
+			if (cd.calculations) {
+				for (var k = 0; k < cd.calculations.length; k++) {
+					var calcId = cd.calculations[k];
+					col = self.getColumnObject(colId, undefined, calcId);
+					if (indexOfCol(col.id) === -1) {
+						ul.append(drawRow(col));
+					}
+				}
+			}
+			if (cd.groupable) {
+				if (self.groupStats && self.groupStats[colId]) {
+					for (var l = 0; l < self.groupStats[colId].length; l++) {
+						var d = self.groupStats[colId][l];
+						col = self.getColumnObject(colId, d.value, undefined);
+						if (indexOfCol(col.id) === -1) {
+							ul.append(drawRow(col));
+						}
+					}
+				}
+
+			} else if (indexOfCol(colId) === -1) {
+				ul.append(drawRow(self.getColumnObject(colId, undefined, undefined)));
+			}
+
+		}
+
+		dialogBox.append(ul);
+
+		ul.sortable();
+	}
+
+	if (!self.groupStats) {
+		loadingDummy.addClass('loading');
+		self.loadGroupStatistics(function () {
+			loadingDummy.removeClass('loading');
+			renderColumnList();
+		});
+	} else {
+		renderColumnList();
+	}
+
+
+	dialogBox.dialog({
+		width: 500,
+		maxHeight: 500,
+		modal: true,
+		buttons: {
+			OK: function () {
+
+				for (var i = 0; i < self.columns.length; i++) {
+					self.columns.splice(i, 1);
+					i--;
+				}
+
+				$(this).find('li').each(function () {
+					var checkO = $('input', this)[0];
+					if (checkO.checked)
+						self.columns.push(this.col);
+				});
+
+				self.saveSettings();
+
+				self.load();
+
+				$(this).dialog("close");
+
+			},
+			'Abbrechen': function () {
+				$(this).dialog("close");
+			}
+		}
+	});
+
+};
+
+StudentAnalytics.prototype.openGroupDialog = function () {
+	var self = this;
+	var dialogBox = $(document.createElement('div'));
+	dialogBox.attr('title', 'Gruppenauswahl');
+
+	$(document.createElement('p')).text(
+		'Die ausgewählten Gruppen können per Drag & Drop sortiert werden.').appendTo(dialogBox);
+
+	function drawRow(cd) {
+		if (cd.presets && cd.presets.indexOf(self.settingId) === -1) return null;
+
+		var boxO = document.createElement('li');
+		boxO.className = 'colrow';
+		boxO.colId = cd.id;
+
+		var labelO = boxO.appendChild(document.createElement('label'));
+
+		var checkO = labelO.appendChild(document.createElement('input'));
+		checkO.className = 'name';
+		checkO.type = 'checkbox';
+
+		checkO.checked = self.rows.indexOf(cd.id) !== -1;
+
+		if (checkO.checked) {
+			boxO.className += ' sortable';
+			var orderBox = document.createElement('div');
+			orderBox.className = 'orderbox';
+			boxO.appendChild(orderBox);
+		}
+
+		labelO.appendChild(document.createTextNode(cd.label));
+
+		return boxO;
+	}
+
+	var ul = $(document.createElement('ul'));
+	ul.addClass('columnlist');
+	var i, col;
+	for (i = 0; i < self.rows.length; i++) {
+		col = self.columnData[self.rows[i]];
+		ul.append(drawRow(col, self.columns[i]));
+	}
+	var columnsSorted = Object.keys(self.columnData).filter(function (id) {
+		return self.columnData[id].groupable;
+	});
+	columnsSorted.sort(function (a, b) {
+		var cola = self.columnData[a];
+		var colb = self.columnData[b];
+		if (cola.label < colb.label) return -1;
+		if (cola.label > colb.label) return 1;
+		return 0;
+	});
+	for (var j = 0; j < columnsSorted.length; j++) {
+		var colId = columnsSorted[j];
+		if (self.rows.indexOf(colId) === -1) {
+			ul.append(drawRow(self.columnData[colId], null));
+		}
+	}
+
+	dialogBox.append(ul);
+
+	ul.sortable();
+
+	dialogBox.dialog({
+		width: 400,
+		maxHeight: 500,
+		modal: true,
+		buttons: {
+			OK: function () {
+
+				for (var i = 0; i < self.rows.length; i++) {
+					self.rows.splice(i, 1);
+					i--;
+				}
+
+				$(this).find('li').each(function () {
+					var checkO = $('input', this)[0];
+					if (checkO.checked)
+						self.rows.push(this.colId);
+				});
+
+				self.saveSettings();
+
+				self.load();
+
+				$(this).dialog("close");
+
+			},
+			'Abbrechen': function () {
+				$(this).dialog("close");
+			}
+		}
+	});
 
 };

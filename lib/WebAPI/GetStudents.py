@@ -252,13 +252,11 @@ def handle():
     mlist = request.args.get('mlist', default=None)
     do_calc = request.args.get('do_calc', default=None)
     groups = request.args.get('groups', default=None)
+    single_groups = request.args.get('single_groups', default=None)
     calculations = request.args.get('calculations', default=None)
     is_csv = request.args.get('output', default='json') == 'csv'
 
     user_role = g.user_role
-
-    if not 1 <= limit <= 1000:
-        return respond({'error': 'invalid_limit'}, 400)
 
     ret = {
         'start': start,
@@ -375,6 +373,30 @@ def handle():
         ret['calculations'] = allowed_calculations
         ret['group_results'] = DB.Student.calc_groups(allowed_groups, db_query, allowed_calculations)
 
+    elif single_groups is not None:
+        allowed_groups = []
+
+        if not isinstance(single_groups, unicode):
+            return respond({'error': 'invalid_groups'}, 400)
+
+        for name in single_groups.split(','):
+            if not is_field_allowed(name, g.user_role, query_types):
+                return respond({'error': 'invalid_group', 'name': name}, 400)
+            allowed_groups.append(name)
+
+        allowed_calculations = list()
+        allowed_ops = ['sum', 'avg', 'max', 'min', 'addToSet']
+        if isinstance(calculations, unicode):
+            for full_name in calculations.split(','):
+                op, name = full_name.split('.', 2)
+                if not is_field_allowed(name, g.user_role, query_types) or op not in allowed_ops:
+                    continue
+                allowed_calculations.append({'field': name, 'op': op})
+
+        ret['single_groups'] = allowed_groups
+        ret['calculations'] = allowed_calculations
+        ret['group_results'] = DB.Student.calc_single_groups(allowed_groups, db_query, allowed_calculations)
+
     elif do_calc == 'sums':
         ret['sums'] = DB.Student.calc_sums(db_query)
 
@@ -399,6 +421,9 @@ def handle():
         return respond_csv(cursor, ret)
 
     else:
+        if not 1 <= limit <= 1000:
+            return respond({'error': 'invalid_limit'}, 400)
+
         try:
             cursor = DB.Student.find(db_query, limit=limit, skip=start, sort=db_sort)
             ret['count'] = cursor.count()

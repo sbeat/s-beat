@@ -929,22 +929,24 @@ function openSettingsDialog() {
 
 	var label, p;
 	if (self.pagination) {
-		p = document.createElement('p');
-		p.className = 'optionset';
-		dialogBox.append(p);
-		label = document.createElement('label');
-		p.appendChild(label);
-		label.appendChild(document.createTextNode('Limit'));
-		var limitSelect = drawSelect({
-			'10': '10',
-			'20': '20',
-			'30': '30',
-			'50': '50',
-			'100': '100',
-			'500': '500',
-			'1000': '1000'
-		}, self.pagination.limit);
-		p.appendChild(limitSelect);
+		if (self.pagination.limit) {
+			p = document.createElement('p');
+			p.className = 'optionset';
+			dialogBox.append(p);
+			label = document.createElement('label');
+			p.appendChild(label);
+			label.appendChild(document.createTextNode('Limit'));
+			var limitSelect = drawSelect({
+				'10': '10',
+				'20': '20',
+				'30': '30',
+				'50': '50',
+				'100': '100',
+				'500': '500',
+				'1000': '1000'
+			}, self.pagination.limit);
+			p.appendChild(limitSelect);
+		}
 
 
 		p = document.createElement('p');
@@ -1035,7 +1037,9 @@ function openSettingsDialog() {
 	var buttons = {
 		Speichern: function () {
 
-			self.pagination.limit = parseInt(limitSelect.value);
+			if (self.pagination.limit) {
+				self.pagination.limit = parseInt(limitSelect.value);
+			}
 			self.pagination.sort1 = sortSelect1.value;
 			self.pagination.sort2 = sortSelect2.value;
 
@@ -1201,6 +1205,9 @@ function loadPresetSettings() {
 	if (typeof(settings.columns) != 'undefined')
 		this.columns = settings.columns.slice();
 
+	if (typeof(settings.rows) != 'undefined')
+		this.rows = settings.rows.slice();
+
 	if (typeof(settings.displayFilters) != 'undefined')
 		this.displayFilters = settings.displayFilters;
 
@@ -1221,7 +1228,7 @@ function loadSettings(settings) {
 	if (this.loadPresetSettings) {
 		this.loadPresetSettings(this.settingId);
 	}
-	if (!settings || settings.rev != this.settingsRev) {
+	if (!settings || settings.rev !== this.settingsRev) {
 		return;
 	}
 	if (settings.filters) {
@@ -1238,6 +1245,9 @@ function loadSettings(settings) {
 	}
 	if (settings.columns) {
 		this.columns = settings.columns;
+	}
+	if (settings.rows) {
+		this.rows = settings.rows;
 	}
 
 }
@@ -1256,6 +1266,9 @@ function saveSettings(serverSettingId, name, callb) {
 
 	if (this.columns) {
 		settings.columns = this.columns;
+	}
+	if (this.rows) {
+		settings.rows = this.rows;
 	}
 	if (name) {
 		settings.name = name;
@@ -1385,32 +1398,32 @@ function getSortedListSettings(prefix, callb) {
 function drawTableHead(tr, tooltipPrefix) {
 	var i;
 	for (i = 0; i < this.columns.length; i++) {
-		var cd = this.columns[i];
-		var col = cd && cd.cdId ? this.columnData[cd.cdId] : this.columnData[cd];
-		if (!col) continue;
+		var col = this.columns[i];
+		var cd = col && col.cdId ? this.columnData[col.cdId] : this.columnData[col];
+		if (!cd) continue;
 		var th = $(document.createElement('th'));
-		th[0].colId = col.id;
+		th[0].colId = cd.id;
 
 		var thbox = $(document.createElement('div'));
 		th.append(thbox);
 
 		var thlabel = $(document.createElement('span'));
 		thbox.append(thlabel);
-		if (cd && cd.cdId && cd.type === 'group') {
-			thlabel.text(col.label + '=' + cd.grpValue);
+		if (this.getColumnLabel) {
+			thlabel.append(this.getColumnLabel(col));
 		} else {
-			thlabel.text(col.label);
+			thlabel.text(cd.label);
 		}
-		thlabel.attr('title', col.title);
+		thlabel.attr('title', cd.title);
 
-		var extended_tooltip = $('#' + tooltipPrefix + col.id);
+		var extended_tooltip = $('#' + tooltipPrefix + cd.id);
 		if (extended_tooltip.size()) {
 			thlabel.tooltip({content: extended_tooltip.html()});
 		} else {
 			thlabel.tooltip();
 		}
 
-		var sortField = col.sortBy ? col.sortBy : col.id;
+		var sortField = cd.sortBy ? cd.sortBy : cd.id;
 		var sort1 = null;
 		var sort2 = null;
 		if (this.pagination) {
@@ -1446,6 +1459,17 @@ function sortElements(parent, caseStable) {
 	});
 	childs.each(function () {
 		parent.append(this);
+	});
+}
+
+function sortByField(arr, field, dir) {
+	if (!dir) dir = 1; // 1=asc, -1=desc
+	arr.sort(function (a, b) {
+		var vA = a ? a[field] : null;
+		var vB = b ? b[field] : null;
+		if (vA < vB) return -1 * dir;
+		if (vA > vB) return 1 * dir;
+		return 0;
 	});
 }
 

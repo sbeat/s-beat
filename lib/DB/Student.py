@@ -694,6 +694,14 @@ class Student(DBDocument):
             return None
 
     @classmethod
+    def calc_single_groups(cls, groups=list(), find=None, calculations=None):
+        results = dict()
+        for grp in groups:
+            results[grp] = cls.calc_groups([grp], find, calculations)
+
+        return results
+
+    @classmethod
     def calc_sums(cls, find=None):
         """
         Groups and counts values for a defined field
