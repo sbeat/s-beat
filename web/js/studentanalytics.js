@@ -1,10 +1,16 @@
 // Copyright (c) 2017 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
 // see LICENSE.md file in the root of this project or http://www.gnu.org/licenses
 
+/**
+ * Student analytics table
+ * Depends on studentlist
+ * @constructor
+ */
 function StudentAnalytics(parentDOM, settingsPrefix) {
 	this.parentDOM = parentDOM;
 
 	this.settingId = this.parentDOM.attr('data-preset') || 'default';
+	this.query = this.parentDOM.attr('data-query') || '';
 	this.settingsRev = 1; // changing this forces a reset of settings for all users
 	this.settingsPrefix = settingsPrefix || 'sanalytics_';
 	this.tooltipPrefix = settingsPrefix || 'tooltip_';
@@ -18,12 +24,34 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 			rows: ['start_semester', 'hzb_type'],
 			displayPagination: false,
 			sortable: false
+		},
+		'course': {
+			limit: 0,
+			sort1: null,
+			sort2: null,
+			filters: [],
+			columns: [],
+			rows: ['start_semester', 'hzb_type'],
+			displayPagination: false,
+			sortable: false
+		},
+		'course_sem': {
+			limit: 0,
+			sort1: null,
+			sort2: null,
+			filters: [],
+			columns: [],
+			rows: ['hzb_type'],
+			displayPagination: false,
+			sortable: false
 		}
 	};
 
 	this.paginationDOM = $(document.createElement('div'));
 	this.pagination = new Pagination(this.paginationDOM);
 	this.pagination.limit = this.settings.default.limit;
+
+	this.displayFilters = true;
 	this.displayPagination = false;
 	this.sortable = true;
 	this.clientSort = false;
@@ -36,6 +64,7 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 	this.columns = [];
 	this.rows = [];
 	this.mandatoryColumns = ['group'];
+	this.definitions = null;
 
 	this.linkBox = $(document.createElement('div'));
 
@@ -54,6 +83,13 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 	this.openLevels = 0;
 
 	this.allowedTableFormats = ['grade', 'percent', 'float', 'int'];
+
+	this.filterDOM = $(document.createElement('div'));
+	this.filter = new FilterList(this.filterDOM);
+
+	this.filter.multiFilters = {
+		exam_count: ['exam_count', 'exam_count_success', 'exam_count_applied']
+	};
 
 	this.loadPresetSettings = loadPresetSettings;
 	this.loadSettings = loadSettings;
@@ -99,7 +135,20 @@ StudentAnalytics.prototype.getColumnObject = function (cdId, grpValue, calcOp) {
 	}
 	return col;
 };
+StudentAnalytics.prototype.removeColumn = function (col) {
+	var self = this;
+	if (self.columnData[col]) {
+		delete self.columnData[col];
+	}
+	for (var i = 0; i < self.columns.length; i++) {
+		var col = self.columns[i];
+		if (col.cdId === col) {
+			self.columns.splice(i, 1);
+			i--;
+		}
+	}
 
+};
 StudentAnalytics.prototype.addLink = function (label, click) {
 	this.linkBox.append(' ');
 	var setBtn = $(document.createElement('a'));
@@ -122,11 +171,15 @@ StudentAnalytics.prototype.init = function () {
 	this.defineColumn('group', 'Gruppe', 'Gruppierung', 'str');
 	this.defineColumn('count', 'Studenten', 'Anzahl Studenten in der Gruppe', 'int');
 	this.defineColumn('age', 'Alter', 'Anzahl Studenten mit dem Alter bzw. berechnetes Alter in der Gruppe', 'int', true, ['min', 'max', 'avg']);
+	this.defineColumn('bonus_total', CONFIG.cp_label, null, 'int', false, ['min', 'max', 'avg']);
+	this.defineColumn('exam_count', 'Leistungen', null, 'int', false, ['min', 'max', 'avg']);
 	this.defineColumn('gender', 'Geschlecht', 'Anzahl Studenten mit dem Geschlecht', 'str', true);
 	this.defineColumn('hzb_type', 'HZB Gruppe', 'Anzahl Studenten mit der HZB Gruppe', 'str', true);
 	this.defineColumn('hzb_grade', 'HZB Note', null, 'grade', true, ['min', 'max', 'avg']);
 	this.defineColumn('status', 'Status', null, 'status', true);
 	this.defineColumn('semesters', 'Studiumssemester', 'Länge des Studiums der Studenten mit Examatrikulation', 'int', true, ['min', 'max', 'avg']);
+	this.defineColumn('cnt_delayed_exams', 'Rücktritte', null, 'int', false, ['min', 'max', 'avg']);
+	this.defineColumn('study_time_real', 'Semester mit Leistungen', null, 'int', false, ['min', 'max', 'avg']);
 	this.defineColumn('start_semester', 'Start Semester', null, 'semester', true);
 
 	this.settings.default.columns.push(this.getColumnObject('group'));
@@ -134,6 +187,8 @@ StudentAnalytics.prototype.init = function () {
 	this.settings.default.columns.push(this.getColumnObject('hzb_grade', undefined, 'avg'));
 	this.settings.default.columns.push(this.getColumnObject('gender', 'W'));
 	this.settings.default.columns.push(this.getColumnObject('gender', 'M'));
+	this.settings.course.columns = this.settings.default.columns;
+	this.settings.course_sem.columns = this.settings.default.columns;
 
 	this.columns = this.settings.default.columns.slice();
 	this.rows = this.settings.default.rows.slice();
@@ -159,18 +214,34 @@ StudentAnalytics.prototype.init = function () {
 
 	self.draw();
 
-	this.pagination.changed = function () {
+	self.pagination.changed = function () {
 		self.sortChanged();
 		self.load();
 	};
-	this.pagination.onReset = function () {
+	self.pagination.onReset = function () {
 		self.loadPresetSettings(self.settingId);
+		self.filter.draw();
 		self.load();
 	};
 
-	self.load();
+	self.filter.filterChanged = function (op, f) {
+		self.pagination.setStart(0);
+		self.load();
+	};
+
+
+	var asyncParent = this.parentDOM.parents('[data-asyncload=1]');
+	if (asyncParent.size()) {
+		asyncParent.one('show', function () {
+			self.load();
+		});
+
+	} else {
+		self.load();
+	}
 
 };
+
 StudentAnalytics.prototype.sortChanged = function () {
 	if (this.clientSort) {
 		this.sortTable();
@@ -184,6 +255,10 @@ StudentAnalytics.prototype.draw = function () {
 	var self = this;
 	if (!this.drawn) {
 		this.parentDOM.empty();
+
+		this.filterDOM.addClass('filterlist');
+		this.parentDOM.append(this.filterDOM);
+		this.filter.draw();
 
 		this.paginationDOM.addClass('pagination');
 		this.parentDOM.append(this.paginationDOM);
@@ -205,6 +280,9 @@ StudentAnalytics.prototype.draw = function () {
 
 		this.drawn = true;
 	}
+
+	if (this.displayFilters) this.filterDOM.show();
+	else this.filterDOM.hide();
 
 	if (this.displayPagination) this.paginationDOM.show();
 	else this.paginationDOM.hide();
@@ -535,6 +613,11 @@ StudentAnalytics.prototype.load = function () {
 
 	var params = [];
 
+	var filterQueries = this.filter.getQueries(false);
+	for (var name in filterQueries) {
+		params.push(name + '=' + encodeURIComponent(filterQueries[name]));
+	}
+
 	params.push('start=' + self.pagination.start);
 	params.push('limit=' + self.pagination.limit);
 	params.push('sort1=' + self.pagination.sort1);
@@ -542,6 +625,10 @@ StudentAnalytics.prototype.load = function () {
 		params.push('sort2=' + self.pagination.sort2);
 
 	if (isTempActive()) params.push('temp=true');
+
+	if (!self.definitions) {
+		params.push('definitions=true');
+	}
 
 	var groups = [], calculations = [];
 	self.columns.forEach(function (col) {
@@ -561,6 +648,9 @@ StudentAnalytics.prototype.load = function () {
 		params.push('calculations=' + encodeURIComponent(calculations.join(',')));
 	}
 
+	if (self.query && self.query.length) {
+		params.push(self.query);
+	}
 
 	if (params.length) url += '?';
 	url += params.join('&');
@@ -572,6 +662,21 @@ StudentAnalytics.prototype.load = function () {
 	}).success(function (data) {
 
 		self.data = data;
+
+		if (data.definitions) {
+			if(self.settingId === 'course') {
+				data.definitions.restricted.push('stg');
+				data.definitions.restricted.push('stg_original');
+			}
+			if(self.settingId === 'course_sem') {
+				data.definitions.restricted.push('stg');
+				data.definitions.restricted.push('stg_original');
+				data.definitions.restricted.push('start_semester');
+				self.removeColumn('start_semester');
+			}
+			StudentList.prototype.initDefinitions.call(self, data.definitions);
+
+		}
 
 		self.tableDOM.removeClass('loading');
 
@@ -756,7 +861,8 @@ StudentAnalytics.prototype.openColumnDialog = function () {
 					}
 				}
 
-			} else if (indexOfCol(colId) === -1) {
+			}
+			if (!cd.calculations && !cd.groupable && indexOfCol(colId) === -1) {
 				ul.append(drawRow(self.getColumnObject(colId, undefined, undefined)));
 			}
 

@@ -9,6 +9,8 @@
 {{ super() }}
 <script src="js/coursedetails.js"></script>
 <script src="js/coursesemesterdetails.js"></script>
+<script src="js/studentlist.js"></script>
+<script src="js/studentanalytics.js"></script>
 {% endblock %}
 {% block content %}
 <div class="layout" data-load="CourseSemesterDetails" data-stg="{{ request.args.get('stg') }}"
@@ -139,6 +141,15 @@
 		<h2>Studierte Semester der Kohorte</h2>
 
 		<div data-detail="semester_table"></div>
+
+	</article>
+
+	<article>
+		<h2 data-toggle="student_analytics" class="toggle">Detaillierte Analyse</h2>
+
+		<div style="display: none" id="student_analytics">
+			<div data-load="StudentAnalytics" data-preset="course_sem" data-query="stg={{ request.args.get('stg',0) }}&amp;start_semester={{ request.args.get('sem',0) }}"></div>
+		</div>
 
 	</article>
 

@@ -9,6 +9,8 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 {{ super() }}
 <script src="js/coursedetails.js"></script>
 <script src="js/coursesemesterlist.js"></script>
+<script src="js/studentlist.js"></script>
+<script src="js/studentanalytics.js"></script>
 {% endblock %}
 {% block content %}
 <div class="layout" data-load="CourseDetails" data-stg="{{ request.args.get('stg',0) }}">
@@ -65,6 +67,15 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 		<h2>Kohorten nach Startsemester</h2>
 
 		<div data-load="CourseSemesterList" data-stg="{{ request.args.get('stg') }}"></div>
+
+	</article>
+
+	<article>
+		<h2 data-toggle="student_analytics" class="toggle">Detaillierte Analyse</h2>
+
+		<div style="display: none" id="student_analytics">
+			<div data-load="StudentAnalytics" data-preset="course" data-query="stg={{ request.args.get('stg',0) }}"></div>
+		</div>
 
 	</article>
 
