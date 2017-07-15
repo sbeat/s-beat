@@ -8,9 +8,11 @@ This Software is currently aimed towards a German audience, sorry.
 Durch seine detaillierte und übersichtliche Darstellung liefert es aber auch Studiendekanen wichtige und interessante Einblicke in die Studiengänge und weitergehende Analysemöglichkeiten.
 Zentraler Punkt der Software ist die Möglichkeit, kritische Studienverläufe frühzeitig automatisiert zu erkennen, um Studenten gezielt beraten und Gegenmaßnahmen ergreifen zu können. S-BEAT liefert hierfür einen Risikowert, der Auskunft darüber gibt, wie hoch die Wahrscheinlichkeit für einen Studierenden ist, sein Studium nicht erfolgreich abzuschließen. Im Falle eines hohen Risikowertes bietet S-BEAT, in Form einer kausalen Analyse, vielfältige Möglichkeiten Rückschlüsse über mögliche Ursachen zu ziehen und steht somit für Nachvollziehbarkeit und Transparenz. 
 
-S-BEAT ist eine Web-Software. Sie besteht aus dem Backend, welches ein Webserver ist, und aus dem in HTML, CSS und JS geschrieben Frontend.
+S-BEAT ist eine Web-Software. Sie besteht aus einem Webserver als Backend, und aus dem in HTML, CSS und JS geschriebenen Frontend.
 
-Es wird MongoDB für die Speicherung von Daten verwendet. Ein Reverse-Proxy (meistens Apache2) wird für die Benutzerauthentifizierung verwendet.
+Für die Speicherung der Daten kommt MongoDB zum Einsatz.
+Die Benutzerauthentifizierung wird über einen Reverse-Proxy (meistens Apache2) geregelt.
+Dadurch ist auch eine Anbindung an LDAP-/AD-Systeme möglich.
 
 
 ## Resourcen
@@ -31,7 +33,7 @@ S-BEAT kann sowohl auf Windows als auch auf Linux ausgeführt werden. Für den p
 * Python 2.x
 * MongoDB 3+
 
-Für den produktiven Betrieb muss ein Webserver als Reverse-Proxy vorgeschaltet werden. Z.B. Apache2. Dieser übernimmt die SSL Verschlüsselung und die Authentifizierung der Benutzer.
+Für den produktiven Betrieb muss ein Webserver als Reverse-Proxy vorgeschaltet werden, beispielsweise Apache 2.x. Dieser übernimmt die SSL Verschlüsselung und die Authentifizierung der Benutzer.
 
 Für den Zugriff auf die Weboberfläche wird ein moderner Web-Browser, welcher mit HTML5, CSS3 & JavaScript umgehen kann, benötigt.
 
