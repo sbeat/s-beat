@@ -35,7 +35,7 @@ from MarkedList import MarkedList
 from Path import Path
 from ProcessTracking import ProcessTracking
 from Settings import Settings
-from ImportTools import get_date_from_csv, get_int, get_unicode
+from ImportTools import get_date_from_csv, get_int, get_unicode, get_boolean
 
 encoding = 'windows-1252'
 logger = logging.getLogger(__name__)
@@ -55,6 +55,10 @@ class Student(DBDocument):
         'surname': 'identification_data',
         'short': 'identification_data',
         'email': 'identification_data',
+        'land': 'identification_data',
+        'plz': 'identification_data',
+        'stang': 'identification_data',
+        'eu': 'identification_data',
     }
 
     cached_min_max = None
@@ -70,6 +74,7 @@ class Student(DBDocument):
         self.stg = None  # Short of the degree course (already mapped!)
         self.stg_original = None  # Original unmapped course
         self.degree_type = None  # type of degree: Diplom,Bachelor,Master
+        self.sem_start = None  # start semester number
         self.imm_date = None  # Enrollment date
         self.exm_date = None  # Disenrollment date
         self.finished = False  # Whether the study is finished
@@ -83,9 +88,13 @@ class Student(DBDocument):
         self.surname = None
         self.short = None
         self.email = None
+        self.land = None  # country of residence
+        self.plz = None  # zip code
+        self.stang = None  # citizenship
+        self.eu = None  # EU citizen (yes/no)
 
         # 1st step calculated values
-        self.start_semester = None  # Start semester number
+        self.start_semester = None  # calculated start semester number
         self.age = None  # Age of student
         self.hzb_imm_time = None  # count of months between entrance qualification and enrollment
         self.semesters = None  # Count of semesters between imm and exm
@@ -322,9 +331,13 @@ class Student(DBDocument):
             if 'kuerzel' in data:
                 student.short = get_unicode(data['kuerzel'], encoding)
             student.email = get_unicode(data['email'], encoding)
+            student.land = get_unicode(data['land'], encoding)
+            student.plz = get_unicode(data['plz'], encoding)
+            student.stang = get_unicode(data['stang'], encoding)
+            student.eu = get_boolean(data['eu'])
 
             student.db_update([
-                'matrikelno', 'forename', 'surname', 'short', 'email'
+                'matrikelno', 'forename', 'surname', 'short', 'email', 'land', 'plz', 'stang', 'eu'
             ])
 
             if num % 100 == 0:
@@ -780,7 +793,10 @@ def create_student_from_entry(data, settings):
     if student.imm_date is not None and student.exm_date is not None:
         student.semesters = CalcTools.semester_delta(student.imm_date, student.exm_date)
 
-    student.start_semester = CalcTools.get_semester_from_date(student.imm_date)
+    if student.sem_start == '':
+        student.start_semester = CalcTools.get_semester_from_date(student.imm_date)
+    else:
+        student.start_semester = student.sem_start
 
     student.hzb_grade = get_int(data['hzbnote'])
     if 'hzbart' in data:
@@ -843,6 +859,18 @@ def create_student_from_entry(data, settings):
 
         if 'email' in data:
             student.email = get_unicode(data['email'], encoding)
+
+        if 'land' in data:
+            student.land = get_unicode(data['land'], encoding)
+
+        if 'plz' in data:
+            student.lplz = get_unicode(data['plz'], encoding)
+
+        if 'stang' in data:
+            student.land = get_unicode(data['stang'], encoding)
+
+        if 'eu' in data:
+            student.eu = get_boolean(data['eu'])
 
     return student
 

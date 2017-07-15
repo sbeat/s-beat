@@ -25,6 +25,7 @@
 	"ignore_exam_numbers": [],
 	"min_semester": 20042,
 	"import_ident_from_students": false,
+	"import_applicants": false,
 	"unique_exam_info_id": ["exam_id"],
 	"unique_exam_id": ["student_id", "exam_id", "semester", "try_nr"],
 	"cp_label": "ECTS",

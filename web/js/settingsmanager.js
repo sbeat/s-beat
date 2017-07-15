@@ -93,6 +93,13 @@ function SettingsManager(parentDOM) {
 			group: 'Import',
 			defaultVal: false
 		},
+		"import_applicants": {
+			type: 'boolean',
+			name: 'Bewerberdaten',
+			desc: 'Sind die Spalten Bewerber in den Studentendaten enthalten und sollen von dort importiert werden?',
+			group: 'Import',
+			defaultVal: false
+		},
 		"unique_exam_info_id": {
 			type: 'list',
 			name: 'Endeutige ID eines Prüfungsmoduls',

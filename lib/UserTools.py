@@ -25,12 +25,13 @@ user_rights = [
     # 'exams_access',
     'admin_access',
     'personal_data',
-    'identification_data'
+    'identification_data',
+    'applicant_data'
 ]
 
 # the following user roles can be overwritten by the main.cfg
 user_roles = {
-    'admin': ['admin_access', 'personal_data', 'identification_data'],
+    'admin': ['admin_access', 'personal_data', 'identification_data', 'applicant_data'],
     'berater': ['personal_data', 'identificationd_data'],
     'dozent': ['personal_data', 'identificationd_data'],
     'guest': []
