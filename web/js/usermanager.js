@@ -17,7 +17,8 @@ function UserManager(parentDOM) {
 	this.rightsDesc = {
 		'admin_access': 'Kann den Bereich "Administration" verwenden',
 		'personal_data': 'Kann persönliche Daten der Studenten sehen',
-		'identification_data': 'Kann identifizierende Daten der Studenten sehen'/*,
+		'identification_data': 'Kann identifizierende Daten der Studenten sehen',
+		'applicant_data': 'Kann Bewerberdaten sehen'/*,
 		'courses_access': 'Kann den Bereich "Studiengänge" verwenden',
 		'students_access': 'Kann den Bereich "Studenten" verwenden',
 		'exams_access': 'Kann den Bereich "Prüfungsleistungen" verwenden'*/

@@ -96,7 +96,7 @@ function SettingsManager(parentDOM) {
 		"import_applicants": {
 			type: 'boolean',
 			name: 'Bewerberdaten',
-			desc: 'Sind die Spalten Bewerber in den Studentendaten enthalten und sollen von dort importiert werden?',
+			desc: 'Sollen Bewerber aus den Studentendaten importiert werden?',
 			group: 'Import',
 			defaultVal: false
 		},
