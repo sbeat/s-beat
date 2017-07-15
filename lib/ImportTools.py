@@ -26,7 +26,7 @@ from datetime import datetime
 import json
 import logging
 
-allowed_directories = ('exams', 'students', 'studentidents', 'courses')
+allowed_directories = ('courses', 'exams', 'studentidents', 'students')
 data_path = 'data'
 mappings = None
 logger = logging.getLogger(__name__)
@@ -198,6 +198,14 @@ def get_int(s):
         return int(s)
     except (ValueError, TypeError):
         return None
+
+
+def get_boolean(s):
+    s = s.lower()
+    if s in [True, 'true', 'y', 'j']:
+        return True
+    else:
+        return False
 
 
 def get_unicode(s, encoding='windows-1252'):
