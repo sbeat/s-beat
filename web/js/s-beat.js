@@ -658,6 +658,27 @@ function getSemesterRanges(semesters) {
 	}
 	return ranges;
 }
+function addSemester(semester, count) {
+	var year = Math.floor(semester / 10);
+	var type = semester % 10; // 1=SS, 2=WS
+	if(count === 0) {
+		return semester;
+	} else if(count === 1 && type === 1) {
+		return year * 10 + 2;
+	} else if(count === 1 && type === 2) {
+		return (year + 1) * 10 + 1;
+	} else if(count === -1 && type === 1) {
+		return (year - 1) * 10 + 2;
+	} else if(count === -1 && type === 2) {
+		return year * 10 + 1;
+	} else {
+		var iterations = Math.abs(count);
+		for(var i=0; i<iterations; i++) {
+			semester = addSemester(semester, count/iterations);
+		}
+	}
+	return semester;
+}
 
 function getSemesterText(value) {
 	var year = Math.floor(value / 10);

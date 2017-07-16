@@ -98,7 +98,10 @@ CourseSemesterDetails.prototype.createSemesterDataTable = function (el) {
 	var self = this;
 
 	this.semTable = new DetailsTable(el, 'coursesemdetailsemesters_');
-	this.semTable.defineColumn('semester', 'Semester', null, 'int');
+	this.semTable.defineColumn('semester', 'Semester', null, 'semester').drawValue = function(entry, col, td){
+		td.append(document.createTextNode(entry.semester+' '));
+		td.append(getFormattedHTML(addSemester(parseInt(self.courseSem), entry.semester - 1), col.formatting));
+	};
 	this.semTable.defineColumn('students.count', 'Anzahl Studenten mit Leistungen', null, 'int');
 	this.semTable.defineColumn('exams.count', 'Anzahl Leistungen', null, 'int');
 	this.semTable.defineColumn('exams.mean', 'Ø Anzahl Leistungen pro Student', null, 'float');
