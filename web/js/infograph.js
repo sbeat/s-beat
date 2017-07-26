@@ -511,7 +511,7 @@ HBarChart.prototype.drawBar = function (bar, parent) {
 		});
 	texts
 		.text(function (d) {
-			if (d.d.y == 0) {
+			if (d.d.y === 0 || Math.round(d.d.y / bar.sumY * 100) === 0) {
 				return '';
 			}
 			return (d.d.y / bar.sumY * 100).toFixed(0) + '%';

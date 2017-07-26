@@ -1226,6 +1226,12 @@ h2.toggle:hover {
 	background: url('../img/icons/minus-small-white.png');
 }
 
+.addBtn {
+	padding-left: 20px;
+	background: url('../img/icons/plus.png') 0 50% no-repeat;
+}
+
+
 @media print {
 	#side {
 		display: none;

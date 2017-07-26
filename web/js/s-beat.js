@@ -459,12 +459,12 @@ function getCompareValueInfo(value, formatting) {
 	} else if (formatting == 'yesno') {
 		ret.type = 'boolean';
 		if (value == 'true') {
-			ret.operator = 'is';
+			ret.operator = 'equal';
 			ret.value = 'true';
 			ret.valueOutput = 'Ja';
 			ret.text = ret.valueOutput;
 		} else {
-			ret.operator = 'is';
+			ret.operator = 'equal';
 			ret.value = 'false';
 			ret.valueOutput = 'Nein';
 			ret.text = ret.valueOutput;
@@ -472,12 +472,25 @@ function getCompareValueInfo(value, formatting) {
 
 	} else if (formatting == 'risk') {
 		ret.type = 'risk';
-		ret.operator = 'is';
+		ret.operator = 'equal';
 		ret.value = value;
 		var valueMapping = {
 			red: 'Rot',
 			yellow: 'Gelb',
 			green: 'Grün'
+		};
+		ret.valueOutput = valueMapping[value];
+		ret.text = ret.valueOutput;
+
+	} else if (formatting == 'status') {
+		ret.type = 'status';
+		ret.operator = 'equal';
+		ret.value = value;
+		var valueMapping = {
+			1: 'Abgeschlossen',
+			2: 'Abgebrochen',
+			3: 'Erfolgreich',
+			4: 'Studierend'
 		};
 		ret.valueOutput = valueMapping[value];
 		ret.text = ret.valueOutput;

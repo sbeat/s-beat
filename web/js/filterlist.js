@@ -719,13 +719,13 @@ FilterList.prototype.drawValueSelector = function (value, formatting, sendCallb,
 	return boxO;
 };
 
-FilterList.prototype.drawStringValueSelector = function (filter, sendCallb) {
+FilterList.prototype.drawStringValueSelector = function (value, possibleValues, formatting, sendCallb) {
 
 	var self = this;
 	var boxO = $(document.createElement('div'));
 	boxO.addClass('filterSelect');
 
-	var values = self.possibleValues[filter.id];
+	var values = possibleValues;
 
 	if (values.length > 10) {
 		var searchLine = $('<p/>').appendTo(boxO);
@@ -742,8 +742,8 @@ FilterList.prototype.drawStringValueSelector = function (filter, sendCallb) {
 		var val = values[i];
 		var el = document.createElement('a');
 		el.href = '';
-		el.appendChild(document.createTextNode(val));
-		if (val == filter.value) el.className = 'active';
+		el.appendChild(getFormattedHTML(val, formatting));
+		if (val == value) el.className = 'active';
 		el.filterValue = val;
 		boxO.append(el);
 	}
@@ -898,7 +898,7 @@ FilterList.prototype.openMulitValueDialog = function (filter_ids, mainFilter_id,
 		if (filter.type == 'attribute') {
 			label.appendChild(document.createTextNode(filter.name));
 			if (self.possibleValues[filter.id]) {
-				selector = self.drawStringValueSelector(filter, submitMultiValueDialog);
+				selector = self.drawStringValueSelector(filter.value, self.possibleValues[filter.id], filter.formatting, submitMultiValueDialog);
 			} else {
 				selector = self.drawValueSelector(filter.value, filter.formatting, submitMultiValueDialog, checkbox);
 			}
@@ -996,7 +996,7 @@ FilterList.prototype.openValueDialog = function (filter, callb) {
 	if (filter.type == 'attribute') {
 		dialogBox.attr('title', filter.name);
 		if (self.possibleValues[filter.id]) {
-			selector = self.drawStringValueSelector(filter, function () {
+			selector = self.drawStringValueSelector(filter.value, self.possibleValues[filter.id], filter.formatting, function () {
 				filter.value = this.getValue();
 				callb(filter);
 				dialogBox.dialog("close");
