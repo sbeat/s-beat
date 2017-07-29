@@ -347,11 +347,21 @@ class Student(DBDocument):
             student.surname = get_unicode(data['nachname'], encoding)
             if 'kuerzel' in data:
                 student.short = get_unicode(data['kuerzel'], encoding)
-            student.email = get_unicode(data['email'], encoding)
-            student.land = get_unicode(data['land'], encoding)
-            student.plz = get_unicode(data['plz'], encoding)
-            student.stang = get_unicode(data['stang'], encoding)
-            student.eu = get_boolean(data['eu'])
+
+            if 'email' in data:
+                student.email = get_unicode(data['email'], encoding)
+
+            if 'land' in data:
+                student.land = get_unicode(data['land'], encoding)
+
+            if 'plz' in data:
+                student.lplz = get_unicode(data['plz'], encoding)
+
+            if 'stang' in data:
+                student.land = get_unicode(data['stang'], encoding)
+
+            if 'eu' in data:
+                student.eu = get_boolean(data['eu'])
 
             student.db_update([
                 'matrikelno', 'forename', 'surname', 'short', 'email', 'land', 'plz', 'stang', 'eu'
