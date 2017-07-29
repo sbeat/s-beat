@@ -488,9 +488,9 @@ StudentAnalytics.prototype.getEntries = function () {
 				var grpValue = d._id[col.cdId];
 				var cd = self.columnData[col.cdId];
 				var cmpInfo = getCompareValueInfo(col.grpValue, cd.formatting);
-				if (cmpInfo.operator === 'equal' && grpValue === col.grpValue
-					|| cmpInfo.operator === 'lte' && grpValue <= col.grpValue
-					|| cmpInfo.operator === 'gte' && grpValue >= col.grpValue
+				if (cmpInfo.operator === 'equal' && grpValue === parseFloat(cmpInfo.value)
+					|| cmpInfo.operator === 'lte' && grpValue <= parseFloat(cmpInfo.value)
+					|| cmpInfo.operator === 'gte' && grpValue >= parseFloat(cmpInfo.value)
 					|| cmpInfo.operator === 'between'
 					&& grpValue >= parseFloat(cmpInfo.minValue)
 					&& grpValue <= parseFloat(cmpInfo.maxValue)) {
@@ -904,6 +904,7 @@ StudentAnalytics.prototype.openColumnDialog = function () {
 				self.openColumnValueDialog(col, function (grpValue) {
 					console.log('grpValue', grpValue);
 					var newCol = self.getColumnObject(col.cdId, grpValue);
+					self.columns.push(newCol);
 					boxO.after(drawRow(newCol));
 
 				});
