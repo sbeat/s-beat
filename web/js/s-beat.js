@@ -331,9 +331,11 @@ function loadStorage(key, def) {
 		return def;
 	}
 }
+
 function saveStorage(key, value) {
 	window.localStorage.setItem(key, JSON.stringify(value));
 }
+
 function removeStorage(key, value) {
 	window.localStorage.removeItem(key);
 }
@@ -359,6 +361,7 @@ function getNumericValueOutput(value, formatting) {
 	if (formatting == 'int' && (value % 1).toString().length > 4) return value.toFixed(2);
 	return value;
 }
+
 function getNumericValueInput(value, formatting) {
 	if (typeof(value) == 'string') value = value.replace(/,/g, '.');
 	if (formatting == '') return null;
@@ -654,27 +657,29 @@ function getSemesterRanges(semesters) {
 	}
 	return ranges;
 }
+
 function addSemester(semester, count) {
 	var year = Math.floor(semester / 10);
 	var type = semester % 10; // 1=SS, 2=WS
-	if(count === 0) {
+	if (count === 0) {
 		return semester;
-	} else if(count === 1 && type === 1) {
+	} else if (count === 1 && type === 1) {
 		return year * 10 + 2;
-	} else if(count === 1 && type === 2) {
+	} else if (count === 1 && type === 2) {
 		return (year + 1) * 10 + 1;
-	} else if(count === -1 && type === 1) {
+	} else if (count === -1 && type === 1) {
 		return (year - 1) * 10 + 2;
-	} else if(count === -1 && type === 2) {
+	} else if (count === -1 && type === 2) {
 		return year * 10 + 1;
 	} else {
 		var iterations = Math.abs(count);
-		for(var i=0; i<iterations; i++) {
-			semester = addSemester(semester, count/iterations);
+		for (var i = 0; i < iterations; i++) {
+			semester = addSemester(semester, count / iterations);
 		}
 	}
 	return semester;
 }
+
 function getStatusText(value) {
 	var valueMapping = {
 		1: 'Abgeschlossen',
@@ -684,6 +689,7 @@ function getStatusText(value) {
 	};
 	return valueMapping[value] ? valueMapping[value] : 'Unbekannt';
 }
+
 function getSemesterText(value) {
 	var year = Math.floor(value / 10);
 	var semnr = value % 10;
@@ -697,6 +703,7 @@ function getSemesterText(value) {
 	}
 	return ret;
 }
+
 function getDateText(dt) {
 	var day = dt.getDate();
 	if (isNaN(day)) {
@@ -712,6 +719,7 @@ function getDateText(dt) {
 	ret += year;
 	return ret;
 }
+
 function getDateTimeText(dt) {
 	var hour = dt.getHours();
 	if (isNaN(hour)) {
@@ -761,6 +769,7 @@ function getTimeOutput(timeval) {
 
 	return time.h + 'h ' + time.i + 'm ' + time.s + 's';
 }
+
 function getBytesOutput(bytes, r) {
 	var ret = bytes;
 	var symbol = 'B';
@@ -778,6 +787,7 @@ function getBytesOutput(bytes, r) {
 	}
 	return ret.toFixed(r || 0) + symbol
 }
+
 function numTd(num) {
 	var parts = String(num).split('.');
 	var n = parts[0];
@@ -804,6 +814,7 @@ function randomString(len) {
 function getUserRole() {
 	return $(document.body).attr('data-user-role') || 'guest';
 }
+
 function getUserName() {
 	return $(document.body).attr('data-user-name') || 'guest';
 }
@@ -995,7 +1006,7 @@ function openSettingsDialog() {
 		p.appendChild(sortSelect2);
 	}
 
-	if(self.graphMode) {
+	if (self.graphMode) {
 		p = document.createElement('p');
 		p.className = 'optionset';
 		dialogBox.append(p);
@@ -1083,7 +1094,7 @@ function openSettingsDialog() {
 			self.pagination.sort1 = sortSelect1.value;
 			self.pagination.sort2 = sortSelect2.value;
 
-			if(self.graphMode) {
+			if (self.graphMode) {
 				self.graphMode = graphModeSelect.value;
 			}
 
@@ -1265,6 +1276,7 @@ function loadPresetSettings() {
 		this.sortable = settings.sortable;
 
 }
+
 function loadSettings(settings) {
 	if (!settings) {
 		settings = loadStorage(this.settingsPrefix + this.settingId);
@@ -1290,16 +1302,17 @@ function loadSettings(settings) {
 	if (settings.columns) {
 		this.columns = settings.columns;
 	}
-	if(this.settingsFields) {
+	if (this.settingsFields) {
 		for (var i = 0; i < this.settingsFields.length; i++) {
 			var field = this.settingsFields[i];
-			if(settings[field] !== undefined) {
+			if (settings[field] !== undefined) {
 				this[field] = settings[field];
 			}
 		}
 	}
 
 }
+
 function saveSettings(serverSettingId, name, callb) {
 	var self = this;
 	var settings = loadStorage(this.settingsPrefix + this.settingId, {});
@@ -1316,7 +1329,7 @@ function saveSettings(serverSettingId, name, callb) {
 	if (this.columns) {
 		settings.columns = this.columns;
 	}
-	if(this.settingsFields) {
+	if (this.settingsFields) {
 		for (var i = 0; i < this.settingsFields.length; i++) {
 			var field = this.settingsFields[i];
 			settings[field] = this[field];
@@ -1333,11 +1346,13 @@ function saveSettings(serverSettingId, name, callb) {
 	setServerSetting('list', serverSettingId, settings, callb);
 
 }
+
 function removeSettings() {
 	removeStorage(this.settingsPrefix + this.settingId);
 }
 
 var loadedServerSettings = {};
+
 function loadServerSettings(type, callb) {
 	if (loadedServerSettings[type]) {
 		callb(loadedServerSettings[type]);
