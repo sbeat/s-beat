@@ -488,12 +488,12 @@ StudentAnalytics.prototype.getEntries = function () {
 				var grpValue = d._id[col.cdId];
 				var cd = self.columnData[col.cdId];
 				var cmpInfo = getCompareValueInfo(col.grpValue, cd.formatting);
-				if (cmpInfo.operator === 'equal' && grpValue === parseFloat(cmpInfo.value)
-					|| cmpInfo.operator === 'lte' && grpValue <= parseFloat(cmpInfo.value)
-					|| cmpInfo.operator === 'gte' && grpValue >= parseFloat(cmpInfo.value)
+				if (cmpInfo.operator === 'equal' && grpValue === cmpInfo.value
+					|| cmpInfo.operator === 'lte' && grpValue <= cmpInfo.value
+					|| cmpInfo.operator === 'gte' && grpValue >= cmpInfo.value
 					|| cmpInfo.operator === 'between'
-					&& grpValue >= parseFloat(cmpInfo.minValue)
-					&& grpValue <= parseFloat(cmpInfo.maxValue)) {
+					&& grpValue >= cmpInfo.minValue
+					&& grpValue <= cmpInfo.maxValue) {
 					value = (value || 0) + d.count;
 				}
 			}

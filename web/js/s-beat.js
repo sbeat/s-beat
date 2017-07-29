@@ -422,14 +422,15 @@ function getCompareValueInfo(value, formatting) {
 		formatting: formatting,
 		dataValue: value,
 		operator: 'equal',
-		text: ''
+		text: '',
+		value: null
 	};
 	if (['int', 'grade', 'percent', 'date', 'semester'].indexOf(formatting) != -1) {
 		ret.type = 'numeric';
 		value = String(value);
 		if (value == '' || value == 'null' || value === null) {
 			ret.operator = 'equal';
-			ret.value = '';
+			ret.value = 0;
 			ret.valueOutput = '';
 			ret.text = ret.valueOutput;
 
@@ -437,25 +438,25 @@ function getCompareValueInfo(value, formatting) {
 			var parts = value.split(',');
 			if (parts.length == 2 && parts[0].length && parts[1].length) {
 				ret.operator = 'between';
-				ret.minValue = parts[0];
-				ret.maxValue = parts[1];
+				ret.minValue = parseFloat(parts[0]);
+				ret.maxValue = parseFloat(parts[1]);
 				ret.minValueOutput = getNumericValueOutput(ret.minValue, formatting);
 				ret.maxValueOutput = getNumericValueOutput(ret.maxValue, formatting);
 				ret.text = ret.minValueOutput + ' ≤x≤ ' + ret.maxValueOutput;
 			} else if (parts.length == 2 && parts[0].length && !parts[1].length) {
 				ret.operator = 'gte';
-				ret.value = parts[0];
+				ret.value = parseFloat(parts[0]);
 				ret.valueOutput = getNumericValueOutput(ret.value, formatting);
 				ret.text = '>= ' + ret.valueOutput;
 			} else if (parts.length == 2 && !parts[0].length && parts[1].length) {
 				ret.operator = 'lte';
-				ret.value = parts[1];
+				ret.value = parseFloat(parts[1]);
 				ret.valueOutput = getNumericValueOutput(ret.value, formatting);
 				ret.text = '<= ' + ret.valueOutput;
 			}
 		} else {
 			ret.operator = 'equal';
-			ret.value = value;
+			ret.value = parseFloat(value);
 			ret.valueOutput = getNumericValueOutput(ret.value, formatting);
 			ret.text = ret.valueOutput;
 		}
