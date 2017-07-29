@@ -104,17 +104,17 @@ InfoGraph.prototype.drawDistribution = function () {
 	}
 
 	var chart = nv.models.discreteBarChart()
-			.x(function (d) {
-				return d.value
-			})
-			.y(function (d) {
-				return d.count
-			})
-			.staggerLabels(false)    //Too many bars and not enough room? Try staggering labels.
-			.tooltips(false)        //Don't show tooltips
-			.showValues(true)       //...instead, show the bar value right on top of each bar.
-			.transitionDuration(350)
-		;
+		.x(function (d) {
+			return d.value
+		})
+		.y(function (d) {
+			return d.count
+		})
+		.staggerLabels(false)    //Too many bars and not enough room? Try staggering labels.
+		.tooltips(false)        //Don't show tooltips
+		.showValues(true)       //...instead, show the bar value right on top of each bar.
+		.transitionDuration(350)
+	;
 
 	chart.xAxis.tickFormat(formatX);
 	chart.yAxis.tickFormat(formatY);
@@ -204,19 +204,19 @@ InfoGraph.prototype.drawDistributionTime = function () {
 	}
 
 	var chart = nv.models.multiBarChart()
-			.x(function (d) {
-				return d.value
-			})
-			.y(function (d) {
-				return d.count
-			})
-			.rotateLabels(0)
-			.stacked(true)
-			.showControls(true)
-			.staggerLabels(false)
-			.tooltips(true)
-			.transitionDuration(350)
-		;
+		.x(function (d) {
+			return d.value
+		})
+		.y(function (d) {
+			return d.count
+		})
+		.rotateLabels(0)
+		.stacked(true)
+		.showControls(true)
+		.staggerLabels(false)
+		.tooltips(true)
+		.transitionDuration(350)
+	;
 
 	chart.xAxis.tickFormat(formatX);
 
@@ -255,6 +255,8 @@ function HBarChart(parentDOM) {
 	this.w = this.parentDOM.width();
 	this.h = this.parentDOM.height();
 
+	this.tooltip = null;
+
 	this.bars = [];
 	this.barScale = null;
 
@@ -264,6 +266,11 @@ function HBarChart(parentDOM) {
 	this.legendHeight = 20;
 
 	this.firstLegend = false;
+	this.barMode = 'relative'; // relative, absolute
+
+	this.minMaxY = [];
+
+	this.colorScale = d3.scale.category20();
 
 	HBarChart.prototype.init.call(this);
 }
@@ -273,6 +280,8 @@ HBarChart.prototype.init = function () {
 
 	self.svg = d3.select(self.parentDOM[0]).append("svg")
 		.attr("height", self.h);
+
+	self.tooltip = $('<div class="graphTooltip"></div>').hide().appendTo(self.parentDOM);
 
 	window.addEventListener('resize', function () {
 		self.w = self.parentDOM.width();
@@ -338,9 +347,19 @@ HBarChart.prototype.addValue = function (barId, valueId, count) {
 
 
 };
+HBarChart.prototype.calculateBars = function () {
+	var self = this;
+	if (!self.minMaxY.length) self.minMaxY = [Infinity, -Infinity];
+	self.bars.forEach(function (bar) {
+		if (bar.sumY < self.minMaxY[0]) self.minMaxY[0] = bar.sumY;
+		if (bar.sumY > self.minMaxY[1]) self.minMaxY[1] = bar.sumY;
+	});
 
+};
 HBarChart.prototype.draw = function () {
 	var self = this;
+
+	self.calculateBars();
 
 	self.barScale = d3.scale.ordinal()
 		.domain(d3.range(self.bars.length))
@@ -363,7 +382,7 @@ HBarChart.prototype.draw = function () {
 			} else {
 				y += self.legendHeight * i;
 			}
-			if(self.svg.attr('height')<y+self.barHeight) {
+			if (self.svg.attr('height') < y + self.barHeight) {
 				self.svg.attr('height', y + self.barHeight);
 			}
 			return 'translate(0,' + y + ')';
@@ -379,8 +398,6 @@ HBarChart.prototype.draw = function () {
 			.attr('transform', 'translate(' + self.barLeftMargin + ',' + (self.barHeight * -1) + ')');
 		self.drawBarLegend(self.bars[0].values, legends);
 	}
-
-
 
 
 };
@@ -441,6 +458,10 @@ HBarChart.prototype.drawBarLegend = function (values, parent) {
 
 };
 
+/**
+ * Draws the bar and appends it to the given parent.
+ * First the rectacnge for each bar value is drawn and then the labels onto each bar
+ */
 HBarChart.prototype.drawBar = function (bar, parent) {
 	var self = this;
 
@@ -465,8 +486,13 @@ HBarChart.prototype.drawBar = function (bar, parent) {
 	rectsGroup.attr('transform', 'translate(' + self.barLeftMargin + ',0)');
 
 	bar.scale = d3.scale.linear()
-		.range([0, self.w - self.barLeftMargin])
-		.domain([0, bar.sumY]);
+		.range([0, self.w - self.barLeftMargin]);
+	if (self.barMode === 'relative') {
+		bar.scale.domain([0, bar.sumY]);
+	}
+	if (self.barMode === 'absolute') {
+		bar.scale.domain([0, self.minMaxY[1]]);
+	}
 
 	var sum = 0;
 	var values = bar.values.map(function (d) {
@@ -477,8 +503,6 @@ HBarChart.prototype.drawBar = function (bar, parent) {
 		};
 	});
 
-	var colorScale = d3.scale.category20();
-
 	var rects = rectsGroup.selectAll('rect')
 		.data(values);
 	rects.exit().remove();
@@ -486,6 +510,16 @@ HBarChart.prototype.drawBar = function (bar, parent) {
 		.append('rect')
 		.attr('transform', function (d, i) {
 			return 'translate(0 , 0)';
+		})
+		.on('mouseover', function (d, i) {
+			self.drawBarTooltip(bar, i);
+			self.tooltip
+				.show()
+				.css('left', d3.event.pageX + 'px')
+				.css('top', d3.event.pageY + 'px');
+		})
+		.on('mouseout', function () {
+			self.tooltip.hide();
 		});
 	rects
 		.transition()
@@ -497,7 +531,7 @@ HBarChart.prototype.drawBar = function (bar, parent) {
 			return 'translate(' + bar.scale(d.start) + ', 0)';
 		})
 		.attr('fill', function (d, i) {
-			return colorScale(i);
+			return self.colorScale(i);
 		});
 
 
@@ -506,15 +540,19 @@ HBarChart.prototype.drawBar = function (bar, parent) {
 	texts.enter()
 		.append('text')
 		.attr('class', 'perctext')
+		.style('pointer-events', 'none')
 		.attr('transform', function (d, i) {
 			return 'translate(' + (bar.scale(d.start)) + ', 0)';
 		});
 	texts
 		.text(function (d) {
-			if (d.d.y === 0 || Math.round(d.d.y / bar.sumY * 100) === 0) {
+			if (self.barMode === 'relative' && d.d.y > 0 && d.d.y / bar.sumY > 0.05) {
+				return self.getBarValueText(bar, d.d);
+			} else if (self.barMode === 'absolute' && d.d.y > 0 && d.d.y / self.minMaxY[1] > 0.05) {
+				return self.getBarValueText(bar, d.d);
+			} else {
 				return '';
 			}
-			return (d.d.y / bar.sumY * 100).toFixed(0) + '%';
 		})
 		.attr('text-anchor', 'middle')
 		.transition()
@@ -528,5 +566,36 @@ HBarChart.prototype.drawBar = function (bar, parent) {
 	if (!self.firstLegend) {
 		self.drawBarLegend(bar.values, rectsGroup);
 	}
+
+
+};
+HBarChart.prototype.getBarValueText = function (bar, d) {
+	var value = d.y === null ? 0 : d.y;
+	if (this.barMode === 'relative') {
+		return (value / bar.sumY * 100).toFixed(0) + '%';
+	} else if (this.barMode === 'absolute') {
+		return value;
+	} else {
+		return '';
+	}
+};
+HBarChart.prototype.drawBarTooltip = function (bar, selectedValueIndex) {
+	var self = this;
+	self.tooltip.empty();
+
+	$('<div></div>').text(bar.label).appendTo(self.tooltip);
+	bar.values.forEach(function (d, i) {
+		var entry = $('<div class="tooltipEntry"></div>').appendTo(self.tooltip);
+		entry.css('border-left-color', self.colorScale(i));
+		if (selectedValueIndex === i) {
+			entry.addClass('active');
+		}
+
+		$('<b></b>').text(self.getBarValueText(bar, d)).appendTo(entry);
+		entry.append(' ');
+		$('<span></span>').text(d.x).appendTo(entry);
+
+	});
+
 
 };

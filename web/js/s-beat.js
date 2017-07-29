@@ -355,6 +355,7 @@ function getNumericValueOutput(value, formatting) {
 	if (formatting == 'percent') return (value * 100).toFixed(1);
 	if (formatting == 'date') return getDateText(new Date(value * 1000));
 	if (formatting == 'semester') return getSemesterText(value);
+	if (formatting == 'status') return getStatusText(value);
 	if (formatting == 'int' && (value % 1).toString().length > 4) return value.toFixed(2);
 	return value;
 }
@@ -486,13 +487,7 @@ function getCompareValueInfo(value, formatting) {
 		ret.type = 'status';
 		ret.operator = 'equal';
 		ret.value = value;
-		var valueMapping = {
-			1: 'Abgeschlossen',
-			2: 'Abgebrochen',
-			3: 'Erfolgreich',
-			4: 'Studierend'
-		};
-		ret.valueOutput = valueMapping[value];
+		ret.valueOutput = getStatusText(value);
 		ret.text = ret.valueOutput;
 
 	} else {
@@ -585,19 +580,7 @@ function getFormattedHTML(value, formatting) {
 	}
 	if (formatting == 'status') {
 		// Status 1=Finished, 2=Aborted, 3=Successful, 4=Studying
-		if (value === 1) {
-			return document.createTextNode('Abgeschlossen');
-		}
-		if (value === 2) {
-			return document.createTextNode('Abgebrochen');
-		}
-		if (value === 3) {
-			return document.createTextNode('Erfolgreich');
-		}
-		if (value === 4) {
-			return document.createTextNode('Studierend');
-		}
-		return document.createTextNode('Unbekannt');
+		return document.createTextNode(getStatusText(value));
 	}
 
 	return document.createTextNode(value);
@@ -692,7 +675,15 @@ function addSemester(semester, count) {
 	}
 	return semester;
 }
-
+function getStatusText(value) {
+	var valueMapping = {
+		1: 'Abgeschlossen',
+		2: 'Abgebrochen',
+		3: 'Erfolgreich',
+		4: 'Studierend'
+	};
+	return valueMapping[value] ? valueMapping[value] : 'Unbekannt';
+}
 function getSemesterText(value) {
 	var year = Math.floor(value / 10);
 	var semnr = value % 10;
@@ -1004,6 +995,21 @@ function openSettingsDialog() {
 		p.appendChild(sortSelect2);
 	}
 
+	if(self.graphMode) {
+		p = document.createElement('p');
+		p.className = 'optionset';
+		dialogBox.append(p);
+		label = document.createElement('label');
+		p.appendChild(label);
+		label.appendChild(document.createTextNode('Diagramm Modus'));
+		var graphModeSelect = drawSelect({
+			'relative': 'Relative Werte',
+			'absolute': 'Absolute Werte'
+		}, self.graphMode);
+		sortElements($(graphModeSelect), true);
+		p.appendChild(graphModeSelect);
+	}
+
 
 	if (self.settingsServerSaveable) {
 		p = $(document.createElement('p')).text(
@@ -1076,6 +1082,10 @@ function openSettingsDialog() {
 			}
 			self.pagination.sort1 = sortSelect1.value;
 			self.pagination.sort2 = sortSelect2.value;
+
+			if(self.graphMode) {
+				self.graphMode = graphModeSelect.value;
+			}
 
 			if (self.settingsServerSaveable) {
 				var idseljQ = $(settingIdSelect);
@@ -1280,8 +1290,13 @@ function loadSettings(settings) {
 	if (settings.columns) {
 		this.columns = settings.columns;
 	}
-	if (settings.rows) {
-		this.rows = settings.rows;
+	if(this.settingsFields) {
+		for (var i = 0; i < this.settingsFields.length; i++) {
+			var field = this.settingsFields[i];
+			if(settings[field] !== undefined) {
+				this[field] = settings[field];
+			}
+		}
 	}
 
 }
@@ -1301,8 +1316,11 @@ function saveSettings(serverSettingId, name, callb) {
 	if (this.columns) {
 		settings.columns = this.columns;
 	}
-	if (this.rows) {
-		settings.rows = this.rows;
+	if(this.settingsFields) {
+		for (var i = 0; i < this.settingsFields.length; i++) {
+			var field = this.settingsFields[i];
+			settings[field] = this[field];
+		}
 	}
 	if (name) {
 		settings.name = name;

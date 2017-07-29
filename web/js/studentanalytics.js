@@ -23,7 +23,8 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 			columns: [],
 			rows: ['start_semester', 'hzb_type'],
 			displayPagination: false,
-			sortable: false
+			sortable: false,
+			graphMode: 'relative'
 		},
 		'course': {
 			limit: 0,
@@ -33,7 +34,8 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 			columns: [],
 			rows: ['start_semester', 'hzb_type'],
 			displayPagination: false,
-			sortable: false
+			sortable: false,
+			graphMode: 'relative'
 		},
 		'course_sem': {
 			limit: 0,
@@ -43,7 +45,8 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 			columns: [],
 			rows: ['hzb_type'],
 			displayPagination: false,
-			sortable: false
+			sortable: false,
+			graphMode: 'relative'
 		}
 	};
 
@@ -76,6 +79,8 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 	this.graphDOM = $(document.createElement('div'));
 	this.graph = null;
 
+	this.graphMode = 'relative';
+
 	this.data = null; // Last loaded list
 	this.metadata = null;
 
@@ -96,6 +101,8 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 	this.filter.multiFilters = {
 		exam_count: ['exam_count', 'exam_count_success', 'exam_count_applied']
 	};
+
+	this.settingsFields = ['graphMode', 'rows'];
 
 	this.loadPresetSettings = loadPresetSettings;
 	this.loadSettings = loadSettings;
@@ -341,6 +348,7 @@ StudentAnalytics.prototype.drawGraph = function () {
 	this.graphDOM.empty();
 	this.graph = new HBarChart(this.graphDOM);
 	this.graph.firstLegend = true;
+	this.graph.barMode = this.graphMode;
 
 	this.entries = this.getEntries();
 	console.log('entries', this.entries);
@@ -368,7 +376,9 @@ StudentAnalytics.prototype.drawGraph = function () {
 		for (var i = 0; i < self.rows.length; i++) {
 			var cd = self.columnData[self.rows[i]];
 			var value = entry.ident[i];
-			text.push(getNumericValueOutput(value, cd.formatting));
+			if(value !== undefined) {
+				text.push(getNumericValueOutput(value, cd.formatting));
+			}
 		}
 		return text.join(', ');
 	}
