@@ -35,7 +35,7 @@ from MarkedList import MarkedList
 from Path import Path
 from ProcessTracking import ProcessTracking
 from Settings import Settings
-from ImportTools import get_date_from_csv, get_int, get_unicode, get_boolean
+from ImportTools import get_date_from_csv, get_int, get_unicode, get_boolean, clean_db_string
 
 encoding = 'windows-1252'
 logger = logging.getLogger(__name__)
@@ -567,7 +567,8 @@ class Student(DBDocument):
                 set_risk_on_student(name, student.degree_type, student, risk, min_max)
                 names.add(name)
 
-            student.db_update(names)
+            if len(names) > 0:
+                student.db_update(names)
             print 'risk', get_progress(index, count, start_time)
 
             if index % 100 == 0:
@@ -888,7 +889,7 @@ def create_student_from_entry(data, settings):
     if 'hzbart' in data:
         student.hzb_type = get_hzbgrp(data['hzbart'])
     if 'hzbgrp' in data:
-        student.hzb_type = get_unicode(data['hzbgrp'], encoding)
+        student.hzb_type = clean_db_string(get_unicode(data['hzbgrp'], encoding))
 
     if student.hzb_type == '':
         logger.warning('No hzb_type for ' + student.stg_original + " ID: " + repr(student.ident))

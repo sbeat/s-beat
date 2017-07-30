@@ -211,3 +211,10 @@ def get_boolean(s):
 def get_unicode(s, encoding='windows-1252'):
     s = s.decode(encoding)
     return unicode(s.strip())
+
+def clean_db_string(s):
+    if '.' in s:
+        s = s.replace('.', ' ')
+    if '$' in s:
+        s = s.replace('$', '')
+    return s
