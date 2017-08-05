@@ -3,11 +3,11 @@
   see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
   -->
 {% set active_page = "students" %}
-{% set active_subpage = request.args.get('preset',"students") %}
+{% set active_subpage = "analytics" %}
 {% set preset = request.args.get('preset',"default") %}
 {% set website_class = "" %}
 {% extends "index.html" %}
-{% block title %}Studentenliste{% endblock %}
+{% block title %}Analyse der Studierenden{% endblock %}
 {% block head %}
 {{ super() }}
 <script src="js/studentlist.js"></script>
@@ -16,7 +16,7 @@
 {% block content %}
 <div class="layout">
 	<article>
-		<h1>Studentenanalyse</h1>
+		<h1>Analyse der Studierenden</h1>
 
 		<div data-load="StudentAnalytics"></div>
 		{% include 'inc/tooltips_studentlist.html' %}

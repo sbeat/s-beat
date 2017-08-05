@@ -216,7 +216,7 @@ class Exam(DBDocument):
                             exam.exam_id == grade_exam_number
                     or unicode(exam.exam_id) in final_exam_numbers_ba and exam.status == 'BE'):
 
-                if student and exam.exam_id == grade_exam_number:
+                if student and exam.exam_id == grade_exam_number and 100 <= exam.grade <= 400:
                     student.final_grade = exam.grade
                     student.success = True
                 # if student and unicode(exam.exam_id) in final_exam_numbers_ba and exam.status == 'BE':

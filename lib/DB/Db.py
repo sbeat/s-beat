@@ -21,6 +21,8 @@ import ConfigParser
 from pymongo import errors, MongoClient
 from datetime import datetime
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 _open_db = None
 
@@ -172,7 +174,8 @@ class DBDocument(object):
             c = get_collection(self.collection_name)
             return c.insert_one(self.db_transform())
 
-        except errors.DuplicateKeyError:
+        except errors.DuplicateKeyError as error:
+            logger.error("db_insert error: " + error.message)
             return None
 
     @classmethod
@@ -183,7 +186,8 @@ class DBDocument(object):
             result = [d for d in cursor]
             return result
 
-        except errors.OperationFailure:
+        except errors.OperationFailure as error:
+            logger.error("db_aggregate error: " + error.message)
             return None
 
     def db_save(self):
@@ -198,7 +202,8 @@ class DBDocument(object):
             return c.replace_one({'_id': data['_id']}, data, upsert=True)
             # return c.save(self.db_transform())
 
-        except errors.OperationFailure:
+        except errors.OperationFailure as error:
+            logger.error("db_save error: " + error.message)
             return None
 
     def db_remove(self):
@@ -210,7 +215,8 @@ class DBDocument(object):
             c = get_collection(self.collection_name)
             return c.delete_one({'_id': data['_id']})
 
-        except errors.OperationFailure:
+        except errors.OperationFailure as error:
+            logger.error("db_remove error: " + error.message)
             return None
 
     def db_update(self, changed=None, custom_set=None):
@@ -235,7 +241,8 @@ class DBDocument(object):
             else:
                 return c.replace_one({'_id': data['_id']}, data)
 
-        except errors.PyMongoError:
+        except errors.PyMongoError as error:
+            logger.error("db_update error: " + error.message)
             return None
 
     @classmethod
@@ -292,7 +299,8 @@ class DBDocument(object):
             result = [item for item in res_list]
             return result
 
-        except errors.PyMongoError:
+        except errors.PyMongoError as error:
+            logger.error("get_grouped_values error: " + error.message)
             return None
 
     @classmethod

@@ -331,9 +331,11 @@ function loadStorage(key, def) {
 		return def;
 	}
 }
+
 function saveStorage(key, value) {
 	window.localStorage.setItem(key, JSON.stringify(value));
 }
+
 function removeStorage(key, value) {
 	window.localStorage.removeItem(key);
 }
@@ -355,9 +357,11 @@ function getNumericValueOutput(value, formatting) {
 	if (formatting == 'percent') return (value * 100).toFixed(1);
 	if (formatting == 'date') return getDateText(new Date(value * 1000));
 	if (formatting == 'semester') return getSemesterText(value);
+	if (formatting == 'status') return getStatusText(value);
 	if (formatting == 'int' && (value % 1).toString().length > 4) return value.toFixed(2);
 	return value;
 }
+
 function getNumericValueInput(value, formatting) {
 	if (typeof(value) == 'string') value = value.replace(/,/g, '.');
 	if (formatting == '') return null;
@@ -418,14 +422,15 @@ function getCompareValueInfo(value, formatting) {
 		formatting: formatting,
 		dataValue: value,
 		operator: 'equal',
-		text: ''
+		text: '',
+		value: null
 	};
 	if (['int', 'grade', 'percent', 'date', 'semester'].indexOf(formatting) != -1) {
 		ret.type = 'numeric';
 		value = String(value);
 		if (value == '' || value == 'null' || value === null) {
 			ret.operator = 'equal';
-			ret.value = '';
+			ret.value = 0;
 			ret.valueOutput = '';
 			ret.text = ret.valueOutput;
 
@@ -433,25 +438,25 @@ function getCompareValueInfo(value, formatting) {
 			var parts = value.split(',');
 			if (parts.length == 2 && parts[0].length && parts[1].length) {
 				ret.operator = 'between';
-				ret.minValue = parts[0];
-				ret.maxValue = parts[1];
+				ret.minValue = parseFloat(parts[0]);
+				ret.maxValue = parseFloat(parts[1]);
 				ret.minValueOutput = getNumericValueOutput(ret.minValue, formatting);
 				ret.maxValueOutput = getNumericValueOutput(ret.maxValue, formatting);
 				ret.text = ret.minValueOutput + ' ≤x≤ ' + ret.maxValueOutput;
 			} else if (parts.length == 2 && parts[0].length && !parts[1].length) {
 				ret.operator = 'gte';
-				ret.value = parts[0];
+				ret.value = parseFloat(parts[0]);
 				ret.valueOutput = getNumericValueOutput(ret.value, formatting);
 				ret.text = '>= ' + ret.valueOutput;
 			} else if (parts.length == 2 && !parts[0].length && parts[1].length) {
 				ret.operator = 'lte';
-				ret.value = parts[1];
+				ret.value = parseFloat(parts[1]);
 				ret.valueOutput = getNumericValueOutput(ret.value, formatting);
 				ret.text = '<= ' + ret.valueOutput;
 			}
 		} else {
 			ret.operator = 'equal';
-			ret.value = value;
+			ret.value = parseFloat(value);
 			ret.valueOutput = getNumericValueOutput(ret.value, formatting);
 			ret.text = ret.valueOutput;
 		}
@@ -459,12 +464,12 @@ function getCompareValueInfo(value, formatting) {
 	} else if (formatting == 'yesno') {
 		ret.type = 'boolean';
 		if (value == 'true') {
-			ret.operator = 'is';
+			ret.operator = 'equal';
 			ret.value = 'true';
 			ret.valueOutput = 'Ja';
 			ret.text = ret.valueOutput;
 		} else {
-			ret.operator = 'is';
+			ret.operator = 'equal';
 			ret.value = 'false';
 			ret.valueOutput = 'Nein';
 			ret.text = ret.valueOutput;
@@ -472,7 +477,7 @@ function getCompareValueInfo(value, formatting) {
 
 	} else if (formatting == 'risk') {
 		ret.type = 'risk';
-		ret.operator = 'is';
+		ret.operator = 'equal';
 		ret.value = value;
 		var valueMapping = {
 			red: 'Rot',
@@ -480,6 +485,13 @@ function getCompareValueInfo(value, formatting) {
 			green: 'Grün'
 		};
 		ret.valueOutput = valueMapping[value];
+		ret.text = ret.valueOutput;
+
+	} else if (formatting == 'status') {
+		ret.type = 'status';
+		ret.operator = 'equal';
+		ret.value = value;
+		ret.valueOutput = getStatusText(value);
 		ret.text = ret.valueOutput;
 
 	} else {
@@ -572,19 +584,7 @@ function getFormattedHTML(value, formatting) {
 	}
 	if (formatting == 'status') {
 		// Status 1=Finished, 2=Aborted, 3=Successful, 4=Studying
-		if (value === 1) {
-			return document.createTextNode('Abgeschlossen');
-		}
-		if (value === 2) {
-			return document.createTextNode('Abgebrochen');
-		}
-		if (value === 3) {
-			return document.createTextNode('Erfolgreich');
-		}
-		if (value === 4) {
-			return document.createTextNode('Studierend');
-		}
-		return document.createTextNode('Unbekannt');
+		return document.createTextNode(getStatusText(value));
 	}
 
 	return document.createTextNode(value);
@@ -659,6 +659,38 @@ function getSemesterRanges(semesters) {
 	return ranges;
 }
 
+function addSemester(semester, count) {
+	var year = Math.floor(semester / 10);
+	var type = semester % 10; // 1=SS, 2=WS
+	if (count === 0) {
+		return semester;
+	} else if (count === 1 && type === 1) {
+		return year * 10 + 2;
+	} else if (count === 1 && type === 2) {
+		return (year + 1) * 10 + 1;
+	} else if (count === -1 && type === 1) {
+		return (year - 1) * 10 + 2;
+	} else if (count === -1 && type === 2) {
+		return year * 10 + 1;
+	} else {
+		var iterations = Math.abs(count);
+		for (var i = 0; i < iterations; i++) {
+			semester = addSemester(semester, count / iterations);
+		}
+	}
+	return semester;
+}
+
+function getStatusText(value) {
+	var valueMapping = {
+		1: 'Abgeschlossen',
+		2: 'Abgebrochen',
+		3: 'Erfolgreich',
+		4: 'Studierend'
+	};
+	return valueMapping[value] ? valueMapping[value] : 'Unbekannt';
+}
+
 function getSemesterText(value) {
 	var year = Math.floor(value / 10);
 	var semnr = value % 10;
@@ -672,6 +704,7 @@ function getSemesterText(value) {
 	}
 	return ret;
 }
+
 function getDateText(dt) {
 	var day = dt.getDate();
 	if (isNaN(day)) {
@@ -687,6 +720,7 @@ function getDateText(dt) {
 	ret += year;
 	return ret;
 }
+
 function getDateTimeText(dt) {
 	var hour = dt.getHours();
 	if (isNaN(hour)) {
@@ -736,6 +770,7 @@ function getTimeOutput(timeval) {
 
 	return time.h + 'h ' + time.i + 'm ' + time.s + 's';
 }
+
 function getBytesOutput(bytes, r) {
 	var ret = bytes;
 	var symbol = 'B';
@@ -753,6 +788,7 @@ function getBytesOutput(bytes, r) {
 	}
 	return ret.toFixed(r || 0) + symbol
 }
+
 function numTd(num) {
 	var parts = String(num).split('.');
 	var n = parts[0];
@@ -779,6 +815,7 @@ function randomString(len) {
 function getUserRole() {
 	return $(document.body).attr('data-user-role') || 'guest';
 }
+
 function getUserName() {
 	return $(document.body).attr('data-user-name') || 'guest';
 }
@@ -970,6 +1007,21 @@ function openSettingsDialog() {
 		p.appendChild(sortSelect2);
 	}
 
+	if (self.graphMode) {
+		p = document.createElement('p');
+		p.className = 'optionset';
+		dialogBox.append(p);
+		label = document.createElement('label');
+		p.appendChild(label);
+		label.appendChild(document.createTextNode('Diagramm Modus'));
+		var graphModeSelect = drawSelect({
+			'relative': 'Relative Werte',
+			'absolute': 'Absolute Werte'
+		}, self.graphMode);
+		sortElements($(graphModeSelect), true);
+		p.appendChild(graphModeSelect);
+	}
+
 
 	if (self.settingsServerSaveable) {
 		p = $(document.createElement('p')).text(
@@ -1042,6 +1094,10 @@ function openSettingsDialog() {
 			}
 			self.pagination.sort1 = sortSelect1.value;
 			self.pagination.sort2 = sortSelect2.value;
+
+			if (self.graphMode) {
+				self.graphMode = graphModeSelect.value;
+			}
 
 			if (self.settingsServerSaveable) {
 				var idseljQ = $(settingIdSelect);
@@ -1221,6 +1277,7 @@ function loadPresetSettings() {
 		this.sortable = settings.sortable;
 
 }
+
 function loadSettings(settings) {
 	if (!settings) {
 		settings = loadStorage(this.settingsPrefix + this.settingId);
@@ -1246,11 +1303,17 @@ function loadSettings(settings) {
 	if (settings.columns) {
 		this.columns = settings.columns;
 	}
-	if (settings.rows) {
-		this.rows = settings.rows;
+	if (this.settingsFields) {
+		for (var i = 0; i < this.settingsFields.length; i++) {
+			var field = this.settingsFields[i];
+			if (settings[field] !== undefined) {
+				this[field] = settings[field];
+			}
+		}
 	}
 
 }
+
 function saveSettings(serverSettingId, name, callb) {
 	var self = this;
 	var settings = loadStorage(this.settingsPrefix + this.settingId, {});
@@ -1267,8 +1330,11 @@ function saveSettings(serverSettingId, name, callb) {
 	if (this.columns) {
 		settings.columns = this.columns;
 	}
-	if (this.rows) {
-		settings.rows = this.rows;
+	if (this.settingsFields) {
+		for (var i = 0; i < this.settingsFields.length; i++) {
+			var field = this.settingsFields[i];
+			settings[field] = this[field];
+		}
 	}
 	if (name) {
 		settings.name = name;
@@ -1281,11 +1347,13 @@ function saveSettings(serverSettingId, name, callb) {
 	setServerSetting('list', serverSettingId, settings, callb);
 
 }
+
 function removeSettings() {
 	removeStorage(this.settingsPrefix + this.settingId);
 }
 
 var loadedServerSettings = {};
+
 function loadServerSettings(type, callb) {
 	if (loadedServerSettings[type]) {
 		callb(loadedServerSettings[type]);
