@@ -128,6 +128,9 @@ def run_import():
     logger.info('####### import students #######')
     import_students()
 
+    logger.info('####### import applicants #######')
+    import_applicants()
+
     logger.info('####### import exams #######')
     import_exams()
 
@@ -392,6 +395,33 @@ def import_students():
         ProcessTracking.process_done('import_students')
     except:
         ProcessTracking.process_failed('import_students', {'error': traceback.format_exc()})
+        raise
+
+
+def import_applicants():
+    ProcessTracking.process_start('import_applicants')
+    run_on_temp_data()
+    try:
+        Applicant.db_setup()
+        file_list = ImportTools.get_files_info('applicants')
+        num = 0
+        file_count = len(file_list)
+        for info in file_list:
+            num += 1
+            ProcessTracking.process_update('import_applicants', 0.0, {
+                'file_num': num,
+                'file_count': file_count
+            })
+
+            if not info['active']:
+                logger.info('Skip file: %s', info)
+                continue
+            logger.info('Import file: %s', info)
+            Applicant.import_from_file(info)
+
+        ProcessTracking.process_done('import_applicants')
+    except:
+        ProcessTracking.process_failed('import_applicants', {'error': traceback.format_exc()})
         raise
 
 
@@ -1016,6 +1046,7 @@ def create_default_folders():
         'data/exams',
         'data/studentidents',
         'data/students',
+        'data/applicants',
         'data/temp',
         'logs'
     ]

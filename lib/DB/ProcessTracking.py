@@ -33,6 +33,7 @@ class ProcessTracking(DBDocument):
     process_steps = [
         'import_courses',
         'import_students',
+        'import_applicants',
         'import_exams',
         'calculate_student_exams',
         'generate_definitions',

@@ -22,6 +22,13 @@ function DataFileBrowser(parentDOM) {
 			],
 			'date_fields':['immdat','exmdat','pdatum','gebdat','hzbdatum']
 		},
+		'applicants':{
+			'delimiter':';',
+			'required_fields':[
+				'identnr','stg','appldat','zuldat','geschl','gebdat','hzbdatum',['hzbart','hzbgrp'],'hzbnote'
+			],
+			'date_fields':['appldat','zuldat','gebdat','hzbdatum']
+		},
 		'exams':{
 			'delimiter':';',
 			'required_fields':[

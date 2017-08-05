@@ -193,6 +193,9 @@ UpdateProcess.prototype.drawProcessEntry = function (step) {
 	if (step.ident == 'import_students' && step.progress_info && step.progress_info.num) {
 		c('Anzahl: ' + step.progress_info.num_success + ' / ' + step.progress_info.num, 'item');
 	}
+	if (step.ident == 'import_applicants' && step.progress_info && step.progress_info.num) {
+		c('Anzahl: ' + step.progress_info.num, 'item');
+	}
 	if (step.ident == 'import_exams' && step.progress_info && step.progress_info.num) {
 		c('Anzahl: ' + step.progress_info.num, 'item');
 		c('Doppelte: ' + step.progress_info.failed, 'item');

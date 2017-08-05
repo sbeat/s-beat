@@ -24,6 +24,7 @@ from Condition import Condition
 from PathElement import PathElement
 from Course import Course
 from Student import Student
+from Applicant import Applicant
 from Path import Path
 from ExamInfo import ExamInfo
 from Exam import Exam
@@ -41,6 +42,7 @@ def enable_temp_data():
     ExamInfo.db_setprefix('temp_')
     Path.db_setprefix('temp_')
     Student.db_setprefix('temp_')
+    Applicant.db_setprefix('temp_')
     CourseSemesterInfo.db_setprefix('temp_')
     MetaData.db_setprefix('temp_')
 
@@ -51,6 +53,7 @@ def disable_temp_data():
     ExamInfo.db_setprefix('')
     Path.db_setprefix('')
     Student.db_setprefix('')
+    Applicant.db_setprefix('')
     CourseSemesterInfo.db_setprefix('')
     MetaData.db_setprefix('')
 
@@ -62,6 +65,7 @@ def swap_temp_to_op():
     ExamInfo.get_collection().rename('examInfos', dropTarget=True)
     Path.get_collection().rename('paths', dropTarget=True)
     Student.get_collection().rename('students', dropTarget=True)
+    Applicant.get_collection().rename('applicants', dropTarget=True)
     CourseSemesterInfo.get_collection().rename('courseSemesterInfos', dropTarget=True)
     MetaData.get_collection().rename('metadata', dropTarget=True)
     disable_temp_data()

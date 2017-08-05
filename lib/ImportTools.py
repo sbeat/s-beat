@@ -26,7 +26,7 @@ from datetime import datetime
 import json
 import logging
 
-allowed_directories = ('applicant', 'courses', 'exams', 'studentidents', 'students')
+allowed_directories = ('applicants', 'courses', 'exams', 'studentidents', 'students')
 data_path = 'data'
 mappings = None
 logger = logging.getLogger(__name__)
