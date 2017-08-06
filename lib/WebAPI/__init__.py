@@ -38,4 +38,5 @@ import GetSettings
 import SaveSettings
 import ManageDefinitions
 import GetStudentInfo
+import GetApplicants
 import GetLogs

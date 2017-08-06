@@ -27,7 +27,6 @@ import ImportTools
 import UserTools
 from Db import DBDocument, get_last_error
 from ImportTools import get_date_from_csv, get_int, get_unicode, get_boolean, clean_db_string
-from MarkedList import MarkedList
 from ProcessTracking import ProcessTracking
 from Settings import Settings
 
@@ -37,21 +36,6 @@ logger = logging.getLogger(__name__)
 
 class Applicant(DBDocument):
     collection_name = 'applicants'
-
-    restricted_fields = {
-        'gender': 'personal_data',
-        'birth_date': 'personal_data',
-        'hzb_grade': 'personal_data',
-        'hzb_type': 'personal_data',
-        'hzb_date': 'personal_data',
-        'forename': 'identification_data',
-        'surname': 'identification_data',
-        'email': 'identification_data',
-        'land': 'identification_data',
-        'plz': 'identification_data',
-        'stang': 'identification_data',
-        'eu': 'identification_data'
-    }
 
     cached_min_max = None
 
@@ -87,17 +71,8 @@ class Applicant(DBDocument):
         # 2nd step calculated values
         self.ignore = False  # if data is faulty - ignore applicant
 
-    def get_dict(self, user_role=None, hide_finished_ident_data=True):
+    def get_dict(self):
         data = self.__dict__.copy()
-        if user_role is not None:
-            for field, role in self.restricted_fields.iteritems():
-                if not UserTools.has_right(role, user_role) and field in data:
-                    del data[field]
-        if hide_finished_ident_data and self.finished:
-            for field, role in self.restricted_fields.iteritems():
-                if role == 'application_data':
-                    del data[field]
-
         return data
 
     def __repr__(self):
@@ -214,6 +189,51 @@ class Applicant(DBDocument):
         except errors.PyMongoError:
             print 'calc_avgs PyMongoError ', get_last_error()
             return None
+
+    @classmethod
+    def calc_groups(cls, groups=list(), find=None, calculations=None):
+        """
+        Groups and counts values for a defined field
+        """
+        try:
+            pipeline = list()
+            if find is not None:
+                pipeline.append({'$match': find})
+
+            group_id = {}
+            for grp in groups:
+                group_id[sanitize_field(grp)] = '$' + grp
+
+            group_stage = {
+                '_id': group_id,
+                'count': {'$sum': 1}
+            }
+
+            if calculations is not None:
+                for calc_def in calculations:
+                    entry = dict()
+                    entry['$' + calc_def['op']] = '$' + calc_def['field']
+                    group_stage[calc_def['op'] + '-' + sanitize_field(calc_def['field'])] = entry
+
+            pipeline.append({'$group': group_stage})
+
+            results = cls.db_aggregate(pipeline)
+            for d in results:
+                unsanitize_dict(d)
+                unsanitize_dict(d['_id'])
+
+            return results
+
+        except errors.PyMongoError:
+            return None
+
+    @classmethod
+    def calc_single_groups(cls, groups=list(), find=None, calculations=None):
+        results = dict()
+        for grp in groups:
+            results[grp] = cls.calc_groups([grp], find, calculations)
+
+        return results
 
     @classmethod
     def db_setup(cls):
