@@ -32,7 +32,7 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 			sort2: null,
 			filters: [],
 			columns: [],
-			rows: ['start_semester', 'hzb_type'],
+			rows: ['hzb_type'],
 			displayPagination: false,
 			sortable: false,
 			graphMode: 'relative'
