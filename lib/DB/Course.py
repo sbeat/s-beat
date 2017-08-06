@@ -226,9 +226,10 @@ class Course(DBDocument):
 
     @classmethod
     def get_by_stg_original(cls, stg_original, cached=True):
+        stg_o = cls.get_mapped_short(stg_original)
         all_originals = cls.get_all_by_stg_original(cached)
-        if all_originals is not None and stg_original in all_originals:
-            return all_originals.get(stg_original)
+        if all_originals is not None and stg_o in all_originals:
+            return all_originals.get(stg_o)
         else:
             return None
 
