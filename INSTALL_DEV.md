@@ -47,11 +47,11 @@ Run the following commands to setup a default configuration:
 	
 Create the default folders structure:
 
+	mkdir logs
 	python sbeat.py create_default_folders
 	
 After you have started the MongoDB, import the initial setting into the database:
 
-	mkdir logs
 	python sbeat.py initial_settings
 	
 Import the definitions into the database:
