@@ -198,14 +198,14 @@ def handle():
         'hzb_grade': 'int',
         'hzb_type': 'str',
         'ident': 'int',
-        'land': 'str',
-        'plz': 'str',
-        'stang': 'str',
+        'country': 'str',
+        'zip': 'str',
+        'citship': 'str',
         'start_semester': 'int',
         'stg': 'str',
         'stg_original': 'str',
         'surname': 'str',
-        'zul_date': 'datetime'
+        'adm_date': 'datetime'
     }
     sortable = DB.Applicant().__dict__.keys()
     sortable.extend([

@@ -65,7 +65,7 @@ function ApplicantList(parentDOM) {
 		'ident': {id: 'ident', label: 'Ident', title: 'Identifikationsnummer', formatting: 'str', sortBy: '_id'},
 		'stg': {id: 'stg', label: 'STG', title: 'Studiengangsgruppe', formatting: 'stg'},
 		'stg_original': {id: 'stg_original', label: 'Studiengang', title: 'Studiengang', formatting: 'stg'},
-		//'degree_type': {id: 'degree_type', label: 'Abschluss', title: 'Abschluss', formatting: 'str'},
+		'degree_type': {id: 'degree_type', label: 'Abschluss', title: 'Abschluss', formatting: 'str'},
 		'start_semester': {id: 'start_semester', label: 'Start', title: 'Voraussichtliches Startsemester', formatting: 'semester'},
 		'admissionstatus': {
 			id: 'admissionstatus',
@@ -96,7 +96,7 @@ function ApplicantList(parentDOM) {
 			formatting: 'date'
 		},
 		'appl_date': {id: 'appl_date', label: 'Bewerbung', title: 'Datum der Bewerbung', formatting: 'date'},
-		'zul_date': {id: 'zul_date', label: 'Zulassung', title: 'Datum der Zulassung', formatting: 'date'},
+		'adm_date': {id: 'adm_date', label: 'Zulassung', title: 'Datum der Zulassung', formatting: 'date'},
 		'hzb_imm_time': {
 			id: 'hzb_imm_time',
 			label: 'Monate seit HZB',

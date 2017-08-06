@@ -55,9 +55,9 @@ class Student(DBDocument):
         'surname': 'identification_data',
         'short': 'identification_data',
         'email': 'identification_data',
-        'land': 'identification_data',
-        'plz': 'identification_data',
-        'stang': 'identification_data',
+        'country': 'identification_data',
+        'zip': 'identification_data',
+        'citship': 'identification_data',
         'eu': 'identification_data',
     }
 
@@ -88,8 +88,8 @@ class Student(DBDocument):
         self.short = None
         self.email = None
         self.land = None  # country of residence
-        self.plz = None  # zip code
-        self.stang = None  # citizenship
+        self.zip = None  # zip code
+        self.citship = None  # citizenship
         self.eu = None  # EU citizen (yes/no)
 
         # 1st step calculated values
@@ -352,19 +352,19 @@ class Student(DBDocument):
                 student.email = get_unicode(data['email'], encoding)
 
             if 'land' in data:
-                student.land = get_unicode(data['land'], encoding)
+                student.country = get_unicode(data['land'], encoding)
 
             if 'plz' in data:
-                student.lplz = get_unicode(data['plz'], encoding)
+                student.zip = get_unicode(data['plz'], encoding)
 
             if 'stang' in data:
-                student.land = get_unicode(data['stang'], encoding)
+                student.citship = get_unicode(data['stang'], encoding)
 
             if 'eu' in data:
                 student.eu = get_boolean(data['eu'])
 
             student.db_update([
-                'matrikelno', 'forename', 'surname', 'short', 'email', 'land', 'plz', 'stang', 'eu'
+                'matrikelno', 'forename', 'surname', 'short', 'email', 'country', 'zip', 'citship', 'eu'
             ])
 
             if num % 100 == 0:
@@ -948,13 +948,13 @@ def create_student_from_entry(data, settings):
             student.email = get_unicode(data['email'], encoding)
 
         if 'land' in data:
-            student.land = get_unicode(data['land'], encoding)
+            student.country = get_unicode(data['land'], encoding)
 
         if 'plz' in data:
-            student.lplz = get_unicode(data['plz'], encoding)
+            student.zip = get_unicode(data['plz'], encoding)
 
         if 'stang' in data:
-            student.land = get_unicode(data['stang'], encoding)
+            student.citship = get_unicode(data['stang'], encoding)
 
         if 'eu' in data:
             student.eu = get_boolean(data['eu'])

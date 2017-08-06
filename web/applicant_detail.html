@@ -8,7 +8,7 @@
 {% block title %}Bewerber Details: {{ request.args.get('id',0) }}{% endblock %}
 {% block content %}
 <div class="layout" data-load="ApplicantDetails" data-id="{{ request.args.get('id',0) }}">
-<h1>Student Details: <span data-applicant="ident"></span></h1>
+<h1>Bewerber Details: <span data-applicant="ident"></span></h1>
 
 <div class="col2_50">
 	<article>
@@ -46,7 +46,7 @@
 				<td>
 					<span data-applicant="appl_date"></span>
 					(<span data-applicant="hzb_appl_time"></span>)
-					<span data-applicant="zul_date"></span>
+					<span data-applicant="adm_date"></span>
 				</td>
 				<td></td>
 			</tr>

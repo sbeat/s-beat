@@ -50,16 +50,16 @@ class Applicant(DBDocument):
         self.stg = None  # Short of the degree course (already mapped!)
         self.stg_original = None  # Original unmapped course
         self.appl_date = None  # application date
-        self.zul_date = None  # admission date
-        # self.degree_type = None  # type of degree: Diplom,Bachelor,Master
+        self.adm_date = None  # admission date
+        self.degree_type = None  # type of degree: Diplom,Bachelor,Master
 
         # Identity
         self.forename = None
         self.surname = None
         self.email = None
-        self.land = None  # country of residence
-        self.plz = None  # zip code
-        self.stang = None  # citizenship
+        self.country = None  # country of residence
+        self.zip = None  # zip code
+        self.citship = None  # citizenship
         self.eu = None  # EU citizen (yes/no)
 
         # 1st step calculated values
@@ -278,12 +278,12 @@ def create_applicant_from_entry(data, settings):
     applicant.degree_type = course.degree_type
 
     applicant.appl_date = get_date_from_csv(data['appldat'])
-    applicant.zul_date = get_date_from_csv(data['zuldat'])
+    applicant.adm_date = get_date_from_csv(data['zuldat'])
 
     if 'sem' in data:
         applicant.start_semester = get_int(data['sem'])
     else:
-        applicant.start_semester = CalcTools.get_appl_start_semester_from_date(applicant.zul_date)
+        applicant.start_semester = CalcTools.get_appl_start_semester_from_date(applicant.adm_date)
 
     applicant.hzb_grade = get_int(data['hzbnote'])
     if 'hzbart' in data:
@@ -313,13 +313,13 @@ def create_applicant_from_entry(data, settings):
             applicant.email = get_unicode(data['email'], encoding)
 
         if 'land' in data:
-            applicant.land = get_unicode(data['land'], encoding)
+            applicant.country = get_unicode(data['land'], encoding)
 
         if 'plz' in data:
-            applicant.plz = get_unicode(data['plz'], encoding)
+            applicant.zip = get_unicode(data['plz'], encoding)
 
         if 'stang' in data:
-            applicant.stang = get_unicode(data['stang'], encoding)
+            applicant.citship = get_unicode(data['stang'], encoding)
 
         if 'eu' in data:
             applicant.eu = get_boolean(data['eu'])
