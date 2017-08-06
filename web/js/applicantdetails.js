@@ -7,7 +7,15 @@ function ApplicantDetails(parentDOM) {
 	this.applicant = null;
 
 	this.fieldData = {};
-	defineFD(this.fieldData, 'students.count', 'Anzahl Studenten', '', 'int');
+	defineFD(this.fieldData, 'admitted', 'Zugelassen', '', 'bool');
+	defineFD(this.fieldData, 'age', 'Alter', '', 'int');
+	defineFD(this.fieldData, 'appl_date', 'Bewerbungdatum', '', 'date');
+	defineFD(this.fieldData, 'birth_date', 'Geburtsdatum', '', 'date');
+	defineFD(this.fieldData, 'gender', 'Geschlecht', '', 'gender');
+	defineFD(this.fieldData, 'hzb_date', 'HZB Datum', '', 'date');
+	defineFD(this.fieldData, 'hzb_grade', 'HZB Note', '', 'grade');
+	defineFD(this.fieldData, 'start_semester', 'Startsemester', '', 'semester');
+	defineFD(this.fieldData, 'adm_date', 'Zulassungsdatum', '', 'date');
 
 	this.data = null; // Last loaded data
 	this.definitions = null;
@@ -44,12 +52,7 @@ ApplicantDetails.prototype.draw = function () {
 ApplicantDetails.prototype.drawValue = function (field, el) {
 	var self = this;
 	var value;
-	var query = self.findQuery(field);
 	var fieldInfo = this.fieldData[field];
-	if (self.definitions.restricted.indexOf(field) != -1) {
-		el.text('***');
-		return;
-	}
 
 	if (field == 'stg') {
 
@@ -59,28 +62,12 @@ ApplicantDetails.prototype.drawValue = function (field, el) {
 		a.text(self.applicant.stg);
 		el.append(a);
 
-	} else if (field == 'markedlists') {
-		self.drawMarkedListInfo(el);
-
-
 	} else if (field == 'admissionstatus') {
-		if (applicant.admitted) {
-			td.text('Zugelassen');
+		if (self.applicant.admitted) {
+			el.text('Zugelassen');
 		} else {
-			td.text('(Noch) nicht zugelassen');
+			el.text('(Noch) nicht zugelassen');
 		}
-
-	} else if (field == 'tooltip') {
-		var contentSelector = el.attr('data-tooltip-content');
-		var contentElement = contentSelector?$(contentSelector):el.find('div');
-		var hoverelement = el.find('a').first();
-		hoverelement.attr('title', '');
-		hoverelement.tooltip({
-			content: contentElement.html(),
-			open: function () {
-				console.log('open');
-			}
-		});
 
 	} else if (field == 'hzb_appl_time') {
 		value = getByPath(field, self.applicant);
@@ -97,9 +84,7 @@ ApplicantDetails.prototype.drawValue = function (field, el) {
 	} else {
 		value = getByPath(field, self.applicant);
 		el.empty();
-		if (query) {
-			el.append(getFormattedHTML(value, query.formatting));
-		} else if (fieldInfo) {
+		if (fieldInfo) {
 			el.append(getFormattedHTML(value, fieldInfo.formatting));
 		} else {
 			el.append(getFormattedHTML(value, 'str'));
@@ -128,11 +113,10 @@ ApplicantDetails.prototype.initDefinitions = function (definitions) {
 
 ApplicantDetails.prototype.load = function () {
 	var self = this;
-	var url = '/api/GetApplicantInfo';
+	var url = '/api/GetApplicants';
 
 	var params = [];
 	params.push('ident=' + this.applicantId);
-	params.push('course_semester=true');
 	if (!self.definitions) {
 		params.push('definitions=true');
 	}
@@ -153,11 +137,8 @@ ApplicantDetails.prototype.load = function () {
 		if (data.definitions) {
 			self.initDefinitions(data.definitions);
 		}
-		if(data.course_semester) {
-			self.course_semester = data.course_semester;
-		}
-		if (data.applicant) {
-			self.applicant = data.applicant;
+		if (data.list[0]) {
+			self.applicant = data.list[0];
 		}
 		self.draw();
 
@@ -166,29 +147,6 @@ ApplicantDetails.prototype.load = function () {
 	}).fail(function () {
 		self.parentDOM.removeClass('loading');
 		self.parentDOM.text('Laden der Daten ist fehlgeschlagen.');
-	})
-
-};
-
-
-ApplicantDetails.prototype.loadMarkedLists = function (el) {
-	var self = this;
-	var url = '/api/GetMarkedList?list=' + this.applicantId;
-
-	el.addClass('loading');
-
-	$.ajax({
-		url: url
-	}).success(function (data) {
-		el.removeClass('loading');
-
-		self.markedListData = data;
-
-		self.drawMarkedListInfo(el);
-
-	}).fail(function () {
-		el.removeClass('loading');
-		el.text('Laden der Daten ist fehlgeschlagen.');
 	})
 
 };
