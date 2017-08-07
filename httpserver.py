@@ -25,6 +25,7 @@ from ConfigParser import RawConfigParser
 from flask import Flask, abort, render_template, request, Response, g, send_file
 import logging
 import markdown
+import codecs
 
 import UserTools
 import WebAPI
@@ -146,7 +147,13 @@ def logout():
 
 @app.route('/LICENSE.md')
 def license():
-    with open('LICENSE.md') as fd:
+    with codecs.open('LICENSE.md', mode='r', encoding='utf-8') as fd:
+        return Response(markdown.markdown(fd.read()), 200, mimetype='text/html')
+
+
+@app.route('/Datenspezifikation.md')
+def data_specification():
+    with codecs.open('Datenspezifikation.md', mode="r", encoding="utf-8") as fd:
         return Response(markdown.markdown(fd.read()), 200, mimetype='text/html')
 
 
