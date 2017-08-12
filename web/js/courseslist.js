@@ -58,7 +58,8 @@ function CoursesList(parentDOM) {
 		'age_data.min': {id: 'age_data.min', label: 'Niedrigstes Alter', title: 'Niedrigstes Alter eines Studenten', formatting: 'int'},
 		'hzb_grade_data.mean': {id: 'hzb_grade_data.mean', label: 'Ø HZB Note', title: 'Durchschnittliche Note der Hochschulzugangsberechtigung', formatting: 'grade'},
 		'exam_perc_resigned': {id: 'exam_perc_resigned', label: 'Rücktritte in %', title: 'Anteil der Prüfungsleistungen von welchen zurückgetreten wurde', formatting: 'percent'},
-		'exams_per_student': {id: 'exams_per_student', label: 'PL pro Student', title: 'Prüfungsleistungen pro Student', formatting: 'int'}
+		'exams_per_student': {id: 'exams_per_student', label: 'PL pro Student', title: 'Prüfungsleistungen pro Student', formatting: 'int'},
+		'applicants.count': {id: 'applicants.count', label: 'Bewerber', title: 'Anzahl Bewerber', formatting: 'int'}
 	};
 	this.columns = this.settings.default.columns.slice();
 	this.mandatoryColumns = ['stg_original'];
@@ -78,6 +79,7 @@ function CoursesList(parentDOM) {
 	this.saveSettings = saveSettings;
 	this.removeSettings = removeSettings;
 	this.openSettingsDialog = openSettingsDialog;
+	this.removeDataColumn = removeDataColumn;
 
 	CoursesList.prototype.init.call(this);
 }
@@ -237,6 +239,12 @@ CoursesList.prototype.initMetadata = function (metadata) {
 	var self = this;
 	self.metadata = metadata;
 
+	if (self.data && self.data.hide_resigned) {
+		self.removeDataColumn('exam_perc_resigned');
+	}
+	if (self.data && !self.data.import_applicants) {
+		self.removeDataColumn('applicants.count');
+	}
 };
 
 CoursesList.prototype.load = function () {

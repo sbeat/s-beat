@@ -853,8 +853,33 @@ function parseQuery(txt) {
 }
 
 function addToSet(arr, item) {
-	if (arr.indexOf(item) === -1) {
+	if (Array.isArray(arr) && arr.indexOf(item) === -1) {
 		arr.push(item);
+	}
+}
+
+function removeFromSet(arr, item) {
+	if(Array.isArray(arr)) {
+		var i = arr.indexOf(item);
+		if(i !== -1) {
+			arr.splice(i, 1);
+		}
+	}
+}
+
+function removeDataColumn(name) {
+	if (this.columnData[name]) {
+		delete this.columnData[name];
+	}
+
+	removeFromSet(this.columns, name);
+
+	if(this.settings) {
+		for(var key in this.settings) {
+			if(this.settings.hasOwnProperty(key) && this.settings[key]) {
+				removeFromSet(this.settings[key].columns, name);
+			}
+		}
 	}
 }
 

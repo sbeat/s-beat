@@ -158,6 +158,12 @@ function CourseSemesterList(parentDOM) {
 			label: 'Niedrigste ' + CONFIG.cp_label,
 			title: 'Niedrigste ' + CONFIG.cp_label + ' Anzahl',
 			formatting: 'int'
+		},
+		'applicants.count': {
+			id: 'applicants.count',
+			label: 'Bewerber',
+			title: 'Anzahl Bewerber',
+			formatting: 'int'
 		}
 	};
 	this.columns = this.settings.default.columns.slice();
@@ -178,9 +184,11 @@ function CourseSemesterList(parentDOM) {
 	this.saveSettings = saveSettings;
 	this.removeSettings = removeSettings;
 	this.openSettingsDialog = openSettingsDialog;
+	this.removeDataColumn = removeDataColumn;
 
 	CourseSemesterList.prototype.init.call(this);
 }
+
 /**
  * Gets called once this CourseSemesterList is initialized
  */
@@ -321,7 +329,7 @@ CourseSemesterList.prototype.drawCellValue = function (course, col, td) {
 
 	} else if (col.id == 'semester_id') {
 		$(document.createElement('a'))
-			.attr('href', 'coursesemesterdetails.html?stg='+self.courseStg+'&sem='+course.semester_id)
+			.attr('href', 'coursesemesterdetails.html?stg=' + self.courseStg + '&sem=' + course.semester_id)
 			.append(getFormattedHTML(value, col.formatting))
 			.appendTo(td);
 
@@ -335,14 +343,11 @@ CourseSemesterList.prototype.initMetadata = function (metadata) {
 	var self = this;
 	self.metadata = metadata;
 
-	var pos;
 	if (self.data && self.data.hide_resigned) {
-		if (self.columnData['exams.resign_perc']) {
-			delete self.columnData['exams.resign_perc'];
-		}
-
-		if ((pos = self.columns.indexOf('exams.resign_perc')) != -1)
-			self.columns.splice(pos, 1);
+		self.removeDataColumn('exams.resign_perc');
+	}
+	if (self.data && !self.data.import_applicants) {
+		self.removeDataColumn('applicants.count');
 	}
 
 };
@@ -367,7 +372,7 @@ CourseSemesterList.prototype.load = function () {
 		params.push('metadata=true');
 	}
 
-	if(isTempActive()) params.push('temp=true');
+	if (isTempActive()) params.push('temp=true');
 
 	if (params.length) url += '?';
 	url += params.join('&');

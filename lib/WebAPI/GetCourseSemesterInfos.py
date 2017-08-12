@@ -52,7 +52,8 @@ def handle():
 
     settings = DB.Settings.load_dict([
         'hide_resigned',
-        'always_display_all_courses'
+        'always_display_all_courses',
+        'import_applicants'
     ])
 
     db_query = dict()
@@ -89,6 +90,7 @@ def handle():
     ret['sort'] = repr(db_sort)
 
     ret['hide_resigned'] = settings['hide_resigned']
+    ret['import_applicants'] = settings['import_applicants']
 
     return respond(ret, 200)
 
