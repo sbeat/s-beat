@@ -302,27 +302,26 @@ def create_applicant_from_entry(data, settings):
 
     applicant.age = CalcTools.calculate_age(applicant.birth_date, applicant.appl_date)
 
-    if settings['import_ident_from_students']:
-        if 'vorname' in data:
-            applicant.forename = get_unicode(data['vorname'], encoding)
+    if 'vorname' in data:
+        applicant.forename = get_unicode(data['vorname'], encoding)
 
-        if 'nachname' in data:
-            applicant.surname = get_unicode(data['nachname'], encoding)
+    if 'nachname' in data:
+        applicant.surname = get_unicode(data['nachname'], encoding)
 
-        if 'email' in data:
-            applicant.email = get_unicode(data['email'], encoding)
+    if 'email' in data:
+        applicant.email = get_unicode(data['email'], encoding)
 
-        if 'land' in data:
-            applicant.country = get_unicode(data['land'], encoding)
+    if 'land' in data:
+        applicant.country = get_unicode(data['land'], encoding)
 
-        if 'plz' in data:
-            applicant.zip = get_unicode(data['plz'], encoding)
+    if 'plz' in data:
+        applicant.zip = get_unicode(data['plz'], encoding)
 
-        if 'stang' in data:
-            applicant.citship = get_unicode(data['stang'], encoding)
+    if 'stang' in data:
+        applicant.citship = get_unicode(data['stang'], encoding)
 
-        if 'eu' in data:
-            applicant.eu = get_boolean(data['eu'])
+    if 'eu' in data:
+        applicant.eu = get_boolean(data['eu'])
 
     return applicant
 

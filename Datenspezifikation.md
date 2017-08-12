@@ -105,6 +105,7 @@ Die Nummer wird über die [mappings.json](data/mappings.default.json) eine der f
 Die Hochzugangsberechtigungsgruppe, welche statt der HZBART verwendet werden kann. (Optional, wenn HZBART gegeben ist)
 
 
+
 ## Studienleistungsdaten CSV Datei
 
 Die Studienleistungsdaten werden während des Studiums erfasst und werden jedes Semester aktualisiert.
@@ -274,7 +275,7 @@ Vor dem Import jeder Datei, wird geprüft welche Semester in der Datei vorkommen
 
 Die Identifikationsdaten enthalten die persönlichen Daten der Studenten und können nur von berechtigten Benutzern eingesehen werden.
 Diese Daten sind optional. Es wird nicht vorausgesetzt, dass diese ins System importiert werden.
-Alternativ können die nachfolgenden Felder auch als Teil der Studentendaten geliefert werden.
+Alternativ können die nachfolgenden Felder auch als Teil der Studentendaten geliefert werden. Dann muss die Einstellung *Studentendaten inkl. ident. Daten* aktiviert werden.
 
 ### Spalten
 
@@ -285,7 +286,7 @@ Identifikationsnummer eines Studenten
 
 #### `MATRIKELNR`
 
-Matrikel-Nr. eines Studenten (alternativ MTKNR)
+Matrikel-Nr. eines Studenten (alternativ `MTKNR`)
 
 
 #### `VORNAME`
@@ -306,6 +307,27 @@ Kürzel bzw. Benutzername des Studenten (Optionales Feld)
 #### `EMAIL`
 
 E-Mail des Studenten
+
+
+#### `LAND`
+
+Herkunftsland des Studenten (Optionales Feld)
+
+
+#### `PLZ`
+
+Postleitzahl des Wohnorts des Studenten (Optionales Feld)
+
+
+#### `STANG`
+
+Staatsangehörigkeit des Studenten (Optionales Feld)
+
+
+#### `EU`
+
+Ist der Studierende ein EU Bürger (J/N) (Optionales Feld)
+
 
 
 ## Studiengangsdaten CSV Datei
@@ -369,4 +391,115 @@ Anzahl der Semester der Regelstudienzeit
 ### Hinweise
 
 Studiengänge, welche nicht eine der eingestellten Abschlussarten haben, werden beim Import ignoriert.
+
+
+## Bewerberdaten CSV Datei
+
+
+
+### Spalten
+
+#### `IDENTNR`
+
+Identifikationsnummer des Bewerbers
+
+#### `STG`
+
+Studiengangskürzel
+
+
+#### `GESCHL`
+
+Geschlecht (M oder W)
+
+
+#### `GEBDAT`
+
+Geburtsdatum (Datumsfeld)
+
+
+#### `HZBNOTE`
+
+Hochschulzugangsberechtigungsnote (Hinweis: ist an dieser Stelle eine Note von 9.9 eingetragen bedeutet dass, dass keine solche vorliegt.)
+
+
+#### `HZBDATUM`
+
+Hochschulzugangsberechtigungsdatum (Datumsfeld)
+
+
+#### `HZBART`
+
+Nummer der Hochschulzugangsberechtigungsart. (Optional, wenn HZBGRP gegeben ist)
+Die Nummer wird über die [mappings.json](data/mappings.default.json) eine der folgenden Hochschulzugangsberechtigungsgruppen zugeordnet: 
+
+* Abitur = Allgemeine Hochschulreife 
+* Ausland = Im Ausland erworbene Hochschulzugangsberechtigung 
+* Beruf = Studienberechtigung ohne formale Hochschulreife 
+* F-Abitur = Fachgebundene Hochschulreife 
+* FH-Reife = Fachhochschulreife 
+* Kolleg = Fachhochschulreife Kolleg
+
+
+#### `HZBGRP`
+
+Die Hochzugangsberechtigungsgruppe, welche statt der HZBART verwendet werden kann. (Optional, wenn HZBART gegeben ist)
+
+
+#### `APPLDAT`
+
+Bewerbungsdatum (Datumsfeld)
+
+
+#### `SEM`
+
+Semester für welches die Bewerbung zugerechnet werden soll. Das Semester wird im Format `YYYYS` angegeben. `YYYY` ist die vierstellige Jahreszahl. `S` ist 1 bei einem Sommersemester und ist 2 für Wintersemester, die in dem mit `YYYY` angegebenen Jahr starten.
+
+Optionales feld. Wenn die Spalte nicht enthalten ist, wird das Folgesemester des aus dem `APPLDAT` hergeleiteten Semester verwendet.
+
+
+#### `ZULDAT`
+
+Zulassungdatum (Datumsfeld). Is leer, wenn keine Zulassung erfolgt ist.
+
+
+#### `VORNAME`
+
+Vorname des Studenten  (Optionales Feld)
+
+
+#### `NACHNAME`
+
+Nachname des Studenten  (Optionales Feld)
+
+
+#### `KUERZEL`
+
+Kürzel bzw. Benutzername des Studenten (Optionales Feld)
+
+
+#### `EMAIL`
+
+E-Mail des Studenten  (Optionales Feld)
+
+
+#### `LAND`
+
+Herkunftsland des Studenten (Optionales Feld)
+
+
+#### `PLZ`
+
+Postleitzahl des Wohnorts des Studenten (Optionales Feld)
+
+
+#### `STANG`
+
+Staatsangehörigkeit des Studenten (Optionales Feld)
+
+
+#### `EU`
+
+Ist der Studierende ein EU Bürger (J/N) (Optionales Feld)
+
 
