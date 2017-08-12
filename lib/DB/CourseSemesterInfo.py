@@ -18,7 +18,7 @@ along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from Db import DBDocument
-
+from Course import Course
 
 class CourseSemesterInfo(DBDocument):
     collection_name = 'courseSemesterInfos'
@@ -107,6 +107,26 @@ class CourseSemesterInfo(DBDocument):
             'values': {}
         }
 
+        self.applicants = {
+            'count': 0,
+            'admitted': 0,
+            'male': 0,
+            'female': 0,
+            'hzb_grade_data': {
+                'min': None,
+                'max': None,
+                'mean': None,
+                'values': {}
+            },
+            'hzb_type_values': {},
+            'age_data': {
+                'min': None,
+                'max': None,
+                'mean': None,
+                'values': {}
+            }
+        }
+
         self.semester_data = {}  # sem_x : { all above }
 
     def __repr__(self):
@@ -120,6 +140,7 @@ class CourseSemesterInfo(DBDocument):
 
         # calculate percentages and values
         self.update_totals_dict_by_semester_data(self.__dict__)
+        self.update_totals_dict_by_semester_data(self.applicants)
         for sem_nr_id, d in self.semester_data.iteritems():
             self.update_totals_dict_by_semester_data(d)
 
@@ -207,12 +228,7 @@ class CourseSemesterInfo(DBDocument):
             else:
                 d.risk_data['values'][risk_id] += 1
 
-        if student.hzb_grade is not None:
-            hzb_grade_id = str(student.hzb_grade)
-            if hzb_grade_id not in d.hzb_grade_data['values']:
-                d.hzb_grade_data['values'][hzb_grade_id] = 1
-            else:
-                d.hzb_grade_data['values'][hzb_grade_id] += 1
+        Course.update_hzb_age_stat_by_entity(d.__dict__, student)
 
         if student.exam_count is not None:
             exam_count_id = str(student.exam_count)
@@ -221,22 +237,26 @@ class CourseSemesterInfo(DBDocument):
             else:
                 d.exam_count['values'][exam_count_id] += 1
 
-        if student.age is not None:
-            age_id = str(student.age)
-            if age_id not in d.age_data['values']:
-                d.age_data['values'][age_id] = 1
-            else:
-                d.age_data['values'][age_id] += 1
-
         if student.gender == 'W':
             d.students['female'] += 1
         elif student.gender == 'M':
             d.students['male'] += 1
 
-        if student.hzb_type not in d.hzb_type_values:
-            d.hzb_type_values[student.hzb_type] = 1
-        else:
-            d.hzb_type_values[student.hzb_type] += 1
+
+    @classmethod
+    def update_by_applicant(cls, applicant):
+        d = cls.get_by_stg_and_semid(applicant.stg, applicant.start_semester)
+
+        d.applicants['count'] += 1
+        if applicant.gender == 'W':
+            d.applicants['female'] += 1
+        elif applicant.gender == 'M':
+            d.applicants['male'] += 1
+
+        if applicant.admitted:
+            d.applicants['admitted'] += 1
+
+        Course.update_hzb_age_stat_by_entity(d.applicants, applicant)
 
     @staticmethod
     def update_stat_dict_by_values(d):
@@ -250,32 +270,37 @@ class CourseSemesterInfo(DBDocument):
 
     @classmethod
     def update_totals_dict_by_semester_data(cls, d):
-        if d['exams']['finished']:
-            d['exams']['success_perc'] = float(d['exams']['successful']) / float(d['exams']['finished'])
-            d['exams']['failed_perc'] = float(d['exams']['failed']) / float(d['exams']['finished'])
-        else:
-            d['exams']['success_perc'] = 0.0
-            d['exams']['failed_perc'] = 0.0
+        if 'exams' in d:
+            if d['exams']['finished']:
+                d['exams']['success_perc'] = float(d['exams']['successful']) / float(d['exams']['finished'])
+                d['exams']['failed_perc'] = float(d['exams']['failed']) / float(d['exams']['finished'])
+            else:
+                d['exams']['success_perc'] = 0.0
+                d['exams']['failed_perc'] = 0.0
 
-        if d['exams']['count']:
-            d['exams']['resign_perc'] = float(d['exams']['resigned']) / float(d['exams']['count'])
-        else:
-            d['exams']['resign_perc'] = 0.0
+            if d['exams']['count']:
+                d['exams']['resign_perc'] = float(d['exams']['resigned']) / float(d['exams']['count'])
+            else:
+                d['exams']['resign_perc'] = 0.0
 
-        if d['students']['finished']:
-            d['students']['success_perc'] = float(d['students']['successful']) / float(d['students']['count'])
-            d['students']['failed_perc'] = float(d['students']['failed']) / float(d['students']['count'])
-        else:
-            d['students']['success_perc'] = 0.0
-            d['students']['failed_perc'] = 0.0
+        if 'students' in d:
+            if d['students']['finished']:
+                d['students']['success_perc'] = float(d['students']['successful']) / float(d['students']['count'])
+                d['students']['failed_perc'] = float(d['students']['failed']) / float(d['students']['count'])
+            else:
+                d['students']['success_perc'] = 0.0
+                d['students']['failed_perc'] = 0.0
 
-        cls.update_stat_dict_by_values(d['exams'])
-        cls.update_stat_dict_by_values(d['bonus_data'])
+        if 'exams' in d:
+            cls.update_stat_dict_by_values(d['exams'])
+        if 'bonus_data' in d:
+            cls.update_stat_dict_by_values(d['bonus_data'])
         if 'exam_count' in d:
             cls.update_stat_dict_by_values(d['exam_count'])
         if 'bonus_total_data' in d:
             cls.update_stat_dict_by_values(d['bonus_total_data'])
-        cls.update_stat_dict_by_values(d['grade_data'])
+        if 'grade_data' in d:
+            cls.update_stat_dict_by_values(d['grade_data'])
         if 'risk_data' in d:
             cls.update_stat_dict_by_values(d['risk_data'])
 

@@ -24,11 +24,12 @@ from pymongo import errors
 
 import CalcTools
 import ImportTools
-import UserTools
 from Db import DBDocument, get_last_error
 from ImportTools import get_date_from_csv, get_int, get_unicode, get_boolean, clean_db_string
 from ProcessTracking import ProcessTracking
 from Settings import Settings
+from Course import Course
+from CourseSemesterInfo import CourseSemesterInfo
 
 encoding = 'windows-1252'
 logger = logging.getLogger(__name__)
@@ -107,7 +108,6 @@ class Applicant(DBDocument):
 
         settings = Settings.load_dict([
             'import_applicants',
-            'import_ident_from_students',
             'import_encoding'
         ])
         encoding = settings['import_encoding']
@@ -121,19 +121,24 @@ class Applicant(DBDocument):
                     "Applicant at line " + str(num) + " has no STG")
                 continue
 
-            applicant_settings = {
-                "import_applicants": settings['import_applicants'],
-                "import_ident_from_students": settings['import_ident_from_students']
-            }
-            applicant = create_applicant_from_entry(entry, applicant_settings)
+            applicant = create_applicant_from_entry(entry, settings)
             if applicant is not None:
                 result = applicant.db_save()
                 logger.info('applicant %d %s', num, (result.upserted_id if result else None))
+
+                course = Course.get_by_stg_original(applicant.stg_original)
+                if course is not None:
+                    course.update_by_applicant(applicant)
+
+                CourseSemesterInfo.update_by_applicant(applicant)
 
             if num % 100 == 0:
                 ProcessTracking.process_update('import_applicants', float(curr) / total, {
                     'num': num
                 })
+
+        Course.save_cached()
+        CourseSemesterInfo.save_cached()
 
         ProcessTracking.process_update('import_applicants', 1.0, {
             'num': num
@@ -279,6 +284,9 @@ def create_applicant_from_entry(data, settings):
 
     applicant.appl_date = get_date_from_csv(data['appldat'])
     applicant.adm_date = get_date_from_csv(data['zuldat'])
+
+    if applicant.adm_date is not None:
+        applicant.admitted = True
 
     if 'sem' in data:
         applicant.start_semester = get_int(data['sem'])

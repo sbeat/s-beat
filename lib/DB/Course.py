@@ -90,6 +90,26 @@ class Course(DBDocument):
             'values': {}
         }
 
+        self.applicants = {
+            'count': 0,
+            'admitted': 0,
+            'male': 0,
+            'female': 0,
+            'hzb_grade_data': {
+                'min': None,
+                'max': None,
+                'mean': None,
+                'values': {}
+            },
+            'hzb_type_values': {},
+            'age_data': {
+                'min': None,
+                'max': None,
+                'mean': None,
+                'values': {}
+            }
+        }
+
         # students in this course which have delayed many exams, but still managed to succeed
         self.delayed_success = dict()
         # students in this course which have delayed many exams and failed/aborted
@@ -102,6 +122,18 @@ class Course(DBDocument):
         self.count_successful = 0
         self.count_students = 0
         self.count_failed = 0
+
+    def update_by_applicant(self, applicant):
+        self.applicants['count'] += 1
+        if applicant.gender == 'W':
+            self.applicants['female'] += 1
+        elif applicant.gender == 'M':
+            self.applicants['male'] += 1
+
+        if applicant.admitted:
+            self.applicants['admitted'] += 1
+
+        Course.update_hzb_age_stat_by_entity(self.applicants, applicant)
 
     def update_by_student(self, student):
         self.count_students += 1
@@ -126,29 +158,12 @@ class Course(DBDocument):
             else:
                 self.risk_data['values'][risk_id] += 1
 
-        if student.hzb_grade is not None:
-            hzb_grade_id = str(student.hzb_grade)
-            if hzb_grade_id not in self.hzb_grade_data['values']:
-                self.hzb_grade_data['values'][hzb_grade_id] = 1
-            else:
-                self.hzb_grade_data['values'][hzb_grade_id] += 1
-
-        if student.age is not None:
-            age_id = str(student.age)
-            if age_id not in self.age_data['values']:
-                self.age_data['values'][age_id] = 1
-            else:
-                self.age_data['values'][age_id] += 1
+        Course.update_hzb_age_stat_by_entity(self.__dict__, student)
 
         if student.gender == 'W':
             self.count_female += 1
         elif student.gender == 'M':
             self.count_male += 1
-
-        if student.hzb_type not in self.hzb_type_values:
-            self.hzb_type_values[student.hzb_type] = 1
-        else:
-            self.hzb_type_values[student.hzb_type] += 1
 
     def __repr__(self):
         return 'Course(' + repr(self.__dict__) + ')'
@@ -162,6 +177,28 @@ class Course(DBDocument):
             d['max'] = max(exams_values)
             values_sum = [int(x) * c for x, c in d['values'].iteritems() if x != 'None']
             d['mean'] = float(sum(values_sum)) / total_count
+
+    @staticmethod
+    def update_hzb_age_stat_by_entity(d, entity):
+        if entity.hzb_grade is not None:
+            hzb_grade_id = str(entity.hzb_grade)
+            if hzb_grade_id not in d['hzb_grade_data']['values']:
+                d['hzb_grade_data']['values'][hzb_grade_id] = 1
+            else:
+                d['hzb_grade_data']['values'][hzb_grade_id] += 1
+
+        if entity.age is not None:
+            age_id = str(entity.age)
+            if age_id not in d['age_data']['values']:
+                d['age_data']['values'][age_id] = 1
+            else:
+                d['age_data']['values'][age_id] += 1
+
+        if entity.hzb_type not in d['hzb_type_values']:
+            d['hzb_type_values'][entity.hzb_type] = 1
+        else:
+            d['hzb_type_values'][entity.hzb_type] += 1
+
 
     def db_transform(self):
         """
@@ -188,6 +225,8 @@ class Course(DBDocument):
 
         self.update_stat_dict_by_values(self.hzb_grade_data)
         self.update_stat_dict_by_values(self.age_data)
+        self.update_stat_dict_by_values(self.applicants['hzb_grade_data'])
+        self.update_stat_dict_by_values(self.applicants['age_data'])
 
         data = self.__dict__.copy()
         del data['stg_original']
