@@ -16,7 +16,7 @@ function ApplicantList(parentDOM) {
 			sort1: '_id,1',
 			sort2: null,
 			filters: [],
-			columns: ['ident', 'stg', 'start_semester', 'admissionstatus', 'age', 'gender', 'bonus_total', 'exam_count', 'grade_current'],
+			columns: ['ident', 'stg', 'start_semester', 'admissionstatus', 'age', 'gender', 'hzb_type', 'hzb_grade'],
 			displayFilters: true,
 			displayPagination: true,
 			sortable: true
@@ -24,9 +24,9 @@ function ApplicantList(parentDOM) {
 		'mlist': {
 			title: "Vormerkungsliste",
 			limit: 20,
-			sort1: 'risk.median_scaled,-1',
+			sort1: '_id,1',
 			filters: [],
-			columns: ['ident', 'stg', 'start_semester', 'admissionstatus', 'age', 'gender', 'bonus_total', 'risk', 'risk.median_scaled', 'comment', 'actions'],
+			columns: ['ident', 'stg', 'start_semester', 'admissionstatus', 'age', 'gender', 'comment', 'actions'],
 			displayFilters: true,
 			displayPagination: true,
 			sortable: true
@@ -57,9 +57,9 @@ function ApplicantList(parentDOM) {
 		this.filter.addAttributeFilter('ident', 'Identifikationsnummer', 'Student', 'int', 0);
 	}
 
-	this.filter.multiFilters = {
-		exam_count: ['exam_count', 'exam_count_success', 'exam_count_applied']
-	};
+	//this.filter.multiFilters = {
+	//	exam_count: ['exam_count', 'exam_count_success', 'exam_count_applied']
+	//};
 
 	this.columnData = {
 		'ident': {id: 'ident', label: 'Ident', title: 'Identifikationsnummer', formatting: 'str', sortBy: '_id'},

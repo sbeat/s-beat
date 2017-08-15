@@ -105,30 +105,25 @@ def get_formatted_value(value, formatting):
     return str(value)
 
 
-def get_csv_col(student, col, settings):
-    if col.q == 'finishstatus':
-        if student['finished']:
-            if student['success']:
-                return 'Erfolgreich'
-            elif student['aborted']:
-                return 'Abgebrochen'
-            else:
-                return 'Abgeschlossen'
+def get_csv_col(applicant, col, settings):
+    if col.q == 'admissionstatus':
+        if applicant['admitted']:
+            return 'Zugelassen'
         else:
-            return 'Studiert'
+            return 'Offen'
 
     else:
-        value = col.run(student)
+        value = col.run(applicant)
         if value is None:
             return ''
         return get_formatted_value(value, col.formatting)
 
 
-def get_csv_row(student, columns, delimiter, settings):
+def get_csv_row(applicant, columns, delimiter, settings):
     values = []
 
     for col in columns:
-        values.append(get_csv_col(student, col, settings).encode('windows-1252'))
+        values.append(get_csv_col(applicant, col, settings).encode('windows-1252'))
 
     return delimiter.join(values)
 
@@ -162,8 +157,8 @@ def respond_csv(cursor, ret):
     def generate():
         yield csvdelimiter.join([col.name.encode('windows-1252') for col in columns]) + '\r\n'
 
-        for student in cursor:
-            data = student.get_dict(user_role)
+        for applicant in cursor:
+            data = applicant.get_dict(user_role)
             strident = str(data['ident'])
             if 'mlist' in ret and strident in ret['mlist']['comments']:
                 data['comment'] = ret['mlist']['comments'][strident]['text']
@@ -173,7 +168,7 @@ def respond_csv(cursor, ret):
     return Response(generate(), mimetype='text/csv', headers=[
         ('Content-Description', 'File Transfer'),
         ('Content-Type', 'application/csv'),
-        ('Content-Disposition', 'attachment; filename=students.csv')
+        ('Content-Disposition', 'attachment; filename=applicants.csv')
     ])
 
 
@@ -225,8 +220,8 @@ def handle():
 
     user_role = g.user_role
 
-    if not UserTools.has_right('applicant_data', user_role):
-        return respond({'error': 'invalid_access'}, 400)
+    # if not UserTools.has_right('applicant_data', user_role):
+    #     return respond({'error': 'invalid_access'}, 400)
 
     ret = {
         'start': start,

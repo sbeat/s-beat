@@ -8,6 +8,10 @@
 {% set website_class = "" %}
 {% extends "index.html" %}
 {% block title %}Bewerberliste{% endblock %}
+{% block head %}
+{{ super() }}
+<script src="js/applicantlist.js"></script>
+{% endblock %}
 {% block content %}
 <div class="layout">
 	<article>
