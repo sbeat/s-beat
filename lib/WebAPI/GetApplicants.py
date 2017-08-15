@@ -220,8 +220,8 @@ def handle():
 
     user_role = g.user_role
 
-    # if not UserTools.has_right('applicant_data', user_role):
-    #     return respond({'error': 'invalid_access'}, 400)
+    if not UserTools.has_right('applicant_data', user_role):
+        return respond({'error': 'invalid_access'}, 400)
 
     ret = {
         'start': start,
