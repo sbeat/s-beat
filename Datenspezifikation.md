@@ -420,7 +420,7 @@ Geburtsdatum (Datumsfeld)
 
 #### `HZBNOTE`
 
-Hochschulzugangsberechtigungsnote (Hinweis: ist an dieser Stelle eine Note von 9.9 eingetragen bedeutet dass, dass keine solche vorliegt.)
+Hochschulzugangsberechtigungsnote (Hinweis: eine Note von 9.9 bedeutet hier, dass keine solche vorliegt.)
 
 
 #### `HZBDATUM`
@@ -430,7 +430,7 @@ Hochschulzugangsberechtigungsdatum (Datumsfeld)
 
 #### `HZBART`
 
-Nummer der Hochschulzugangsberechtigungsart. (Optional, wenn HZBGRP gegeben ist)
+Nummer der Hochschulzugangsberechtigungsart. (Optional wenn HZBGRP gegeben ist)
 Die Nummer wird über die [mappings.json](data/mappings.default.json) eine der folgenden Hochschulzugangsberechtigungsgruppen zugeordnet: 
 
 * Abitur = Allgemeine Hochschulreife 
@@ -443,7 +443,7 @@ Die Nummer wird über die [mappings.json](data/mappings.default.json) eine der f
 
 #### `HZBGRP`
 
-Die Hochzugangsberechtigungsgruppe, welche statt der HZBART verwendet werden kann. (Optional, wenn HZBART gegeben ist)
+Die Hochzugangsberechtigungsgruppe, welche statt der HZBART verwendet werden kann. (Optional wenn HZBART gegeben ist)
 
 
 #### `APPLDAT`
@@ -460,7 +460,7 @@ Optionales feld. Wenn die Spalte nicht enthalten ist, wird das Folgesemester des
 
 #### `ZULDAT`
 
-Zulassungdatum (Datumsfeld). Is leer, wenn keine Zulassung erfolgt ist.
+Zulassungdatum (Datumsfeld). Ist leer, wenn keine Zulassung erfolgt ist.
 
 
 #### `VORNAME`
