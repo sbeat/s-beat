@@ -290,9 +290,8 @@ def create_applicant_from_entry(data, settings):
 
     if 'sem' in data:
         applicant.start_semester = get_int(data['sem'])
-    else:
-        if applicant.adm_date is not None:
-            applicant.start_semester = CalcTools.get_appl_start_semester_from_date(applicant.adm_date)
+    elif applicant.appl_date is not None:
+        applicant.start_semester = CalcTools.get_appl_start_semester_from_date(applicant.appl_date)
 
     applicant.hzb_grade = get_int(data['hzbnote'])
     if 'hzbart' in data:
