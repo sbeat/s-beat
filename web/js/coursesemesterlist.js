@@ -164,6 +164,12 @@ function CourseSemesterList(parentDOM) {
 			label: 'Bewerber',
 			title: 'Anzahl Bewerber',
 			formatting: 'int'
+		},
+		'applicants.count_per_student': {
+			id: 'applicants.count_per_student',
+			label: 'Bewerber pro Platz',
+			title: 'Bewerber pro Platz',
+			formatting: 'float'
 		}
 	};
 	this.columns = this.settings.default.columns.slice();
@@ -347,7 +353,11 @@ CourseSemesterList.prototype.initMetadata = function (metadata) {
 		self.removeDataColumn('exams.resign_perc');
 	}
 	if (self.data && !self.data.import_applicants) {
-		self.removeDataColumn('applicants.count');
+		Object.keys(self.columnData).forEach(function (key) {
+			if (key.indexOf('applicants.') === 0) {
+				self.removeDataColumn(key);
+			}
+		});
 	}
 
 };

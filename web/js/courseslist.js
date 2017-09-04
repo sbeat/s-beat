@@ -4,27 +4,27 @@
 function CoursesList(parentDOM) {
 	this.parentDOM = parentDOM;
 
-	this.settingId = this.parentDOM.attr('data-preset')||'default';
+	this.settingId = this.parentDOM.attr('data-preset') || 'default';
 	this.settingsRev = 1; // changing this forces a reset of settings for all users
 	this.settingsPrefix = 'courses_';
 	this.settings = {
-		'default':{
-			limit:100,
+		'default': {
+			limit: 100,
 			sort1: '_id,1',
 			sort2: null,
-			filters:[],
+			filters: [],
 			columns: ['stg_original', 'stg', 'name', 'degree_type', 'faculty', 'semesters', 'count_students', 'count_failed', 'count_successful', 'risk_data.mean'],
-			displayPagination:true,
-			sortable:true
+			displayPagination: true,
+			sortable: true
 		},
-		'details':{
-			limit:100,
+		'details': {
+			limit: 100,
 			sort1: '_id,-1',
 			sort2: null,
-			filters:[],
+			filters: [],
 			columns: ['stg_original', 'semesters', 'count_students', 'count_failed', 'count_successful'],
-			displayPagination:true,
-			sortable:true
+			displayPagination: true,
+			sortable: true
 		}
 	};
 	this.courseStg = parentDOM.attr('data-stg');
@@ -40,26 +40,97 @@ function CoursesList(parentDOM) {
 	this.pagination.sortOptions = {};
 
 	this.columnData = {
-		'stg_original': {id: 'stg_original', label: 'Kürzel', title: 'Kürzel', formatting: 'str', sortBy:'_id'},
+		'stg_original': {id: 'stg_original', label: 'Kürzel', title: 'Kürzel', formatting: 'str', sortBy: '_id'},
 		'stg': {id: 'stg', label: 'Gruppe', title: 'Gruppe', formatting: 'str'},
 		'name': {id: 'name', label: 'Name', title: 'Name', formatting: 'str'},
 		'faculty': {id: 'faculty', label: 'Fakultät', title: 'Fakultät', formatting: 'int'},
 		'semesters': {id: 'semesters', label: 'Regelstu- dienzeit', title: 'Regelstudienzeit', formatting: 'int'},
 		'degree_type': {id: 'degree_type', label: 'Abschluss', title: 'Abschlussart', formatting: 'str'},
-		'count_finished': {id: 'count_finished', label: 'Studium abgeschl.', title: 'Studium abgeschlossen', formatting: 'int'},
-		'count_successful': {id: 'count_successful', label: 'Studium erfolgreich', title: 'Studium erfolgreich', formatting: 'int'},
-		'count_failed': {id: 'count_failed', label: 'Studium nicht erfolgreich', title: 'Studium nicht erfolgreich', formatting: 'int'},
-		'count_students': {id: 'count_students', label: 'Anzahl Studenten', title: 'Anzahl Studenten', formatting: 'int'},
-		'female_perc': {id: 'female_perc', label: 'Frauenanteil', title: 'Prozentualer Anteil weiblicher Studenten', formatting: 'percent'},
-		'male_perc': {id: 'male_perc', label: 'Männeranteil', title: 'Prozentualer Anteil männlicher Studenten', formatting: 'percent'},
-		'risk_data.mean': {id: 'risk_data.mean', label: 'Ø Risiko in %', title: 'Durchschnittliches Risiko in %', formatting: 'percent'},
-		'age_data.mean': {id: 'age_data.mean', label: 'Ø Alter', title: 'Durchschnittliches Alter bei Immatrikulation', formatting: 'int'},
-		'age_data.max': {id: 'age_data.max', label: 'Höchstes Alter', title: 'Höchstes Alter eines Studenten', formatting: 'int'},
-		'age_data.min': {id: 'age_data.min', label: 'Niedrigstes Alter', title: 'Niedrigstes Alter eines Studenten', formatting: 'int'},
-		'hzb_grade_data.mean': {id: 'hzb_grade_data.mean', label: 'Ø HZB Note', title: 'Durchschnittliche Note der Hochschulzugangsberechtigung', formatting: 'grade'},
-		'exam_perc_resigned': {id: 'exam_perc_resigned', label: 'Rücktritte in %', title: 'Anteil der Prüfungsleistungen von welchen zurückgetreten wurde', formatting: 'percent'},
-		'exams_per_student': {id: 'exams_per_student', label: 'PL pro Student', title: 'Prüfungsleistungen pro Student', formatting: 'int'},
-		'applicants.count': {id: 'applicants.count', label: 'Bewerber', title: 'Anzahl Bewerber', formatting: 'int'}
+		'count_finished': {
+			id: 'count_finished',
+			label: 'Studium abgeschl.',
+			title: 'Studium abgeschlossen',
+			formatting: 'int'
+		},
+		'count_successful': {
+			id: 'count_successful',
+			label: 'Studium erfolgreich',
+			title: 'Studium erfolgreich',
+			formatting: 'int'
+		},
+		'count_failed': {
+			id: 'count_failed',
+			label: 'Studium nicht erfolgreich',
+			title: 'Studium nicht erfolgreich',
+			formatting: 'int'
+		},
+		'count_students': {
+			id: 'count_students',
+			label: 'Anzahl Studenten',
+			title: 'Anzahl Studenten',
+			formatting: 'int'
+		},
+		'female_perc': {
+			id: 'female_perc',
+			label: 'Frauenanteil',
+			title: 'Prozentualer Anteil weiblicher Studenten',
+			formatting: 'percent'
+		},
+		'male_perc': {
+			id: 'male_perc',
+			label: 'Männeranteil',
+			title: 'Prozentualer Anteil männlicher Studenten',
+			formatting: 'percent'
+		},
+		'risk_data.mean': {
+			id: 'risk_data.mean',
+			label: 'Ø Risiko in %',
+			title: 'Durchschnittliches Risiko in %',
+			formatting: 'percent'
+		},
+		'age_data.mean': {
+			id: 'age_data.mean',
+			label: 'Ø Alter',
+			title: 'Durchschnittliches Alter bei Immatrikulation',
+			formatting: 'int'
+		},
+		'age_data.max': {
+			id: 'age_data.max',
+			label: 'Höchstes Alter',
+			title: 'Höchstes Alter eines Studenten',
+			formatting: 'int'
+		},
+		'age_data.min': {
+			id: 'age_data.min',
+			label: 'Niedrigstes Alter',
+			title: 'Niedrigstes Alter eines Studenten',
+			formatting: 'int'
+		},
+		'hzb_grade_data.mean': {
+			id: 'hzb_grade_data.mean',
+			label: 'Ø HZB Note',
+			title: 'Durchschnittliche Note der Hochschulzugangsberechtigung',
+			formatting: 'grade'
+		},
+		'exam_perc_resigned': {
+			id: 'exam_perc_resigned',
+			label: 'Rücktritte in %',
+			title: 'Anteil der Prüfungsleistungen von welchen zurückgetreten wurde',
+			formatting: 'percent'
+		},
+		'exams_per_student': {
+			id: 'exams_per_student',
+			label: 'PL pro Student',
+			title: 'Prüfungsleistungen pro Student',
+			formatting: 'int'
+		},
+		'applicants.count': {id: 'applicants.count', label: 'Bewerber', title: 'Anzahl Bewerber', formatting: 'int'},
+		'applicants.count_per_student': {
+			id: 'applicants.count_per_student',
+			label: 'Bewerber pro Platz',
+			title: 'Bewerber pro Platz',
+			formatting: 'float'
+		}
 	};
 	this.columns = this.settings.default.columns.slice();
 	this.mandatoryColumns = ['stg_original'];
@@ -83,6 +154,7 @@ function CoursesList(parentDOM) {
 
 	CoursesList.prototype.init.call(this);
 }
+
 /**
  * Gets called once this CoursesList is initialized
  */
@@ -145,7 +217,7 @@ CoursesList.prototype.draw = function () {
 		this.drawn = true;
 	}
 
-	if(this.displayPagination) this.paginationDOM.show();
+	if (this.displayPagination) this.paginationDOM.show();
 	else this.paginationDOM.hide();
 
 
@@ -164,7 +236,7 @@ CoursesList.prototype.draw = function () {
 	var tr = $(document.createElement('tr'));
 	thead.append(tr);
 
-	drawTableHead.call(this,tr,'tooltip_course_');
+	drawTableHead.call(this, tr, 'tooltip_course_');
 
 	thead.find('th').click(function (e) {
 		var col = self.columnData[this.colId];
@@ -187,7 +259,7 @@ CoursesList.prototype.draw = function () {
 
 	var tbody = $(document.createElement('tbody'));
 	this.tableDOM.append(tbody);
-	
+
 	for (i = 0; i < this.data.list.length; i++) {
 		var course = this.data.list[i];
 
@@ -224,9 +296,9 @@ CoursesList.prototype.drawCellValue = function (course, col, td) {
 		idA.text(value);
 		td.append(idA);
 
-	} else if(col.id == 'risk_data.mean') {
+	} else if (col.id == 'risk_data.mean') {
 		value = getByPath(col.id, course);
-		td.append(getFormattedHTML(value?value/100:null, col.formatting));
+		td.append(getFormattedHTML(value ? value / 100 : null, col.formatting));
 
 	} else {
 		value = getByPath(col.id, course);
@@ -243,7 +315,12 @@ CoursesList.prototype.initMetadata = function (metadata) {
 		self.removeDataColumn('exam_perc_resigned');
 	}
 	if (self.data && !self.data.import_applicants) {
-		self.removeDataColumn('applicants.count');
+		Object.keys(self.columnData).forEach(function (key) {
+			if (key.indexOf('applicants.') === 0) {
+				self.removeDataColumn(key);
+			}
+		});
+
 	}
 };
 
@@ -255,17 +332,17 @@ CoursesList.prototype.load = function () {
 
 	var params = [];
 	params.push('ignore=false');
-	if(self.courseStg) {
-		params.push('stg='+self.courseStg);
+	if (self.courseStg) {
+		params.push('stg=' + self.courseStg);
 	}
 
 	params.push('start=' + self.pagination.start);
 	params.push('limit=' + self.pagination.limit);
 	params.push('sort1=' + self.pagination.sort1);
-	if(self.pagination.sort2)
+	if (self.pagination.sort2)
 		params.push('sort2=' + self.pagination.sort2);
 
-	if(isTempActive()) params.push('temp=true');
+	if (isTempActive()) params.push('temp=true');
 
 	if (params.length) url += '?';
 	url += params.join('&');

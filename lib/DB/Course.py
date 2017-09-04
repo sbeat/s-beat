@@ -95,6 +95,10 @@ class Course(DBDocument):
             'admitted': 0,
             'male': 0,
             'female': 0,
+            'count_per_student': None,  # (students + applicants) / students
+            'denied_quote': None,  # not admitted / total applicants
+            'refusal_quote': None,  # admitted / (admitted + students)
+            'accept_quote': None,  # students / admitted
             'hzb_grade_data': {
                 'min': None,
                 'max': None,
@@ -199,7 +203,6 @@ class Course(DBDocument):
         else:
             d['hzb_type_values'][entity.hzb_type] += 1
 
-
     def db_transform(self):
         """
         Transforms self to a database dictionary object.
@@ -222,6 +225,16 @@ class Course(DBDocument):
             self.female_perc = float(self.count_female) / self.count_students
             self.male_perc = float(self.count_male) / self.count_students
             self.count_studying = self.count_students - self.count_finished
+
+        if self.applicants['count'] > 0:
+            if self.count_students > 0:
+                self.applicants['count_per_student'] = float(self.applicants['count']) / self.count_students
+            self.applicants['denied_quote'] = float(self.applicants['admitted']) / self.applicants['count']
+
+        if self.applicants['admitted'] > 0:
+            self.applicants['accept_quote'] = float(self.count_students) / self.applicants['admitted']
+            self.applicants['refusal_quote'] = float(self.applicants['admitted'] - self.count_students) / \
+                                               self.applicants['admitted']
 
         self.update_stat_dict_by_values(self.hzb_grade_data)
         self.update_stat_dict_by_values(self.age_data)

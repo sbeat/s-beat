@@ -20,6 +20,7 @@ along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 from Db import DBDocument
 from Course import Course
 
+
 class CourseSemesterInfo(DBDocument):
     collection_name = 'courseSemesterInfos'
 
@@ -112,6 +113,10 @@ class CourseSemesterInfo(DBDocument):
             'admitted': 0,
             'male': 0,
             'female': 0,
+            'count_per_student': None,  # (students + applicants) / students
+            'denied_quote': None,  # not admitted / total applicants
+            'refusal_quote': None,  # admitted / (admitted + students)
+            'accept_quote': None,  # students / admitted
             'hzb_grade_data': {
                 'min': None,
                 'max': None,
@@ -149,6 +154,16 @@ class CourseSemesterInfo(DBDocument):
             self.students['male_perc'] = float(self.students['male']) / self.students['count']
             self.students['female_perc'] = float(self.students['female']) / self.students['count']
             self.students['studying'] = self.students['count'] - self.students['finished']
+
+        if self.applicants['count'] > 0:
+            if self.students['count'] > 0:
+                self.applicants['count_per_student'] = float(self.applicants['count']) / self.students['count']
+            self.applicants['denied_quote'] = float(self.applicants['admitted']) / self.applicants['count']
+
+        if self.applicants['admitted'] > 0:
+            self.applicants['accept_quote'] = float(self.students['count']) / self.applicants['admitted']
+            self.applicants['refusal_quote'] = float(self.applicants['admitted'] - self.students['count']) / \
+                                               self.applicants['admitted']
 
         data = self.__dict__.copy()
         del data['ident']
@@ -241,7 +256,6 @@ class CourseSemesterInfo(DBDocument):
             d.students['female'] += 1
         elif student.gender == 'M':
             d.students['male'] += 1
-
 
     @classmethod
     def update_by_applicant(cls, applicant):

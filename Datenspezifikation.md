@@ -395,7 +395,7 @@ Studiengänge, welche nicht eine der eingestellten Abschlussarten haben, werden 
 
 ## Bewerberdaten CSV Datei
 
-
+Die Bewerberdaten erhalten alle Bewerbungen. Somit sollten in einem Semester mindestens so viele Einträge vorhanden sein, wie in den Studentendaten.
 
 ### Spalten
 
