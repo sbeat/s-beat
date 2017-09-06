@@ -308,9 +308,9 @@ ApplicantList.prototype.draw = function () {
 		// this.pagination.addLink('Berechnungen', function () {
 		// 	self.openCalculationsDialog();
 		// });
-		this.pagination.addLink('Herunterladen', function () {
-			self.openDownloadDialog();
-		});
+		// this.pagination.addLink('Herunterladen', function () {
+		// 	self.openDownloadDialog();
+		// });
 	}
 
 	if (this.displayFilters) this.filterDOM.show();
