@@ -21,6 +21,7 @@ function FilterList(parentDOM) {
 
 	FilterList.prototype.init.call(this);
 }
+
 FilterList.prototype.hasFilter = function (filter) {
 	return this.filters.filter(function (d) {
 		if (d.id == filter.id) return d;
@@ -72,7 +73,7 @@ FilterList.prototype.addElementFilter = function (id, query, condition) {
 	this.available.push(o);
 	return o;
 };
-FilterList.prototype.copyFilter = function(filter) {
+FilterList.prototype.copyFilter = function (filter) {
 	var newFilter = {};
 	for (var key in filter) {
 		newFilter[key] = filter[key];
@@ -305,7 +306,7 @@ FilterList.prototype.drawAddFilterMenu = function (fBox) {
 					}
 				});
 			} else if (filter.type == 'value') {
-				if(filter.value===null) {
+				if (filter.value === null) {
 					self.openValueDialog(filter, function (value) {
 						if (hasFilter) {
 							self.replaceFilter(filter, filter);
@@ -327,7 +328,7 @@ FilterList.prototype.drawAddFilterMenu = function (fBox) {
 
 };
 
-FilterList.prototype.drawFilter = function (filter,noInteraction) {
+FilterList.prototype.drawFilter = function (filter, noInteraction) {
 	var self = this;
 
 	var peBox = document.createElement('div');
@@ -341,7 +342,7 @@ FilterList.prototype.drawFilter = function (filter,noInteraction) {
 	var cBox = peBox.appendChild(document.createElement('div'));
 	cBox.className = 'cond';
 
-	if(!noInteraction) {
+	if (!noInteraction) {
 		var deleteBox = peBox.appendChild(document.createElement('div'));
 		deleteBox.className = 'delete';
 
@@ -383,7 +384,7 @@ FilterList.prototype.drawFilter = function (filter,noInteraction) {
 
 	} else if (filter.type == 'value') {
 		var info = getCompareValueInfo(filter.value, filter.formatting);
-		if(!info.type) {
+		if (!info.type) {
 			info.text = filter.values[filter.value];
 		}
 		qBox.appendChild(document.createTextNode(filter.name));
@@ -409,6 +410,7 @@ FilterList.prototype.drawFilterSelection = function (filters) {
 	var parentList = document.createElement('ul');
 	parentList.lists = {};
 	parentList.items = {};
+
 	function createItem(id, label, parent, filterItem) {
 		var item = document.createElement('li');
 		parent.appendChild(item);
@@ -472,29 +474,34 @@ FilterList.prototype.drawFilterSelection = function (filters) {
 	}
 
 	function addAttribute(group, id, item) {
-		if (group == 'ignore')return;
+		if (group == 'ignore') return;
 		var path = splitGroup(group);
 		addItem(path, id, item.displayName ? item.displayName : item.name, item);
 	}
 
 	function addFilterElement(group, queryid, id, item) {
-		if (group == 'ignore')return;
+		if (group == 'ignore') return;
 		var path = splitGroup(group);
 		path.push(queryid);
 		addItem(path, id, getConditionText(item.condition, item.query.formatting), item);
 	}
 
 	function addValueElement(group, id, item) {
-		if (group == 'ignore')return;
-		var path = splitGroup(group);
-		for (var key in item.values) {
-			var text = item.values[key];
-			var itemPath = path.slice();
-			itemPath.push(item.name);
-			var f = self.copyFilter(item);
-			f.value = key;
-			addItem(itemPath, id, text, f);
+		if (group == 'ignore') return;
+		if (typeof(item.values) === 'function') {
+			addAttribute(group, id, item);
+		} else {
+			var path = splitGroup(group);
+			for (var key in item.values) {
+				var text = item.values[key];
+				var itemPath = path.slice();
+				itemPath.push(item.name);
+				var f = self.copyFilter(item);
+				f.value = key;
+				addItem(itemPath, id, text, f);
+			}
 		}
+
 	}
 
 	for (var i = 0; i < filters.length; i++) {
@@ -787,25 +794,41 @@ FilterList.prototype.drawValueAttributeSelector = function (filter, sendCallb) {
 	var boxO = $(document.createElement('div'));
 	boxO.addClass('filterSelect');
 
-	for (var val in filter.values) {
-		var text = filter.values[val];
-		var el = document.createElement('a');
-		el.href = '';
-		el.appendChild(document.createTextNode(text));
-		if (val == filter.value) el.className = 'active';
-		el.filterValue = val;
-		boxO.append(el);
+	var definedFilter = this.getFilterById(filter.id);
+
+	function drawValues(values) {
+		for (var val in values) {
+			var text = values[val];
+			var el = document.createElement('a');
+			el.href = '';
+			el.appendChild(document.createTextNode(text));
+			if (val == filter.value) el.className = 'active';
+			el.filterValue = val;
+			boxO.append(el);
+		}
+
+		sortElements(boxO);
+
+		var allItems = boxO.find('a');
+		boxO.find('a').click(function (e) {
+			e.preventDefault();
+			allItems.removeClass('active');
+			$(this).addClass('active');
+			sendCallb.call(boxO);
+		});
 	}
 
-	sortElements(boxO);
+	if (definedFilter && typeof(definedFilter.values) === 'function') {
+		boxO.addClass('loading');
+		definedFilter.values(filter, function (values) {
+			boxO.removeClass('loading');
+			drawValues(values);
+		});
 
-	var allItems = boxO.find('a');
-	boxO.find('a').click(function (e) {
-		e.preventDefault();
-		allItems.removeClass('active');
-		$(this).addClass('active');
-		sendCallb.call(boxO);
-	});
+	} else {
+		drawValues(filter.values);
+	}
+
 
 	boxO.getValue = function () {
 		var curr = boxO.find('a.active')[0];

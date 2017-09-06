@@ -85,6 +85,7 @@ function ApplicantAnalytics(parentDOM, settingsPrefix) {
 	this.metadata = null;
 
 	this.groupStats = null;
+	this.valueStats = {};
 
 	this.drawn = false;
 
@@ -105,6 +106,8 @@ function ApplicantAnalytics(parentDOM, settingsPrefix) {
 	this.saveSettings = saveSettings;
 	this.removeSettings = removeSettings;
 	this.openSettingsDialog = openSettingsDialog;
+	this.addFilterForData = ApplicantList.prototype.addFilterForData;
+	this.loadValuesOfColumn = ApplicantList.prototype.loadValuesOfColumn;
 
 	ApplicantAnalytics.prototype.init.call(this);
 }
@@ -183,10 +186,13 @@ ApplicantAnalytics.prototype.init = function () {
 	this.defineColumn('count', 'Bewerber', 'Anzahl Bewerber in der Gruppe', 'int');
 	this.defineColumn('age', 'Alter', 'Anzahl Bewerber mit dem Alter bzw. berechnetes Alter in der Gruppe', 'int', true, ['min', 'max', 'avg']);
 	this.defineColumn('gender', 'Geschlecht', 'Anzahl Bewerber mit dem Geschlecht', 'str', true);
+	this.defineColumn('country', 'Land', 'Anzahl Bewerber aus dem Land', 'str', true);
+	this.defineColumn('admitted', 'Zulassung', 'Anzahl Bewerber aus mit dem Zulassungsstatus', 'yesno', true);
 	this.defineColumn('hzb_type', 'HZB Gruppe', 'Anzahl Bewerber mit der HZB Gruppe', 'str', true);
 	this.defineColumn('hzb_grade', 'HZB Note', null, 'grade', true, ['min', 'max', 'avg']);
 	this.defineColumn('status', 'Status', null, 'status', true);
 	this.defineColumn('start_semester', 'Start Semester', null, 'semester', true);
+	this.defineColumn('stg', 'Studiengangsgruppe', null, 'str', true);
 
 	this.settings.default.columns.push(this.getColumnObject('group'));
 	this.settings.default.columns.push(this.getColumnObject('count'));
@@ -209,7 +215,7 @@ ApplicantAnalytics.prototype.init = function () {
 	for (var colId in this.columnData) {
 		var col = this.columnData[colId];
 
-		this.filter.addAttributeFilter(col.id, col.label, 'Bewerber', col.formatting, col.formatting === 'int' ? 0 : '');
+		this.addFilterForData(col);
 
 		var sf = col.id;
 		if (col.sortBy) {
@@ -219,17 +225,38 @@ ApplicantAnalytics.prototype.init = function () {
 		this.pagination.sortOptions[sf + ',-1'] = col.label + ' absteigend';
 	}
 
+	this.addFilterForData({
+		id: 'birth_date',
+		label: 'Geburtsdatum',
+		formatting: 'date'
+	});
+	this.addFilterForData({
+		id: 'appl_date',
+		label: 'Bewerbung am',
+		formatting: 'date'
+	});
+	this.addFilterForData({
+		id: 'adm_date',
+		label: 'Zulassung am',
+		formatting: 'date'
+	});
+	this.addFilterForData({
+		id: 'degree_type',
+		label: 'Abschluss',
+		formatting: 'str'
+	});
+	this.addFilterForData({
+		id: 'citship',
+		label: 'Staatsangehörigkeit',
+		formatting: 'str'
+	});
+	this.addFilterForData({
+		id: 'eu',
+		label: 'EU Bürger',
+		formatting: 'yesno'
+	});
+
 	this.filter.sortFilters();
-
-	this.filter.addAttributeFilter('birth_date', 'Geburtsdatum', 'Bewerber', 'date', '');
-	this.filter.addAttributeFilter('appl_date', 'Bewerbung am', 'Bewerber', 'date', '');
-	this.filter.addAttributeFilter('adm_date', 'Zulassung am', 'Bewerber', 'date', '');
-	this.filter.addAttributeFilter('degree_type', 'Abschluss', 'Bewerber', 'str', '');
-	this.filter.addAttributeFilter('country', 'Land', 'Bewerber', 'str', '');
-	this.filter.addAttributeFilter('citship', 'Staatsangehörigkeit', 'Bewerber', 'str', '');
-	this.filter.addAttributeFilter('eu', 'EU Bürger', 'Bewerber', 'yesno', false);
-	this.filter.addAttributeFilter('admitted', 'Zugelassen', 'Bewerber', 'yesno', false);
-
 
 	self.loadSettings();
 

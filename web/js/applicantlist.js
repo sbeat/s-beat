@@ -4,7 +4,6 @@
 function ApplicantList(parentDOM) {
 	this.parentDOM = parentDOM;
 
-	this.mlistId = this.parentDOM.attr('data-mlist');
 	this.settingId = this.parentDOM.attr('data-preset') || 'default';
 	this.settingsRev = 1; // changing this forces a reset of settings for all users
 	this.settingsPrefix = 'applicants_';
@@ -17,16 +16,6 @@ function ApplicantList(parentDOM) {
 			sort2: null,
 			filters: [],
 			columns: ['ident', 'stg', 'start_semester', 'admissionstatus', 'age', 'gender', 'hzb_type', 'hzb_grade'],
-			displayFilters: true,
-			displayPagination: true,
-			sortable: true
-		},
-		'mlist': {
-			title: "Vormerkungsliste",
-			limit: 20,
-			sort1: '_id,1',
-			filters: [],
-			columns: ['ident', 'stg', 'start_semester', 'admissionstatus', 'age', 'gender', 'comment', 'actions'],
 			displayFilters: true,
 			displayPagination: true,
 			sortable: true
@@ -52,28 +41,31 @@ function ApplicantList(parentDOM) {
 
 	this.filterDOM = $(document.createElement('div'));
 	this.filter = new FilterList(this.filterDOM);
-	//this.filter.addAttributeFilter('risk.median_scaled', 'Misserfolg in %', 'Vorhersage', 'percent', 0);
-	if (this.settingId != 'mlist') {
-		this.filter.addAttributeFilter('ident', 'Identifikationsnummer', 'Student', 'int', 0);
-	}
 
-	//this.filter.multiFilters = {
-	//	exam_count: ['exam_count', 'exam_count_success', 'exam_count_applied']
-	//};
 
 	this.columnData = {
 		'ident': {id: 'ident', label: 'Ident', title: 'Identifikationsnummer', formatting: 'str', sortBy: '_id'},
 		'stg': {id: 'stg', label: 'STG', title: 'Studiengangsgruppe', formatting: 'stg'},
 		'stg_original': {id: 'stg_original', label: 'Studiengang', title: 'Studiengang', formatting: 'stg'},
 		'degree_type': {id: 'degree_type', label: 'Abschluss', title: 'Abschluss', formatting: 'str'},
-		'start_semester': {id: 'start_semester', label: 'Start', title: 'Voraussichtliches Startsemester', formatting: 'semester'},
+		'start_semester': {
+			id: 'start_semester',
+			label: 'Start Semester',
+			title: 'Voraussichtliches Startsemester',
+			formatting: 'semester'
+		},
 		'admissionstatus': {
 			id: 'admissionstatus',
 			label: 'Status',
 			title: 'Status der Zulassung',
 			formatting: 'yesno',
-			sortBy: 'status',
-			filters: ['admitted', 'not_admitted']
+			sortBy: 'admitted'
+		},
+		'admitted': {
+			id: 'admitted',
+			label: 'Zugelassen',
+			title: 'Ist der Bewerber zugelassen worden',
+			formatting: 'yesno'
 		},
 		'age': {id: 'age', label: 'Alter b. Bewerb.', title: 'Alter bei Bewerbung', formatting: 'int'},
 		'birth_date': {id: 'birth_date', label: 'Geburtstag', title: 'Geburtstag', formatting: 'date'},
@@ -103,26 +95,7 @@ function ApplicantList(parentDOM) {
 			title: 'Monate zwischen HZB und Immatrikulation',
 			formatting: 'int'
 		},
-		'gender': {id: 'gender', label: 'Geschl.', title: 'Geschlecht', formatting: 'gender'},
-
-		'comment': {
-			id: 'comment',
-			label: 'Kommentar',
-			title: 'Kommentar aus Vormerkung',
-			formatting: 'str',
-			sortBy: null
-		},
-		//'category': {id: 'category', label: 'Kategorie', title: 'Kategorie aus Vormerkung', formatting: 'str', sortBy: null},
-
-		'actions': {
-			id: 'actions',
-			label: 'Aktionen',
-			title: 'Aktionen',
-			formatting: 'actions',
-			noDownload: true,
-			sortBy: null,
-			presets: ['mlist']
-		}
+		'gender': {id: 'gender', label: 'Geschl.', title: 'Geschlecht', formatting: 'gender'}
 
 	};
 	this.columns = this.settings.default.columns;
@@ -131,10 +104,10 @@ function ApplicantList(parentDOM) {
 	this.tableDOM = $(document.createElement('table'));
 
 	this.data = null; // Last loaded data
-	this.markedData = null;
-	this.definitions = null;
 
 	this.drawn = false;
+
+	this.valueStats = {};
 
 	this.openColumnDialog = openColumnDialog;
 	this.loadPresetSettings = loadPresetSettings;
@@ -146,6 +119,7 @@ function ApplicantList(parentDOM) {
 
 	ApplicantList.prototype.init.call(this);
 }
+
 /**
  * Gets called once this MarkedList is initialized
  */
@@ -153,12 +127,20 @@ ApplicantList.prototype.init = function () {
 	// Check for global context and filters
 	var self = this;
 
-	for (var colId in self.columnData) {
-		var col = self.columnData[colId];
-		if (colId == 'ident' || col.sortBy) continue;
-		self.pagination.sortOptions[col.id + ',1'] = col.label + ' aufsteigend';
-		self.pagination.sortOptions[col.id + ',-1'] = col.label + ' absteigend';
+	for (var colId in this.columnData) {
+		var col = this.columnData[colId];
+
+		this.addFilterForData(col);
+
+		var sf = col.id;
+		if (col.sortBy) {
+			sf = col.sortBy;
+		}
+		this.pagination.sortOptions[sf + ',1'] = col.label + ' aufsteigend';
+		this.pagination.sortOptions[sf + ',-1'] = col.label + ' absteigend';
 	}
+
+	this.filter.sortFilters();
 
 	self.pagination.onReset = function () {
 		self.loadPresetSettings(self.settingId);
@@ -209,6 +191,75 @@ ApplicantList.prototype.init = function () {
 
 
 };
+
+ApplicantList.prototype.addFilterForData = function (cd) {
+	var self = this;
+	if (['str', 'stg', 'gender'].indexOf(cd.formatting) !== -1 && cd.id !== 'ident' && cd.id !== 'admissionstatus') {
+		this.filter.addValueFilter(cd.id, cd.label, 'Bewerber', cd.formatting, getValues, null);
+	} else {
+		this.filter.addAttributeFilter(cd.id, cd.label, 'Bewerber', cd.formatting, cd.formatting === 'int' ? 0 : '');
+	}
+
+	function getValues(filter, callb) {
+		if (self.valueStats[filter.id]) {
+			callb(getValuesFromStats(filter));
+		} else {
+			self.loadValuesOfColumn(filter.id, function () {
+				callb(getValuesFromStats(filter));
+			})
+		}
+
+	}
+
+	function getValuesFromStats(filter) {
+		const values = {};
+		if (self.valueStats[filter.id]) {
+			self.valueStats[filter.id].forEach(function (gs) {
+				values[gs.value] = getCompareValueInfo(gs.value, gs.formatting).text + ' (' + gs.count + ')';
+			});
+		}
+		console.log('values for ', filter, values);
+		return values;
+	}
+
+
+};
+ApplicantList.prototype.loadValuesOfColumn = function (col, callb) {
+	var self = this;
+	var url = '/api/GetApplicants';
+
+	var params = [];
+
+	var groups = [col];
+
+	params.push('single_groups=' + encodeURIComponent(groups.join(',')));
+
+	if (params.length) url += '?';
+	url += params.join('&');
+
+	$.ajax({
+		url: url
+	}).success(function (data) {
+
+		if (data.group_results) {
+			for (var grp in data.group_results) {
+				if (!data.group_results.hasOwnProperty(grp)) continue;
+				var values = data.group_results[grp];
+				self.valueStats[grp] = values.map(function (d) {
+					return {
+						value: d._id[grp],
+						count: d.count
+					};
+				});
+			}
+		}
+		callb();
+
+	}).fail(function (jqXHR) {
+		callb();
+	})
+};
+
 ApplicantList.prototype.findColumnByFilter = function (f) {
 	var columnId = null;
 	if (f.type == 'attribute') columnId = f.id;
@@ -254,19 +305,11 @@ ApplicantList.prototype.draw = function () {
 		this.pagination.addLink('Spaltenauswahl', function () {
 			self.openColumnDialog();
 		});
-		this.pagination.addLink('Berechnungen', function () {
-			self.openCalculationsDialog();
-		});
+		// this.pagination.addLink('Berechnungen', function () {
+		// 	self.openCalculationsDialog();
+		// });
 		this.pagination.addLink('Herunterladen', function () {
 			self.openDownloadDialog();
-		});
-	}
-
-	if (this.mlistId) {
-		$('[data-mlistdata]').each(function () {
-			var el = $(this);
-			var field = el.attr('data-mlistdata');
-			self.drawMListValue(field, el);
 		});
 	}
 
@@ -331,54 +374,6 @@ ApplicantList.prototype.draw = function () {
 	adjustTableHeaders(this.tableDOM);
 };
 
-
-ApplicantList.prototype.drawMListValue = function (field, el) {
-	var self = this;
-	var value;
-	el.empty();
-
-	if (!self.data) {
-		el.text('-');
-
-	} else if (field == 'user_roles') {
-		value = getByPath(field, self.data['mlist']);
-		var text = value ? value.join(', ') : 'Keine';
-		if (value) {
-			var readOnly = getByPath('read_only', self.data['mlist']);
-			text += ' (' + (readOnly ? 'Nur lesen' : 'Schreiben') + ')';
-		}
-		el.text(text);
-
-	} else if (field.indexOf('date_') == 0) {
-		value = getByPath(field, self.data['mlist']);
-		if (value) {
-			el.text(getDateTimeText(new Date(Math.floor(value * 1000))));
-		} else {
-			el.text('Nie');
-		}
-
-	} else if (field == 'modify_button') {
-		var btn = $(document.createElement('a'))
-			.text('Einstellungen der Vormerkungsliste bearbeiten')
-			.attr('href', '')
-			.click(function (e) {
-				e.preventDefault();
-				self.openMarkedListSettingsDialog();
-			});
-		if (self.data['mlist'] && self.data['mlist']['is_writable']) {
-			el.append(btn);
-		}
-
-
-	} else {
-		value = getByPath(field, self.data['mlist']);
-		el.append(getFormattedHTML(value, 'str'));
-
-	}
-
-};
-
-
 ApplicantList.prototype.drawApplicant = function (applicant) {
 
 	var tr = $(document.createElement('tr'));
@@ -401,10 +396,6 @@ ApplicantList.prototype.drawCellValue = function (applicant, col, td) {
 	var value;
 	var role = getUserRole();
 	td.addClass('col_applicant_' + col.id);
-	if (self.definitions.restricted.indexOf(col.id) != -1) {
-		td.text('***');
-		return
-	}
 
 	if (col.id == 'ident') {
 		var idA = $(document.createElement('a'));
@@ -423,61 +414,11 @@ ApplicantList.prototype.drawCellValue = function (applicant, col, td) {
 		 */
 		td.append(detailA);
 
-	} else if (col.id == 'actions') {
-		if (self.data.mlist && self.data.mlist.list.indexOf(applicant.ident) != -1 && self.data.mlist.is_writable) {
-			var delA = $(document.createElement('a'))
-				.attr('href', '')
-				.text('Entfernen')
-				.attr('title', 'Entfernt diesen Bewerber aus der Vormerkungsliste')
-				.appendTo(td);
-			delA.tooltip();
-			delA.click(function (e) {
-				e.preventDefault();
-
-				if (!confirm('Soll dieser Bewerber wirklich aus der Liste entfernt werden?')) {
-					return;
-				}
-				var data = {};
-				data['remove_idents'] = [applicant.ident];
-
-				self.tableDOM.addClass('loading');
-				$.ajax({
-					url: '/api/SaveMarkedList?ident=' + self.data.mlist.ident,
-					type: 'POST',
-					contentType: 'application/json; charset=utf-8',
-					data: JSON.stringify(data)
-				}).success(function (data) {
-					self.load();
-
-				}).fail(function () {
-					self.tableDOM.removeClass('loading');
-					self.tableDOM.text('Speichern der Daten ist fehlgeschlagen.');
-				});
-
-			});
-
-		}
-
-	} else if (col.id == 'category') {
-		var mark = self.getMarkedInfo(applicant.ident);
-		if (mark) {
-			td.text(mark.category ? mark.category : '-');
-		} else {
-			td.text('-');
-		}
-
-	} else if (col.id == 'comment') {
-		if (self.data.mlist && self.data.mlist.comments[applicant.ident]) {
-			td.text(self.data.mlist.comments[applicant.ident].text);
-		} else {
-			td.text('-');
-		}
-
 	} else if (col.id == 'admissionstatus') {
 		if (applicant.admitted) {
-				td.text('Zugelassen');
+			td.text('Zugelassen');
 		} else {
-		td.text('(Noch) nicht zugelassen');
+			td.text('(Noch) nicht zugelassen');
 		}
 
 	} else {
@@ -498,41 +439,7 @@ ApplicantList.prototype.removeColumn = function (col) {
 	}
 
 };
-ApplicantList.prototype.initDefinitions = function (definitions) {
-	var self = this;
-	self.definitions = definitions;
-	var query;
-	var usedQueries = [];
 
-
-	for (var peId in self.definitions['path_elements']) {
-		var pe = self.definitions['path_elements'][peId];
-		query = self.definitions['queries'][pe['query_id']];
-		if (self.definitions.restricted.indexOf(query.q) != -1) continue;
-
-		self.filter.addElementFilter(peId, query, pe.condition);
-		if (usedQueries.indexOf(pe['query_id'].toString()) == -1) {
-			usedQueries.push(pe['query_id'].toString());
-		}
-	}
-	for (var qId in self.definitions['queries']) {
-		query = self.definitions['queries'][qId];
-		if (self.definitions.restricted.indexOf(query.q) != -1) continue;
-		if (usedQueries.indexOf(qId) == -1) {
-			self.filter.addAttributeFilter(query.q, query.name, query.category, query['formatting'], null);
-		} else if (['int', 'grade', 'percent'].indexOf(query['formatting']) != -1) {
-			var catg = query.category.split('.');
-			catg.push(query.name);
-			var f = self.filter.addAttributeFilter(query.q, query.name, catg, query['formatting'], null);
-			f.displayName = 'Benutzerdefiniert';
-		}
-	}
-
-
-	self.filter.sortFilters();
-
-
-};
 ApplicantList.prototype.setCustomFilters = function (ids) {
 	this.loadPresetSettings(this.settingId);
 
@@ -568,14 +475,8 @@ ApplicantList.prototype.load = function () {
 	params.push('sort1=' + self.pagination.sort1);
 	if (self.pagination.sort2)
 		params.push('sort2=' + self.pagination.sort2);
-	if (!self.definitions) {
-		params.push('definitions=true');
-	}
-	if (this.mlistId) {
-		params.push('mlist=' + this.mlistId);
-	}
 
-	if(isTempActive()) params.push('temp=true');
+	if (isTempActive()) params.push('temp=true');
 
 	if (params.length) url += '?';
 	url += params.join('&');
@@ -590,15 +491,6 @@ ApplicantList.prototype.load = function () {
 
 
 		self.data = data;
-		if (data.definitions) {
-			self.initDefinitions(data.definitions);
-
-			if (query['setFilterByIds']) {
-				self.setCustomFilters(query['setFilterByIds'].split(','));
-				return;
-			}
-
-		}
 
 		self.tableDOM.removeClass('loading');
 
@@ -621,53 +513,6 @@ ApplicantList.prototype.load = function () {
 			}
 
 		}
-	})
-
-};
-
-ApplicantList.prototype.findQuery = function (q) {
-	for (var qId in this.definitions['queries']) {
-		var query = this.definitions['queries'][qId];
-		if (query.q == q) return query;
-	}
-	return null;
-};
-
-ApplicantList.prototype.getMarkedInfo = function (ident) {
-	var self = this;
-	if (!self.markedData) return null;
-	for (var i = 0; i < self.markedData.list.length; i++) {
-		var mark = self.markedData.list[i];
-		if (mark.ident == ident) return mark;
-	}
-	return null;
-};
-
-ApplicantList.prototype.loadMarkedInfo = function () {
-	var self = this;
-	var url = '/api/GetMarkedApplicants';
-
-	var idents = [];
-	for (var i = 0; i < self.data.list.length; i++) {
-		var d = self.data.list[i];
-		idents.push(d.ident);
-	}
-
-
-	$.ajax({
-		url: url,
-		type: 'POST',
-		contentType: 'application/json; charset=utf-8',
-		data: JSON.stringify({
-			idents: idents
-		})
-	}).success(function (data) {
-
-		self.markedData = data;
-
-		self.draw();
-
-	}).fail(function () {
 	})
 
 };
@@ -815,82 +660,6 @@ ApplicantList.prototype.openDetailDialog = function (applicant) {
 
 };
 
-ApplicantList.prototype.openMarkedListSettingsDialog = function () {
-	var self = this;
-
-	var mlist = self.data['mlist'];
-	if (!mlist) {
-		return;
-	}
-
-	var mlists = new MarkedLists($(document.createElement('div')));
-	var box = mlists.drawMarkedListSettings(mlist, self.definitions['user_roles']);
-
-
-	var dialogBox = $(document.createElement('div'));
-	dialogBox.attr('title', 'Vormerkungsliste Einstellungen');
-
-	var status = $(document.createElement('p')).appendTo(dialogBox);
-
-	dialogBox.append(box);
-
-
-	var buttons = {};
-	buttons['Speichern'] = function () {
-
-		var data = box.getValues();
-
-		$.ajax({
-			url: '/api/SaveMarkedList?ident=' + mlist.ident,
-			type: 'POST',
-			contentType: 'application/json; charset=utf-8',
-			data: JSON.stringify(data)
-		}).success(function (data) {
-			status.removeClass('loading');
-			if (data && data.mlist) {
-				self.data['mlist'] = data.mlist;
-				self.draw();
-			}
-			$(dialogBox).dialog("close");
-
-		}).fail(function () {
-			status.removeClass('loading');
-			status.text('Speichern der Daten ist fehlgeschlagen.');
-		});
-
-	};
-	if (mlist['deleteable'] && mlist['owner'] == getUserName()) {
-		buttons['Löschen'] = function () {
-			$.ajax({
-				url: '/api/SaveMarkedList?ident=' + mlist.ident,
-				type: 'POST',
-				contentType: 'application/json; charset=utf-8',
-				data: JSON.stringify({'delete': true})
-			}).success(function (data) {
-				status.removeClass('loading');
-				$(dialogBox).dialog("close");
-				location.href = 'markedlists.html';
-
-			}).fail(function () {
-				status.removeClass('loading');
-				status.text('Speichern der Daten ist fehlgeschlagen.');
-			});
-
-		};
-	}
-	buttons['Abbrechen'] = function () {
-		$(dialogBox).dialog("close");
-	};
-
-
-	dialogBox.dialog({
-		width: 400,
-		modal: true,
-		buttons: buttons
-	});
-
-};
-
 ApplicantList.prototype.openDownloadDialog = function () {
 	var self = this;
 	var dialogBox = $(document.createElement('div'));
@@ -974,12 +743,6 @@ ApplicantList.prototype.openDownloadDialog = function () {
 				params.push('sort1=' + self.pagination.sort1);
 				if (self.pagination.sort2)
 					params.push('sort2=' + self.pagination.sort2);
-				if (!self.definitions) {
-					params.push('definitions=true');
-				}
-				if (self.mlistId) {
-					params.push('mlist=' + self.mlistId);
-				}
 
 				params.push('output=csv');
 
