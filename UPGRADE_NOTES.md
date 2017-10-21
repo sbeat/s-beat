@@ -8,6 +8,10 @@ Run the following command to integrate new settings:
 
     python sbeat.py initial_settings
     
+Run that command to migrate the persistent database data to a new model:
+
+	python sbeat.py migrate_db
+    
 
 Add new Definition under Administration -> Definitionen:
 

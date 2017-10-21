@@ -32,7 +32,7 @@ def handle():
         'updated_by': 'str',
         'name': 'str',
         'count': 'int',
-        'list': 'int',
+        'list': 'str',
         'read_only': 'bool'
     }
 

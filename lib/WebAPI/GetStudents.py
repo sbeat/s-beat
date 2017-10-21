@@ -277,11 +277,22 @@ def handle():
     if len(sort2) == 2 and sort2[0] in sortable:
         db_sort.append((sort2[0], int(sort2[1])))
 
+    settings = DB.Settings.load_dict([
+        'lights',
+        'main_risk_group',
+        'hide_finished_ident_data',
+        'hide_finished_after_days',
+        'student_ident_string'
+    ])
+
     # filter by MarkedList
     if mlist is not None:
         ml = DB.MarkedList.find_one({'_id': mlist})
         if ml is not None and ml.is_allowed(g.username, user_role):
-            db_query['_id'] = {'$in': list(ml.list)}
+            student_ids = list(ml.list)
+            if not settings['student_ident_string']:
+                student_ids = [int(x) for x in student_ids]
+            db_query['_id'] = {'$in': student_ids}
             ret['mlist'] = ml.get_dict()
             ret['mlist']['is_writable'] = ml.is_writable(g.username, user_role)
         else:
@@ -294,12 +305,10 @@ def handle():
             if fe is not None:
                 fe.get_db_query(db_query)  # apply condition from filter element to db_query
 
-    settings = DB.Settings.load_dict([
-        'lights',
-        'main_risk_group',
-        'hide_finished_ident_data',
-        'hide_finished_after_days'
-    ])
+
+    if settings['student_ident_string']:
+        query_types['ident'] = 'str'
+
     for name in ['risk', 'risk_all', 'risk_stg', 'risk_degree']:
         if name in request.args:
             if request.args[name] == 'green':

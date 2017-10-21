@@ -267,7 +267,7 @@ def create_applicant_from_entry(data, settings):
     from Course import Course
 
     applicant = Applicant()
-    applicant.ident = get_int(data['identnr'])
+    applicant.ident = get_unicode(data['identnr'], encoding)
     applicant.gender = get_unicode(data['geschl'], encoding)
     applicant.birth_date = get_date_from_csv(data['gebdat'])
 

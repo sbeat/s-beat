@@ -242,9 +242,15 @@ DataFileBrowser.prototype.load = function () {
 
 		self.draw();
 
-	}).fail(function () {
+	}).fail(function (data) {
+		console.log('fail data', data);
 		self.filesDOM.removeClass('loading');
 		self.filesDOM.text('Laden der Daten ist fehlgeschlagen.');
+		if(data && data.responseJSON && data.responseJSON.error === 'disabled_directory') {
+			self.filesDOM.text('Datenordner deaktiviert durch Einstellungen.');
+			self.uploadDOM.hide();
+		}
+
 	});
 
 };

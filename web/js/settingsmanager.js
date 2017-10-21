@@ -112,6 +112,20 @@ function SettingsManager(parentDOM) {
 			desc: 'Die Felder aus welchen sich die eindeutige ID einer angemeldeten Prüfungsleistung ergeben.',
 			group: 'Import'
 		},
+		"student_ident_string": {
+			type: 'boolean',
+			name: 'Studenten Id als String',
+			desc: 'Soll die IDENTNR aus den Studentendaten, Bewerberdaten und Identifikationsdaten als String importiert werden?',
+			group: 'Import',
+			defaultVal: false
+		},
+		"unique_student_id": {
+			type: 'list',
+			name: 'Endeutige ID eines Studiums',
+			desc: 'Die Datenbankfelder aus welchen sich die eindeutige ID eines Studiums ergibt. Wenn diese Einstellung vom Standard abweicht, wird ein separater Identifikationsdatenimport nicht unterstützt.',
+			group: 'Import',
+			defaultVal: ['ident_original']
+		},
 		"use_preferred_paths": {
 			type: 'boolean',
 			name: 'Risiko auf Basis bevorzugter Risikokriterien berechnen',

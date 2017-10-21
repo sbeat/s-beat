@@ -58,17 +58,17 @@ def handle():
     add_idents = data.get('add_idents')
     if add_idents is not None and type(add_idents) == list:
         for ident in add_idents:
-            mlist.add_student(int(ident))
+            mlist.add_student(ident)
 
     remove_idents = data.get('remove_idents')
     if remove_idents is not None and type(remove_idents) == list:
         for ident in remove_idents:
-            mlist.remove_student(int(ident))
+            mlist.remove_student(ident)
 
     comments = data.get('comments')
     if comments is not None and type(comments) == dict:
         for comment_ident, comment in comments.iteritems():
-            if int(comment_ident) in mlist.list:
+            if comment_ident in mlist.list:
                 mlist.comments[comment_ident] = {'text': comment, 'by': g.username, 'date': datetime.utcnow()}
 
     if mlist.owner == g.username:

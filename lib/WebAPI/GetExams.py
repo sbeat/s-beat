@@ -86,7 +86,17 @@ def handle():
     if ident is not None:
         db_query['_id'] = ident
 
-    student_id = request.args.get('student_id', default=0, type=int)
+    settings = DB.Settings.load_dict([
+        'compare_averages',
+        'hide_exam_date',
+        'student_ident_string'
+    ])
+
+    student_id = request.args.get('student_id', default=None, type=unicode)
+    if settings['student_ident_string']:
+        query_types['student_id'] = 'str'
+    else:
+        student_id = request.args.get('student_id', default=None, type=int)
 
     for name in request.args:
         if name not in query_types:
@@ -95,7 +105,7 @@ def handle():
         try:
             value = request.args.get(name)
             if name == 'semester' and value == 'current' and 'student_id' in request.args:
-                student = DB.Student.find_one({'_id': request.args.get('student_id', type=int)})
+                student = DB.Student.find_one({'_id': student_id})
                 if student and student.current_semester is not None:
                     value = str(student.current_semester)
                 else:
@@ -125,14 +135,10 @@ def handle():
         else:
             ret['info'] = []
 
-        settings = DB.Settings.load_dict([
-            'compare_averages',
-            'hide_exam_date'
-        ])
         ret['compare_averages'] = settings['compare_averages']
         ret['hide_exam_date'] = settings['hide_exam_date']
 
-    if with_metadata == 'true' and student_id > 0:
+    if with_metadata == 'true' and student_id:
         meta_query = {'student_id': student_id}
         ret['metadata'] = DB.Exam.get_grouped_values([
             'stg', 'stg_original', 'degree_type', 'status', 'type', 'phase', 'form', 'mandatory', 'comment', 'name'

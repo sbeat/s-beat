@@ -37,6 +37,7 @@ class Exam(DBDocument):
     def __init__(self, **kwargs):
         self.ident = None  # Combined ident: student_id, exam_id, semester, try_nr
         self.student_id = 0  # Ident of the student
+        self.ident_original = None  # Ident of the student
         self.exam_id = 0  # ID Number of the exam (PNR)
         self.exam_info_id = 0  # ID of the exam info
         self.semester = 0  # semester number
@@ -160,7 +161,9 @@ class Exam(DBDocument):
             'min_semester',
             'unique_exam_id',
             'unique_exam_info_id',
-            'import_encoding'
+            'import_encoding',
+            'student_ident_string',
+            'unique_student_id'
         ])
         encoding = settings['import_encoding']
 
@@ -204,13 +207,21 @@ class Exam(DBDocument):
         failed_num = 0
         for entry, curr, total in ImportTools.read_csv(file_info):
             num += 1
-            student = Student.find_one({'_id': get_int(entry['identnr'])})
-            exam = create_exam_from_entry(entry, student, settings)
+            exam = create_exam_from_entry(entry, settings)
 
             if exam is not None:
                 grade_exam_number = grade_exam_number_stg.get(exam.stg, settings['grade_exam_number'])
                 final_exam_numbers_ba = final_exam_numbers_ba_stg.get(exam.stg, settings['final_exam_numbers_ba'])
                 ignore_exam_numbers = ignore_exam_numbers_stg.get(exam.stg, settings['ignore_exam_numbers'])
+
+                exam.student_id = Student.generate_ident(exam, settings['unique_student_id'])
+                student = Student.find_one({'_id': exam.student_id})
+
+                if student and student.start_semester > exam.semester:
+                    exam.semester = student.start_semester
+
+                exam.generate_exam_info_id(settings['unique_exam_info_id'])
+                exam.generate_ident(settings['unique_exam_id'])
 
             if exam is not None and (
                             exam.exam_id == grade_exam_number
@@ -261,20 +272,19 @@ class Exam(DBDocument):
         })
 
 
-def create_exam_from_entry(data, student, settings):
+def create_exam_from_entry(data, settings):
     from Course import Course
 
     exam = Exam()
-
-    exam.student_id = get_int(data['identnr'])  # Ident of the student
+    if settings['student_ident_string']:
+        exam.ident_original = get_unicode(data['identnr'], encoding)
+    else:
+        exam.ident_original = get_int(data['identnr'])
     exam.exam_id = get_int(data['pnr'])  # ID Number of the exam (PNR)
     exam.semester = get_int(data['psem'])  # semester number
     exam.try_nr = get_int(data['pversuch'])  # try number
 
-    if student and student.start_semester > exam.semester:
-        exam.semester = student.start_semester
-
-    if None in (exam.student_id, exam.exam_id, exam.semester, exam.try_nr):
+    if None in (exam.ident_original, exam.exam_id, exam.semester, exam.try_nr):
         return None
 
     exam.name = get_unicode(data['pdtxt'])
@@ -319,10 +329,5 @@ def create_exam_from_entry(data, student, settings):
 
     if 'panerk' in data and get_boolean(data['panerk']) == True:
         exam.recognized = True
-
-    exam.generate_exam_info_id(settings['unique_exam_info_id'])
-    exam.generate_ident(settings['unique_exam_id'])
-    # exam.ident = unicode(
-    #   '%d_%d_%d_%d' % (exam.student_id, exam.exam_id, exam.semester, exam.try_nr))  # Combined ident
 
     return exam

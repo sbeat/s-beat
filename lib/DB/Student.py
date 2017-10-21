@@ -18,6 +18,8 @@ along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import array
+import base64
+import hashlib
 import logging
 import time
 
@@ -65,7 +67,8 @@ class Student(DBDocument):
 
     def __init__(self, **kwargs):
 
-        self.ident = None  # Ident number
+        self.ident = None  # System Ident number
+        self.ident_original = None  # Original ident number
         self.gender = ''  # Gender of student: M,W
         self.birth_date = None  # Date of birth
         self.hzb_grade = 0  # entrance qualification grade
@@ -269,6 +272,15 @@ class Student(DBDocument):
         return cls.cached_min_max
 
     @staticmethod
+    def generate_ident(student, fields):
+        if len(fields) == 1:
+            return getattr(student, fields[0])
+        m = hashlib.md5()
+        for field in fields:
+            m.update(unicode(getattr(student, field)))
+        return base64.b32encode(m.digest())[0:8]
+
+    @staticmethod
     def import_from_file(file_info):
         import ImportTools
         global encoding
@@ -277,7 +289,9 @@ class Student(DBDocument):
             'final_exam_numbers_ba',
             'min_semester',
             'import_ident_from_students',
-            'import_encoding'
+            'import_encoding',
+            'student_ident_string',
+            'unique_student_id'
         ])
         encoding = settings['import_encoding']
 
@@ -300,7 +314,9 @@ class Student(DBDocument):
             student_settings = {
                 "min_semester": min_semester_stg.get(stg, settings['min_semester']),
                 "final_exam_numbers_ba": final_exam_numbers_ba_stg.get(stg, settings['final_exam_numbers_ba']),
-                "import_ident_from_students": settings['import_ident_from_students']
+                "import_ident_from_students": settings['import_ident_from_students'],
+                "student_ident_string": settings['student_ident_string'],
+                "unique_student_id": settings['unique_student_id']
             }
             student = create_student_from_entry(entry, student_settings)
             if student is not None:
@@ -327,13 +343,19 @@ class Student(DBDocument):
         global encoding
 
         settings = Settings.load_dict([
-            'import_encoding'
+            'import_encoding',
+            'student_ident_string',
+            'unique_student_id'
         ])
         encoding = settings['import_encoding']
 
         num = 0
         for data, curr, total in ImportTools.read_csv(file_info):
             num += 1
+
+            if len(settings['unique_student_id']) > 1 or settings['unique_student_id'][0] != 'ident_original':
+                raise Exception("Identity data only allowed for students with unique_student_id == ident_original")
+
             ident = get_int(data['identnr'])
             student = cls.find_one({'_id': ident})
             if student is None:
@@ -855,7 +877,10 @@ def create_student_from_entry(data, settings):
     final_exam_numbers = [int(x) for x in settings['final_exam_numbers_ba']]
 
     student = Student()
-    student.ident = get_int(data['identnr'])
+    if settings['student_ident_string']:
+        student.ident_original = get_unicode(data['identnr'], encoding)
+    else:
+        student.ident_original = get_int(data['identnr'])
     student.gender = get_unicode(data['geschl'], encoding)
     student.birth_date = get_date_from_csv(data['gebdat'])
 
@@ -958,6 +983,8 @@ def create_student_from_entry(data, settings):
 
         if 'eu' in data:
             student.eu = get_boolean(data['eu'])
+
+    student.ident = Student.generate_ident(student, settings['unique_student_id'])
 
     return student
 

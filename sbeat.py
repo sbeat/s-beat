@@ -1058,12 +1058,24 @@ def create_default_folders():
             pass
 
 
+def migrate_db():
+    marked_list = MarkedList.find({})
+    for d in marked_list:
+        new_set = set()
+        # convert all numeric ids to string ids
+        for id in d.list:
+            new_set.add(unicode(id))
+        d.list = new_set
+        res = d.db_update(['list'])
+        logger.info("List updated %s", d.ident)
+
+
 if __name__ == '__main__':
     log_formatter = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_formatter)
     file_handler = logging.handlers.RotatingFileHandler(
-        filename=config.get('general', 'logfile'), maxBytes=1024 * 1024 * 10, backupCount=20)
+        filename=config.get('general', 'logfile'), maxBytes=1024 * 1024 * 20, backupCount=10)
     file_handler.setFormatter(log_formatter)
     logging.getLogger('').addHandler(console_handler)
     logging.getLogger('').addHandler(file_handler)

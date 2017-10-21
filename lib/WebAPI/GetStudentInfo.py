@@ -41,16 +41,23 @@ def handle():
 
     ret = {}
 
+    settings = DB.Settings.load_dict([
+        'hide_finished_ident_data',
+        'student_ident_string'
+    ])
+
+    ident = request.args.get('ident')
+    if not settings['student_ident_string']:
+        ident = int(ident)
+
     if with_definitions == 'true':
         ret['definitions'] = get_definitions()
 
     db_query = {
-        '_id': int(request.args.get('ident'))
+        '_id': ident
     }
 
-    settings = DB.Settings.load_dict([
-        'hide_finished_ident_data'
-    ])
+
 
     allowed_stgs = UserTools.get_allowed_stgs(g.user)
     if allowed_stgs:

@@ -66,7 +66,7 @@ function ExamList(parentDOM) {
 		}
 	};
 	this.examInfoId = parentDOM.attr('data-examinfoid');
-	this.studentId = parseInt(parentDOM.attr('data-id'));
+	this.studentId = parentDOM.attr('data-id');
 
 	this.displayStats = this.studentId ? true : false;
 	this.displayFilters = true;

@@ -100,7 +100,7 @@ function StudentList(parentDOM) {
 	this.filter = new FilterList(this.filterDOM);
 	//this.filter.addAttributeFilter('risk.median_scaled', 'Misserfolg in %', 'Vorhersage', 'percent', 0);
 	if (this.settingId != 'mlist') {
-		this.filter.addAttributeFilter('ident', 'Identifikationsnummer', 'Student', 'int', 0);
+		this.filter.addAttributeFilter('ident', 'Identifikationsnummer', 'Student', 'str', '');
 	}
 
 	this.filter.multiFilters = {

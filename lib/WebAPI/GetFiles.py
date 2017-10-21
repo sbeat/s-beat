@@ -18,12 +18,11 @@ along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from flask import request, g
-from APIBase import respond
 
 import ImportTools
 import UserTools
+import DB
 from APIBase import respond
-
 
 
 def handle():
@@ -35,8 +34,25 @@ def handle():
 
     ret = dict()
     directory = request.args.get('directory')
+
+
+
     if directory is None or directory not in ImportTools.allowed_directories:
         return respond({'error': 'invalid_directory'}, 400)
+
+    if directory == 'studentidents':
+        settings = DB.Settings.load_dict([
+            'unique_student_id'
+        ])
+        if len(settings['unique_student_id']) > 1 or settings['unique_student_id'][0] != 'ident_original':
+            return respond({'error': 'disabled_directory'}, 400)
+
+    if directory == 'applicants':
+        settings = DB.Settings.load_dict([
+            'import_applicants'
+        ])
+        if not settings['import_applicants']:
+            return respond({'error': 'disabled_directory'}, 400)
 
     ret['files_info'] = ImportTools.get_files_info(directory)
 

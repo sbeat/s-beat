@@ -36,5 +36,7 @@
 	"import_encoding": "windows-1252",
 	"hide_exam_date": true,
 	"always_display_all_courses": false,
-	"hide_median_risk": true
+	"hide_median_risk": true,
+	"student_ident_string": false,
+	"unique_student_id": ["ident_original"]
 }

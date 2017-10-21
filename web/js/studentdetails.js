@@ -3,7 +3,7 @@
 
 function StudentDetails(parentDOM) {
 	this.parentDOM = parentDOM;
-	this.studentId = parseInt(parentDOM.attr('data-id'));
+	this.studentId = parentDOM.attr('data-id');
 	this.student = null;
 	this.course_semester = null;
 
