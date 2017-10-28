@@ -500,8 +500,11 @@ class Student(DBDocument):
         """
 
         settings = Settings.load_dict([
-            'risk_ignore_recognized_exams'
+            'risk_ignore_recognized_exams',
+            'max_valid_cp'
         ])
+
+        max_valid_cp_stg = Settings.load_dict_for_key('max_valid_cp')
 
         students = Student.find({}, modifiers={'$snapshot': True}).batch_size(
             10)  # choose small batches to avoid cursor timeout
@@ -516,11 +519,17 @@ class Student(DBDocument):
         for student in students:
             num += 1
 
+            max_valid_cp = max_valid_cp_stg.get(student.stg_original, settings['max_valid_cp'])
+
             # calculate_student_from_exams(student)
             student.calculate_from_exams(settings=settings)
-            if student.bonus_total > 220 or student.exm_date is None and student.finished:
+
+
+
+            if student.bonus_total > max_valid_cp or student.exm_date is None and student.finished:
                 logger.warning(
-                    "Student has a bonus over 220 (%s) or (no exm_date %s and is finished): %s ID: %s",
+                    "Student has a bonus over %s (%s) or (no exm_date %s and is finished): %s ID: %s",
+                    max_valid_cp,
                     student.bonus_total, student.exm_date, student.stg_original, student.ident)
                 student.db_remove()
 

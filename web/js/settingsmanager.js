@@ -86,6 +86,14 @@ function SettingsManager(parentDOM) {
 			defaultVal: 20042,
 			perStg: true
 		},
+		"max_valid_cp": {
+			type: 'int',
+			name: 'Maximale CP eines Studenten',
+			desc: 'Wenn die maximalen CP überschritten werden, wird der Student nicht importiert.',
+			group: 'Import',
+			defaultVal: 220,
+			perStg: true
+		},
 		"import_ident_from_students": {
 			type: 'boolean',
 			name: 'Studentendaten inkl. ident. Daten',

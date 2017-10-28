@@ -38,5 +38,6 @@
 	"always_display_all_courses": false,
 	"hide_median_risk": true,
 	"student_ident_string": false,
-	"unique_student_id": ["ident_original"]
+	"unique_student_id": ["ident_original"],
+	"max_valid_cp": 220
 }
