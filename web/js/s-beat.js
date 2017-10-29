@@ -696,11 +696,11 @@ function getSemesterText(value) {
 	var semnr = value % 10;
 	var ret = '';
 
-	if (semnr == 1) ret = 'SS ' + year;
+	if (semnr == 1) ret = 'SoSe ' + year;
 	if (semnr == 2) {
 		var sndyear = (year + 1) % 100;
 		var fstyear = year % 100;
-		ret = 'WS ' + (fstyear < 10 ? '0' + fstyear : fstyear) + '/' + (sndyear < 10 ? '0' + sndyear : sndyear);
+		ret = 'WiSe ' + (fstyear < 10 ? '0' + fstyear : fstyear) + '/' + (sndyear < 10 ? '0' + sndyear : sndyear);
 	}
 	return ret;
 }

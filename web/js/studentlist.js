@@ -92,15 +92,15 @@ function StudentList(parentDOM) {
 	this.pagination.sort1 = this.settings.default.sort1;
 	this.pagination.sort2 = this.settings.default.sort2;
 	this.pagination.sortOptions = {
-		'_id,1': 'Ident aufsteigend',
-		'_id,-1': 'Ident absteigend'
+		'_id,1': CONFIG.student_ident_label + ' aufsteigend',
+		'_id,-1': CONFIG.student_ident_label + ' absteigend'
 	};
 
 	this.filterDOM = $(document.createElement('div'));
 	this.filter = new FilterList(this.filterDOM);
 	//this.filter.addAttributeFilter('risk.median_scaled', 'Misserfolg in %', 'Vorhersage', 'percent', 0);
 	if (this.settingId != 'mlist') {
-		this.filter.addAttributeFilter('ident', 'Identifikationsnummer', 'Student', 'str', '');
+		this.filter.addAttributeFilter('ident', CONFIG.student_ident_desc, 'Student', 'str', '');
 	}
 
 	this.filter.multiFilters = {
@@ -108,7 +108,7 @@ function StudentList(parentDOM) {
 	};
 
 	this.columnData = {
-		'ident': {id: 'ident', label: 'Ident', title: 'Identifikationsnummer', formatting: 'str', sortBy: '_id'},
+		'ident': {id: 'ident', label: CONFIG.student_ident_label, title: CONFIG.student_ident_desc, formatting: 'str', sortBy: '_id'},
 		'stg': {id: 'stg', label: 'STG', title: 'Studiengangsgruppe', formatting: 'stg'},
 		'stg_original': {id: 'stg_original', label: 'Studiengang', title: 'Studiengang', formatting: 'stg'},
 		'degree_type': {id: 'degree_type', label: 'Abschluss', title: 'Abschluss', formatting: 'str'},

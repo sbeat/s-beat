@@ -93,7 +93,7 @@ function ExamList(parentDOM) {
 
 		this.columnData = {
 			//'student_id': {id: 'student_id', label: 'Student ID', title: 'ID des Studenten', formatting: 'int'},
-			'exam_id': {id: 'exam_id', label: 'EDV Nr.', title: 'ID der Prüfungsleistung', formatting: 'int'},
+			'exam_id': {id: 'exam_id', label: CONFIG.exam_id_label, title: CONFIG.exam_id_desc, formatting: 'int'},
 			//'stg': {id: 'stg', label: 'Studiengangsgruppe', title: 'Studiengangsgruppe', formatting: 'stg'},
 			'name': {id: 'name', label: 'Prüfungsleistung Name', title: 'Prüfungsleistung Name', formatting: 'str'},
 			'semester': {id: 'semester', label: 'Semester', title: 'Semester der Leistung', formatting: 'semester'},
@@ -157,7 +157,7 @@ function ExamList(parentDOM) {
 	else {
 		this.columnData = {
 			'student_id': {id: 'student_id', label: 'Student ID', title: 'ID des Studenten', formatting: 'int'},
-			'exam_id': {id: 'exam_id', label: 'EDV Nr.', title: 'ID der Prüfungsleistung', formatting: 'int'},
+			'exam_id': {id: 'exam_id', label: CONFIG.exam_id_label, title: CONFIG.exam_id_desc, formatting: 'int'},
 			'stg': {id: 'stg', label: 'Studiengangsgruppe', title: 'Studiengangsgruppe', formatting: 'stg'},
 			'name': {id: 'name', label: 'Prüfungsleistung Name', title: 'Prüfungsleistung Name', formatting: 'str'},
 			'semester': {id: 'semester', label: 'Semester', title: 'Semester der Leistung', formatting: 'semester'},

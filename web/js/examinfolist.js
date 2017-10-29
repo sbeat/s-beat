@@ -40,7 +40,7 @@ function ExamInfoList(parentDOM) {
 
 	this.columnData = {
 		'exam_info_id': {id: 'exam_info_id', label: 'ID', title: 'Eindeutige ID der Prüfungsleistung', formatting: 'str', sortBy:'_id', group:'Leistung'},
-		'exam_id': {id: 'exam_id', label: 'EDV Nr.', title: 'ID der Prüfungsleistung', formatting: 'int', sortBy:'exam_id', group:'Leistung'},
+		'exam_id': {id: 'exam_id', label: CONFIG.exam_id_label, title: CONFIG.exam_id_desc, formatting: 'int', sortBy:'exam_id', group:'Leistung'},
 		'stg': {id: 'stg', label: 'Studiengangsgruppe', title: 'Studiengangsgruppe', formatting: 'stg', group:'Leistung'},
 		'stg_original': {id: 'stg_original', label: 'Studiengang', title: 'Studiengang', formatting: 'stg', group:'Leistung'},
 		'name': {id: 'name', label: 'Prüfungsleistung Name', title: 'Prüfungsleistung Name', formatting: 'str',group:'Leistung'},

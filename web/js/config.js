@@ -18,5 +18,13 @@ var CONFIG={
 	 * Label for naming credit points.
 	 * Is overwritten in index.html by using data from main.cfg
 	 */
-	cp_label: 'ECTS'
+	cp_label: 'ECTS',
+
+	faculty_label: 'Fakultät',
+
+	student_ident_label: 'Ident',
+	student_ident_desc: 'Identifikationsnummer',
+
+	exam_id_label: 'EDV Nr.',
+	exam_id_desc: 'ID der Prüfungsleistung'
 };
