@@ -789,7 +789,7 @@ StudentList.prototype.drawCellValue = function (student, col, td) {
 			td.text('-');
 		} else {
 			value = student.risk.median_scaled;
-			td.append(drawRiskLights(value, self.definitions.lights));
+			td.append(drawRiskLightsForStudent(value, student, self.definitions.lights));
 		}
 
 	} else if (col.id == 'risk.median_scaled' && !self.definitions.risk_value_allowed) {

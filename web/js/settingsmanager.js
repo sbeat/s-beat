@@ -42,7 +42,8 @@ function SettingsManager(parentDOM) {
 			name: 'Ampel Grenzwerte',
 			desc: 'Startwerte für die Ampelanzeige des Risikos eines Studenten',
 			group: 'Risikoanzeige',
-			defaultVal: [0, 0.4, 0.7]
+			defaultVal: [0, 0.4, 0.7],
+			perStg: true
 		},
 		"risk_value_(.+)": {
 			type: 'boolean',
@@ -275,6 +276,7 @@ function SettingsManager(parentDOM) {
 
 	SettingsManager.prototype.init.call(this);
 }
+
 /**
  * Gets called once this SettingsManager is initialized
  */
@@ -511,13 +513,16 @@ SettingsManager.prototype.drawValueInput = function (name, stg) {
 		return drawString();
 	}
 	if (type == 'lights') {
+		if (!value) {
+			value = [0, 0, 0];
+		}
 		return drawLights();
 	}
 	if (type == 'boolean') {
 		return drawBoolean();
 	}
 	if (type == 'list') {
-		if(!Array.isArray(value)) value = [];
+		if (!Array.isArray(value)) value = [];
 		return drawList();
 	}
 
@@ -657,7 +662,7 @@ SettingsManager.prototype.drawSettingDialog = function (name) {
 
 		function drawStgEntry(stg) {
 			var valueO = $('<div class="valueInputItem" />').appendTo(valuesO);
-			var titleO = $('<b/>').text('Studiengang ' + stg+' ').appendTo(valueO);
+			var titleO = $('<b/>').text('Studiengang ' + stg + ' ').appendTo(valueO);
 			$('<a href=""/>').text('Entfernen').appendTo(valueO)
 				.click(function (e) {
 					e.preventDefault();
@@ -675,10 +680,10 @@ SettingsManager.prototype.drawSettingDialog = function (name) {
 
 		var buttonContainer = $('<p />').appendTo(dialog);
 		$('<a href=""/>').text('Studiengangsspezifischen Wert hinzufügen').appendTo(buttonContainer)
-			.click(function(e){
+			.click(function (e) {
 				e.preventDefault();
 				var stg = prompt('Studiengangskürzel');
-				if(!stg) return;
+				if (!stg) return;
 				drawStgEntry(stg);
 			});
 
@@ -690,21 +695,22 @@ SettingsManager.prototype.drawSettingDialog = function (name) {
 
 		var keys = Object.keys(inputs);
 		var index = 0;
+
 		function saveNext() {
-			if(index == keys.length) {
+			if (index == keys.length) {
 				self.load();
 				$(dialog).dialog("close");
 				return;
 			}
 			var key = keys[index++];
 			var input = inputs[key];
-			if(input == null) {
+			if (input == null) {
 				self.removeSetting(key, saveNext);
 				return;
 			}
 
 			var newValue = input.getValue();
-			console.log('new value '+ key+' :', newValue);
+			console.log('new value ' + key + ' :', newValue);
 			if (typeof(newValue) == 'number' && isNaN(newValue)) {
 				alert('Ungültige Nummer');
 				return;
@@ -713,6 +719,7 @@ SettingsManager.prototype.drawSettingDialog = function (name) {
 			self.saveSetting(key, newValue, saveNext);
 
 		}
+
 		saveNext();
 
 	};
@@ -747,7 +754,7 @@ SettingsManager.prototype.saveSetting = function (name, value, onDone) {
 		data: JSON.stringify(data)
 	}).success(function (data) {
 		self.settingsDOM.removeClass('loading');
-		if(onDone) onDone();
+		if (onDone) onDone();
 		else self.load();
 
 	}).fail(function () {

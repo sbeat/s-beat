@@ -191,7 +191,7 @@ StudentDetails.prototype.drawValue = function (field, el) {
 			el.text('-');
 		} else {
 			value = self.student.risk_all.median_scaled;
-			el.append(drawRiskLights(value, self.definitions.lights));
+			el.append(drawRiskLightsForStudent(value, self.student, self.definitions.lights));
 		}
 
 	} else if (field == 'risk_stg') {
@@ -199,7 +199,7 @@ StudentDetails.prototype.drawValue = function (field, el) {
 			el.text('-');
 		} else {
 			value = self.student.risk_stg.median_scaled;
-			el.append(drawRiskLights(value, self.definitions.lights));
+			el.append(drawRiskLightsForStudent(value, self.student, self.definitions.lights));
 		}
 
 	} else if (field == 'risk_degree') {
@@ -207,7 +207,7 @@ StudentDetails.prototype.drawValue = function (field, el) {
 			el.text('-');
 		} else {
 			value = self.student.risk_degree.median_scaled;
-			el.append(drawRiskLights(value, self.definitions.lights));
+			el.append(drawRiskLightsForStudent(value, self.student, self.definitions.lights));
 		}
 
 	} else if (field == 'exam_count_applied') {
@@ -646,9 +646,18 @@ StudentDetails.prototype.drawMarkedListDialog = function (baseElement) {
 StudentDetails.prototype.initDefinitions = function (definitions) {
 	var self = this;
 	self.definitions = definitions;
-	$("[data-lights=lights_0]").text(self.definitions.lights[0] * 100);
-	$("[data-lights=lights_1]").text(self.definitions.lights[1] * 100);
-	$("[data-lights=lights_2]").text(self.definitions.lights[2] * 100);
+
+	var lightsSetting = self.definitions.lights[''];
+	if(self.definitions.lights[self.student.stg_original]) {
+		lightsSetting = self.definitions.lights[self.student.stg_original];
+	}
+	if(self.definitions.lights[self.student.stg]) {
+		lightsSetting = self.definitions.lights[self.student.stg];
+	}
+
+	$("[data-lights=lights_0]").text(lightsSetting[0] * 100);
+	$("[data-lights=lights_1]").text(lightsSetting[1] * 100);
+	$("[data-lights=lights_2]").text(lightsSetting[2] * 100);
 
 };
 StudentDetails.prototype.findQuery = function (q) {
@@ -683,14 +692,15 @@ StudentDetails.prototype.load = function () {
 		self.parentDOM.removeClass('loading');
 
 		self.data = data;
-		if (data.definitions) {
-			self.initDefinitions(data.definitions);
-		}
+
 		if(data.course_semester) {
 			self.course_semester = data.course_semester;
 		}
 		if (data.student) {
 			self.student = data.student;
+		}
+		if (data.definitions) {
+			self.initDefinitions(data.definitions);
 		}
 		self.draw();
 

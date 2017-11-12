@@ -611,7 +611,20 @@ function getRiskGraph(risk, w, h) {
 
 }
 
+function drawRiskLightsForStudent(value, student, setting) {
+	if(setting[student.stg_original]) {
+		return drawRiskLights(value, setting[student.stg_original]);
+	}
+	if(setting[student.stg]) {
+		return drawRiskLights(value, setting[student.stg]);
+	}
+	return drawRiskLights(value, setting['']);
+}
+
 function drawRiskLights(value, setting) {
+	if(!Array.isArray(setting)) {
+		return $('<div class="lights" />');
+	}
 	var color = 'green';
 	if (value >= setting[1]) color = 'yellow';
 	if (value >= setting[2]) color = 'red';

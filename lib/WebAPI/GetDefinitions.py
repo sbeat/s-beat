@@ -70,7 +70,6 @@ def get_definitions():
 
     risk_values_allowed_key = 'risk_value_' + user_role
     settings = DB.Settings.load_dict([
-        'lights',
         risk_values_allowed_key,
         'generate_risk_group_all',
         'generate_risk_group_stg',
@@ -84,7 +83,7 @@ def get_definitions():
 
     data['queries'] = get_queries(settings)
 
-    data['lights'] = settings['lights']
+    data['lights'] = DB.Settings.load_dict_for_key('lights')
     data['generate_risk_group_all'] = settings['generate_risk_group_all']
     data['generate_risk_group_stg'] = settings['generate_risk_group_stg']
     data['generate_risk_group_degree'] = settings['generate_risk_group_degree']
