@@ -151,7 +151,7 @@ CourseSemesterDetails.prototype.load = function () {
 	var url = '/api/GetCourseSemesterInfos';
 
 	var params = [];
-	params.push('ident=' + self.courseStg + '_' + self.courseSem);
+	params.push('ident=' + encodeURIComponent(self.courseStg) + '_' + self.courseSem);
 
 	if (isTempActive()) params.push('temp=true');
 
