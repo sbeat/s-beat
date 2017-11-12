@@ -17,7 +17,7 @@
 	 data-sem="{{ request.args.get('sem') }}">
 
 	<h1>
-		Kohorte: <a href="coursedetails.html?stg={{ request.args.get('stg') }}">{{ request.args.get('stg') }}</a> -
+		Kohorte: <a href="coursedetails.html?stg={{ request.args.get('stg') | urlencode }}">{{ request.args.get('stg') }}</a> -
 		<span data-course="name"></span> -
 		<span data-detail="semester"></span>
 	</h1>
@@ -148,7 +148,7 @@
 		<h2 data-toggle="student_analytics" class="toggle">Detaillierte Analyse</h2>
 
 		<div style="display: none" id="student_analytics">
-			<div data-load="StudentAnalytics" data-preset="course_sem" data-query="stg={{ request.args.get('stg',0) }}&amp;start_semester={{ request.args.get('sem',0) }}"></div>
+			<div data-load="StudentAnalytics" data-preset="course_sem" data-query="stg={{ request.args.get('stg',0) | urlencode }}&amp;start_semester={{ request.args.get('sem',0) }}"></div>
 		</div>
 
 	</article>

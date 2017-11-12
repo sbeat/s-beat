@@ -74,7 +74,7 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 		<h2 data-toggle="student_analytics" class="toggle">Detaillierte Analyse</h2>
 
 		<div style="display: none" id="student_analytics">
-			<div data-load="StudentAnalytics" data-preset="course" data-query="stg={{ request.args.get('stg',0) }}"></div>
+			<div data-load="StudentAnalytics" data-preset="course" data-query="stg={{ request.args.get('stg',0) | urlencode }}"></div>
 		</div>
 
 	</article>
