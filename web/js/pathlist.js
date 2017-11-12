@@ -4,7 +4,7 @@
 function PathList(parentDOM) {
 	this.parentDOM = parentDOM;
 
-	this.studentId = parseInt(parentDOM.attr('data-id'));
+	this.studentId = parentDOM.attr('data-id');
 	this.settingId = this.studentId ? 'student' : 'default';
 	this.settingsPrefix = 'pathlist_';
 	this.settingsRev = 1; // changing this forces a reset of settings for all users
