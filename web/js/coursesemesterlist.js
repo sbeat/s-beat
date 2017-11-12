@@ -335,7 +335,7 @@ CourseSemesterList.prototype.drawCellValue = function (course, col, td) {
 
 	} else if (col.id == 'semester_id') {
 		$(document.createElement('a'))
-			.attr('href', 'coursesemesterdetails.html?stg=' + self.courseStg + '&sem=' + course.semester_id)
+			.attr('href', 'coursesemesterdetails.html?stg=' + encodeURIComponent(self.courseStg) + '&sem=' + course.semester_id)
 			.append(getFormattedHTML(value, col.formatting))
 			.appendTo(td);
 
@@ -370,7 +370,7 @@ CourseSemesterList.prototype.load = function () {
 
 	var params = [];
 	if (self.courseStg) {
-		params.push('stg=' + self.courseStg);
+		params.push('stg=' + encodeURIComponent(self.courseStg));
 	}
 
 	params.push('start=' + self.pagination.start);

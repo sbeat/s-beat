@@ -292,7 +292,7 @@ CoursesList.prototype.drawCellValue = function (course, col, td) {
 	if (col.id == 'stg') {
 		value = getByPath(col.id, course);
 		var idA = $(document.createElement('a'));
-		idA.attr('href', 'coursedetails.html?stg=' + value);
+		idA.attr('href', 'coursedetails.html?stg=' + encodeURIComponent(value));
 		idA.text(value);
 		td.append(idA);
 
@@ -333,7 +333,7 @@ CoursesList.prototype.load = function () {
 	var params = [];
 	params.push('ignore=false');
 	if (self.courseStg) {
-		params.push('stg=' + self.courseStg);
+		params.push('stg=' + encodeURIComponent(self.courseStg));
 	}
 
 	params.push('start=' + self.pagination.start);

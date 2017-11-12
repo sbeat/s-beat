@@ -58,7 +58,7 @@ ApplicantDetails.prototype.drawValue = function (field, el) {
 
 		//Link to courses detail list
 		var a = $(document.createElement('a'));
-		a.attr('href', 'coursedetails.html?stg=' + self.applicant.stg);
+		a.attr('href', 'coursedetails.html?stg=' + encodeURIComponent(self.applicant.stg));
 		a.text(self.applicant.stg);
 		el.append(a);
 

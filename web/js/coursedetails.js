@@ -227,7 +227,7 @@ CourseDetails.prototype.load = function () {
 
 	var params = [];
 	params.push('ignore=false');
-	params.push('stg=' + self.courseStg);
+	params.push('stg=' + encodeURIComponent(self.courseStg));
 
 	params.push('start=0');
 	params.push('limit=100');
