@@ -111,13 +111,13 @@ function SettingsManager(parentDOM) {
 		},
 		"unique_exam_info_id": {
 			type: 'list',
-			name: 'Endeutige ID eines Prüfungsmoduls',
+			name: 'Eindeutige ID eines Prüfungsmoduls',
 			desc: 'Die Felder aus welchen sich die eindeutige ID eines Prüfungsmoduls ergeben.',
 			group: 'Import'
 		},
 		"unique_exam_id": {
 			type: 'list',
-			name: 'Endeutige ID einer Prüfungsleistung',
+			name: 'Eindeutige ID einer Prüfungsleistung',
 			desc: 'Die Felder aus welchen sich die eindeutige ID einer angemeldeten Prüfungsleistung ergeben.',
 			group: 'Import'
 		},
@@ -130,7 +130,7 @@ function SettingsManager(parentDOM) {
 		},
 		"unique_student_id": {
 			type: 'list',
-			name: 'Endeutige ID eines Studiums',
+			name: 'Eindeutige ID eines Studiums',
 			desc: 'Die Datenbankfelder aus welchen sich die eindeutige ID eines Studiums ergibt. Wenn diese Einstellung vom Standard abweicht, wird ein separater Identifikationsdatenimport nicht unterstützt.',
 			group: 'Import',
 			defaultVal: ['ident_original']
