@@ -1074,6 +1074,7 @@ if __name__ == '__main__':
     log_formatter = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_formatter)
+
     file_handler = logging.handlers.RotatingFileHandler(
         filename=config.get('general', 'logfile'), maxBytes=1024 * 1024 * 20, backupCount=10)
     file_handler.setFormatter(log_formatter)
@@ -1087,6 +1088,9 @@ if __name__ == '__main__':
         logger.info('please provide a command as first argument')
 
     elif sys.argv[1] in dir():
+        if sys.argv[1] == 'run_all':
+            file_handler.doRollover()
+
         eval(sys.argv[1] + '()')
 
     else:
