@@ -79,9 +79,16 @@ def handle():
     sort1 = request.args.get('sort1', default='value,-1').split(',')
     sort2 = request.args.get('sort2', default='').split(',')
     with_definitions = request.args.get('definitions', default='false')
-    student_id = request.args.get('student_id', default=0, type=int)
+    student_id = request.args.get('student_id', default=None, type=str)
     filter_dim = request.args.get('filter_dim', default=None)
     in_filter_elements = request.args.get('in_filter_elements', default=None)
+
+    settings = DB.Settings.load_dict([
+        'student_ident_string'
+    ])
+
+    if not settings['student_ident_string'] and student_id is not None:
+        student_id = int(student_id)
 
     ret = {
         'start': start,
@@ -121,7 +128,7 @@ def handle():
         except ValueError:
             return respond({'error': 'invalid_filter', name: name}, 400)
 
-    if student_id > 0:
+    if student_id is not None:
         student_element_ids = get_student_matching_elements(student_id)
         if student_element_ids is None:
             return respond({'error': 'invalid_student_id'}, 400)

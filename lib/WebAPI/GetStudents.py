@@ -305,7 +305,6 @@ def handle():
             if fe is not None:
                 fe.get_db_query(db_query)  # apply condition from filter element to db_query
 
-
     if settings['student_ident_string']:
         query_types['ident'] = 'str'
 
