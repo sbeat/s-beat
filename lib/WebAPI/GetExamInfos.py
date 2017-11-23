@@ -33,6 +33,7 @@ def handle():
 
     query_types = {
         'exam_info_id': 'str',
+        'exam_id': 'int',
         'name': 'str',
         'stg': 'str',
         'stg_original': 'str',
