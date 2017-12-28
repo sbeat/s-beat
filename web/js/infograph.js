@@ -261,7 +261,7 @@ function HBarChart(parentDOM) {
 	this.barScale = null;
 
 	this.barHeight = 20;
-	this.barLeftMargin = 100;
+	this.barLeftMargin = 150;
 	this.spaceBetweenBars = 10;
 	this.legendHeight = 20;
 

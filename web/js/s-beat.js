@@ -352,6 +352,7 @@ function getByPath(path, o) {
 
 
 function getNumericValueOutput(value, formatting) {
+	if (formatting == 'str') return value;
 	if (typeof(value) == 'object' && value === null || isNaN(value)) return '';
 	if (formatting == 'grade') return (Math.floor(value / 10) / 10).toFixed(1);
 	if (formatting == 'percent') return (value * 100).toFixed(1);
@@ -612,17 +613,17 @@ function getRiskGraph(risk, w, h) {
 }
 
 function drawRiskLightsForStudent(value, student, setting) {
-	if(setting[student.stg_original]) {
+	if (setting[student.stg_original]) {
 		return drawRiskLights(value, setting[student.stg_original]);
 	}
-	if(setting[student.stg]) {
+	if (setting[student.stg]) {
 		return drawRiskLights(value, setting[student.stg]);
 	}
 	return drawRiskLights(value, setting['']);
 }
 
 function drawRiskLights(value, setting) {
-	if(!Array.isArray(setting)) {
+	if (!Array.isArray(setting)) {
 		return $('<div class="lights" />');
 	}
 	var color = 'green';
@@ -872,9 +873,9 @@ function addToSet(arr, item) {
 }
 
 function removeFromSet(arr, item) {
-	if(Array.isArray(arr)) {
+	if (Array.isArray(arr)) {
 		var i = arr.indexOf(item);
-		if(i !== -1) {
+		if (i !== -1) {
 			arr.splice(i, 1);
 		}
 	}
@@ -887,9 +888,9 @@ function removeDataColumn(name) {
 
 	removeFromSet(this.columns, name);
 
-	if(this.settings) {
-		for(var key in this.settings) {
-			if(this.settings.hasOwnProperty(key) && this.settings[key]) {
+	if (this.settings) {
+		for (var key in this.settings) {
+			if (this.settings.hasOwnProperty(key) && this.settings[key]) {
 				removeFromSet(this.settings[key].columns, name);
 			}
 		}

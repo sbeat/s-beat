@@ -372,7 +372,7 @@ def handle():
         allowed_ops = ['sum', 'avg', 'max', 'min', 'addToSet']
         if isinstance(calculations, unicode):
             for full_name in calculations.split(','):
-                op, name = full_name.split('.', 2)
+                op, name = full_name.split('.', 1)
                 if not is_field_allowed(name, g.user_role, query_types) or op not in allowed_ops:
                     continue
                 allowed_calculations.append({'field': name, 'op': op})
@@ -396,7 +396,7 @@ def handle():
         allowed_ops = ['sum', 'avg', 'max', 'min', 'addToSet']
         if isinstance(calculations, unicode):
             for full_name in calculations.split(','):
-                op, name = full_name.split('.', 2)
+                op, name = full_name.split('.', 1)
                 if not is_field_allowed(name, g.user_role, query_types) or op not in allowed_ops:
                     continue
                 allowed_calculations.append({'field': name, 'op': op})

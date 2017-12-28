@@ -521,6 +521,10 @@ Table style
 	background: #f1f1f1;
 }
 
+.columnlist .cat_title {
+	font-weight: bold;
+}
+
 .orderbox {
 	float: right;
 	cursor: ns-resize;
@@ -1251,6 +1255,10 @@ h2.toggle:hover {
 .graphTooltip .tooltipEntry.active {
 	border-left-width: 7px;
 	padding-left: 3px;
+}
+
+.table_links {
+	margin: 5px 0;
 }
 
 @media print {

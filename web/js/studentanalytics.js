@@ -104,6 +104,8 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 
 	this.settingsFields = ['graphMode', 'rows'];
 
+	this.tableLinks = $(document.createElement('div')).addClass('table_links');
+
 	this.loadPresetSettings = loadPresetSettings;
 	this.loadSettings = loadSettings;
 	this.saveSettings = saveSettings;
@@ -113,14 +115,15 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 	StudentAnalytics.prototype.init.call(this);
 }
 
-StudentAnalytics.prototype.defineColumn = function (id, label, title, formatting, groupable, calculations) {
+StudentAnalytics.prototype.defineColumn = function (id, label, title, formatting, groupable, calculations, category) {
 	return this.columnData[id] = {
 		id: id,
 		label: label,
 		title: title,
 		formatting: formatting,
 		groupable: groupable,
-		calculations: calculations
+		calculations: calculations,
+		category: category
 	};
 };
 
@@ -163,8 +166,9 @@ StudentAnalytics.prototype.removeColumn = function (col) {
 	}
 
 };
-StudentAnalytics.prototype.addLink = function (label, click) {
-	this.linkBox.append(' ');
+StudentAnalytics.prototype.addLink = function (label, click, to) {
+	if (!to) to = this.linkBox;
+	to.append(' ');
 	var setBtn = $(document.createElement('a'));
 	setBtn.attr('href', '');
 	setBtn.text(label);
@@ -172,7 +176,7 @@ StudentAnalytics.prototype.addLink = function (label, click) {
 		e.preventDefault();
 		click();
 	});
-	this.linkBox.append(setBtn);
+	to.append(setBtn);
 	return setBtn;
 };
 
@@ -183,19 +187,28 @@ StudentAnalytics.prototype.init = function () {
 	// Check for global context and filters
 	var self = this;
 
-	this.defineColumn('group', 'Gruppe', 'Gruppierung', 'str');
-	this.defineColumn('count', 'Studenten', 'Anzahl Studenten in der Gruppe', 'int');
-	this.defineColumn('age', 'Alter', 'Anzahl Studenten mit dem Alter bzw. berechnetes Alter in der Gruppe', 'int', true, ['min', 'max', 'avg']);
-	this.defineColumn('bonus_total', CONFIG.cp_label, null, 'int', true, ['min', 'max', 'avg']);
-	this.defineColumn('exam_count', 'Leistungen', null, 'int', true, ['min', 'max', 'avg']);
-	this.defineColumn('gender', 'Geschlecht', 'Anzahl Studenten mit dem Geschlecht', 'str', true);
-	this.defineColumn('hzb_type', 'HZB Gruppe', 'Anzahl Studenten mit der HZB Gruppe', 'str', true);
-	this.defineColumn('hzb_grade', 'HZB Note', null, 'grade', true, ['min', 'max', 'avg']);
-	this.defineColumn('status', 'Status', null, 'status', true);
-	this.defineColumn('semesters', 'Studiumssemester', 'Länge des Studiums der Studenten mit Examatrikulation', 'int', true, ['min', 'max', 'avg']);
-	this.defineColumn('cnt_delayed_exams', 'Rücktritte', null, 'int', false, ['min', 'max', 'avg']);
-	this.defineColumn('study_time_real', 'Semester mit Leistungen', null, 'int', true, ['min', 'max', 'avg']);
-	this.defineColumn('start_semester', 'Start Semester', null, 'semester', true);
+	this.defineColumn('group', 'Gruppe', 'Gruppierung', 'str', undefined, undefined, 'Allgemein');
+	this.defineColumn('count', 'Studenten', 'Anzahl Studenten in der Gruppe', 'int', undefined, undefined, 'Allgemein');
+	// this.defineColumn('age', 'Alter', 'Anzahl Studenten mit dem Alter bzw. berechnetes Alter in der Gruppe', 'int', true, ['min', 'max', 'avg']);
+	// this.defineColumn('bonus_total', CONFIG.cp_label, null, 'int', true, ['min', 'max', 'avg']);
+	// this.defineColumn('exam_count', 'Leistungen', null, 'int', true, ['min', 'max', 'avg']);
+	this.defineColumn('gender', 'Geschlecht', 'Anzahl Studenten mit dem Geschlecht', 'str', true, undefined, 'Student');
+	this.defineColumn('hzb_type', 'HZB Gruppe', 'Anzahl Studenten mit der HZB Gruppe', 'str', true, undefined, 'Student.HZB');
+	this.defineColumn('hzb_grade', 'HZB Note', null, 'grade', true, ['min', 'max', 'avg'], 'Student.HZB');
+	// this.defineColumn('hzb_imm_time', 'Monate seit HZB', null, 'int', true, ['min', 'max', 'avg']);
+	this.defineColumn('status', 'Status', null, 'status', true, undefined, 'Student');
+	// this.defineColumn('semesters', 'Studiumssemester', 'Länge des Studiums der Studenten mit Examatrikulation', 'int', true, ['min', 'max', 'avg']);
+	// this.defineColumn('cnt_delayed_exams', 'Rücktritte', null, 'int', false, ['min', 'max', 'avg']);
+	// this.defineColumn('study_time_real', 'Semester mit Leistungen', null, 'int', true, ['min', 'max', 'avg']);
+	this.defineColumn('start_semester', 'Start Semester', null, 'semester', true, undefined, 'Student.Studium');
+
+	// this.defineColumn('final_grade', 'Abschlussnote', null, 'grade', true, ['min', 'max', 'avg']);
+	// this.defineColumn('grade_basic_studies', 'Note Grundstudium', null, 'grade', true, ['min', 'max', 'avg']);
+	// this.defineColumn('grade_main_studies', 'Note Hauptstudium', null, 'grade', true, ['min', 'max', 'avg']);
+	// this.defineColumn('grade_current', 'Note aktuell', null, 'grade', true, ['min', 'max', 'avg']);
+	// this.defineColumn('semester_data.sem_1.grade', 'Note im 1. Semester', null, 'grade', true, ['min', 'max', 'avg']);
+	// this.defineColumn('semester_data.sem_2.grade', 'Note im 2. Semester', null, 'grade', true, ['min', 'max', 'avg']);
+	// this.defineColumn('semester_data.sem_3.grade', 'Note im 3. Semester', null, 'grade', true, ['min', 'max', 'avg']);
 
 	this.settings.default.columns.push(this.getColumnObject('group'));
 	this.settings.default.columns.push(this.getColumnObject('count'));
@@ -280,6 +293,8 @@ StudentAnalytics.prototype.draw = function () {
 
 		this.parentDOM.append(this.linkBox);
 
+		this.parentDOM.append(this.tableLinks);
+
 		this.tableDOM.addClass('indentList tbl sortable');
 		this.parentDOM.append(this.tableDOM);
 
@@ -308,6 +323,13 @@ StudentAnalytics.prototype.draw = function () {
 			self.draw();
 		});
 
+		this.addLink('Alle Gruppen aufklappen', function () {
+			self.openCloseAll(true);
+		}, this.tableLinks);
+		this.addLink('Alle Gruppen einklappen', function () {
+			self.openCloseAll(false);
+		}, this.tableLinks);
+
 		this.drawn = true;
 	}
 
@@ -324,6 +346,7 @@ StudentAnalytics.prototype.draw = function () {
 	if (this.mode === 'table') {
 		this.graphDOM.hide();
 		this.tableDOM.show();
+		this.tableLinks.show();
 		if (!this.data) {
 			this.tableDOM.text('Keine Daten verfügbar');
 			return;
@@ -333,6 +356,7 @@ StudentAnalytics.prototype.draw = function () {
 	if (this.mode === 'graph') {
 		this.graphDOM.show();
 		this.tableDOM.hide();
+		this.tableLinks.hide();
 		if (!this.data) {
 			this.graphDOM.text('Keine Daten verfügbar');
 			return;
@@ -361,7 +385,7 @@ StudentAnalytics.prototype.drawGraph = function () {
 		for (var j = 0; j < this.columns.length; j++) {
 			var col = this.columns[j];
 			var cd = this.columnData[col.cdId];
-			if(col.type === 'group') {
+			if (col.type === 'group') {
 				var value = entry[col.id];
 				var label = this.getColumnLabel(col);
 				this.graph.addValue(id, label.data || label.innerText, value);
@@ -385,6 +409,7 @@ StudentAnalytics.prototype.drawGraph = function () {
 
 };
 StudentAnalytics.prototype.drawTable = function () {
+	var self = this;
 	this.tableDOM.empty();
 
 	var thead = $(document.createElement('thead'));
@@ -586,12 +611,22 @@ StudentAnalytics.prototype.setEntryDisplay = function (ident, open) {
 	this.tableDOM.find('tr[id]').each(function () {
 		if (this.id === keyStr) {
 			if (open) {
-				$(this).show();
+				this.style.display = null;
 			} else {
-				$(this).hide();
+				this.style.display = 'none';
 			}
 		}
 	});
+
+};
+StudentAnalytics.prototype.openCloseAll = function (open) {
+	if (!this.entries) return;
+	for (var i = 0; i < this.entries.length; i++) {
+		var entry = this.entries[i];
+		if (entry.open !== undefined && entry.open !== open) {
+			entry.toggleOpenWithView();
+		}
+	}
 
 };
 StudentAnalytics.prototype.findParent = function (ident) {
@@ -605,21 +640,21 @@ StudentAnalytics.prototype.findParent = function (ident) {
 	});
 };
 StudentAnalytics.prototype.drawEntry = function (entry) {
-	var tr = $(document.createElement('tr'));
-	tr.attr('id', entry.ident.join(','));
+	var tr = document.createElement('tr');
+	tr.id = entry.ident.join(',');
 
 	if (entry.ident.length > 1) {
 		var parentEntry = this.findParent(entry.ident);
 		if (parentEntry && !parentEntry.open) {
-			tr.hide();
+			tr.style.display = 'none';
 		}
 	}
 
 	for (var i = 0; i < this.columns.length; i++) {
 		var cd = this.columns[i];
-		var td = $(document.createElement('td'));
-		tr.append(td);
+		var td = document.createElement('td');
 		this.drawCellValue(entry, cd, td);
+		tr.appendChild(td);
 	}
 
 	return tr;
@@ -630,15 +665,18 @@ StudentAnalytics.prototype.drawCellValue = function (entry, col, td) {
 
 		if (entry.open !== undefined) {
 			var link = $('<a class="openable" href="javascript:"></a>');
-			link.click(function () {
+			entry.toggleOpenWithView = function() {
 				if (entry.open) {
 					link.removeClass('open');
 				} else {
 					link.addClass('open');
 				}
 				entry.toggleOpen();
+			};
+			link.click(function () {
+				entry.toggleOpenWithView();
 			});
-			td.append(link);
+			td.appendChild(link[0]);
 		}
 
 		var level = 0, lastValue = null, rCd = null;
@@ -650,10 +688,10 @@ StudentAnalytics.prototype.drawCellValue = function (entry, col, td) {
 			level++;
 		}
 		if (rCd) {
-			td.attr('title', rCd.label);
+			td.title = rCd.label;
 		}
-		td.addClass('level' + level);
-		td.append(lastValue);
+		td.classList.add('level' + level);
+		td.appendChild(lastValue);
 
 	} else if (cd.drawValue && cd.drawValue instanceof Function) {
 		cd.drawValue(entry, col, td);
@@ -662,7 +700,7 @@ StudentAnalytics.prototype.drawCellValue = function (entry, col, td) {
 		var value = entry[col.id];
 		var formatting = cd.formatting;
 		if (this.allowedTableFormats.indexOf(formatting) === -1) formatting = 'int';
-		td.append(getFormattedHTML(value, formatting));
+		td.appendChild(getFormattedHTML(value, formatting));
 	}
 
 };
@@ -699,6 +737,17 @@ StudentAnalytics.prototype.sortTable = function () {
 };
 StudentAnalytics.prototype.onHeaderClick = function () {
 	this.load();
+};
+StudentAnalytics.prototype.initColumns = function () {
+	var self = this;
+	var query;
+	for (var qId in self.definitions['queries']) {
+		query = self.definitions['queries'][qId];
+		if (self.definitions.restricted.indexOf(query.q) !== -1) continue;
+		if (['int', 'grade', 'percent'].indexOf(query['formatting']) !== -1) {
+			self.defineColumn(query.q, query.name, query.name, query.formatting, query['formatting'] !== 'percent', ['min', 'max', 'avg'], query.category);
+		}
+	}
 };
 StudentAnalytics.prototype.load = function () {
 	var self = this;
@@ -770,6 +819,7 @@ StudentAnalytics.prototype.load = function () {
 				self.removeColumn('start_semester');
 			}
 			StudentList.prototype.initDefinitions.call(self, data.definitions);
+			self.initColumns();
 
 		}
 
@@ -888,14 +938,14 @@ StudentAnalytics.prototype.openColumnDialog = function () {
 		var boxO = document.createElement('li');
 		boxO.className = 'colrow';
 		boxO.col = col;
-		if(cd.titl) {
+		if (cd.titl) {
 			boxO.title = cd.title;
 		}
 
 		var labelO = boxO.appendChild(document.createElement('label'));
 
 		if (col.type === 'group' && col.grpValue === null) {
-			labelO.appendChild(document.createTextNode(cd.label+' '));
+			labelO.appendChild(document.createTextNode(cd.label + ' '));
 			labelO.className = 'addBtn';
 			var addLink = $('<a href="javascript:"></a>').text('Bedingte Spalte hinzufügen').appendTo(boxO);
 			addLink.click(function (e) {
@@ -926,7 +976,6 @@ StudentAnalytics.prototype.openColumnDialog = function () {
 				orderBox.className = 'orderbox';
 				boxO.appendChild(orderBox);
 			}
-
 
 
 			if (col.type === 'group') {
@@ -970,31 +1019,62 @@ StudentAnalytics.prototype.openColumnDialog = function () {
 			if (cola.label > colb.label) return 1;
 			return 0;
 		});
-		for (var j = 0; j < columnsSorted.length; j++) {
-			var colId = columnsSorted[j];
-			var cd = self.columnData[colId];
-			if (cd.calculations) {
-				for (var k = 0; k < cd.calculations.length; k++) {
-					var calcId = cd.calculations[k];
-					col = self.getColumnObject(colId, undefined, calcId);
-					if (indexOfCol(col.id) === -1) {
-						ul.append(drawRow(col));
+
+		var categories = getColumnsByCategory();
+		var categroyKeys = Object.keys(categories);
+		categroyKeys.sort();
+
+		for (var l = 0; l < categroyKeys.length; l++) {
+			var catKey = categroyKeys[l];
+			if (catKey === 'ignore') continue;
+			var columns = categories[catKey];
+			var path = catKey.split('.');
+
+			ul.append($('<li></li>').addClass('cat_title').text(path.join(' » ')));
+
+
+			for (var j = 0; j < columns.length; j++) {
+				var cd = columns[j];
+				var colId = cd.id;
+				if (cd.calculations) {
+					for (var k = 0; k < cd.calculations.length; k++) {
+						var calcId = cd.calculations[k];
+						col = self.getColumnObject(colId, undefined, calcId);
+						if (indexOfCol(col.id) === -1) {
+							ul.append(drawRow(col));
+						}
 					}
 				}
-			}
-			if (cd.groupable) {
-				col = self.getColumnObject(colId, null, undefined);
-				ul.append(drawRow(col));
-			}
-			if (!cd.calculations && !cd.groupable && indexOfCol(colId) === -1) {
-				ul.append(drawRow(self.getColumnObject(colId, undefined, undefined)));
+				if (cd.groupable) {
+					col = self.getColumnObject(colId, null, undefined);
+					ul.append(drawRow(col));
+				}
+				if (!cd.calculations && !cd.groupable && indexOfCol(colId) === -1) {
+					ul.append(drawRow(self.getColumnObject(colId, undefined, undefined)));
+				}
+
 			}
 
 		}
 
+
 		dialogBox.append(ul);
 
 		ul.sortable();
+	}
+
+	function getColumnsByCategory() {
+		var result = {};
+		Object.keys(self.columnData).forEach(function (colId) {
+			var col = self.columnData[colId];
+			var cat = col.category || 'Sonstige';
+			if (!result[cat]) result[cat] = [];
+			result[cat].push(col);
+		});
+		Object.keys(result).forEach(function (cat) {
+			sortByField(result[cat], 'label', 1);
+		});
+		return result;
 	}
 
 	if (!self.groupStats) {
@@ -1022,7 +1102,7 @@ StudentAnalytics.prototype.openColumnDialog = function () {
 
 				$(this).find('li').each(function () {
 					var checkO = $('input', this)[0];
-					if (checkO && checkO.checked)
+					if (checkO && checkO.checked && this.col)
 						self.columns.push(this.col);
 				});
 
@@ -1048,6 +1128,8 @@ StudentAnalytics.prototype.openGroupDialog = function () {
 
 	$(document.createElement('p')).text(
 		'Die ausgewählten Gruppen können per Drag & Drop sortiert werden.').appendTo(dialogBox);
+	$(document.createElement('p')).text(
+		'Es können maximal 3 Gruppen gewählt werden.').appendTo(dialogBox);
 
 	function drawRow(cd) {
 		if (cd.presets && cd.presets.indexOf(self.settingId) === -1) return null;
@@ -1118,7 +1200,7 @@ StudentAnalytics.prototype.openGroupDialog = function () {
 
 				$(this).find('li').each(function () {
 					var checkO = $('input', this)[0];
-					if (checkO.checked)
+					if (checkO.checked && self.rows.length < 3)
 						self.rows.push(this.colId);
 				});
 
@@ -1148,8 +1230,8 @@ StudentAnalytics.prototype.openColumnValueDialog = function (col, callb) {
 
 	var valueO;
 	var possibleValues = self.groupStats[col.cdId];
-	if(possibleValues) {
-		possibleValues = possibleValues.map(function(d) {
+	if (possibleValues) {
+		possibleValues = possibleValues.map(function (d) {
 			return d.value;
 		});
 	}
@@ -1157,7 +1239,7 @@ StudentAnalytics.prototype.openColumnValueDialog = function (col, callb) {
 		callb(valueO.getValue());
 		dialogBox.dialog("close");
 	};
-	if(['int', 'grade', 'semester'].indexOf(cd.formatting) !== -1 || !possibleValues) {
+	if (['int', 'grade', 'semester'].indexOf(cd.formatting) !== -1 || !possibleValues) {
 		valueO = FilterList.prototype.drawValueSelector(col.grpValue, cd.formatting, submitValue);
 	} else {
 		valueO = FilterList.prototype.drawStringValueSelector(col.grpValue, possibleValues, cd.formatting, submitValue);
