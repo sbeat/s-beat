@@ -3,6 +3,7 @@
     <module2copyright>
       <element module="web" copyright="GPLv3 S-BEAT short" />
       <element module="lib" copyright="GPLv3 S-BEAT" />
+      <element module="Local Unit Tests" copyright="GPLv3 S-BEAT" />
     </module2copyright>
     <LanguageOptions name="HTML">
       <option name="fileTypeOverride" value="3" />

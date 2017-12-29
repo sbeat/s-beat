@@ -38,6 +38,7 @@ def get_semester_from_date(date):
     else:
         return date.year * 10 + 2  # WS im aktuellen Jahr
 
+
 def get_appl_start_semester_from_date(date):
     # Wintersemester: 01.09-28.02/29.02 [2]
     # Sommersemester: 01.03-31.08 [1]
@@ -53,16 +54,17 @@ def get_appl_start_semester_from_date(date):
     else:
         return (date.year + 1) * 10 + 1  # SS im nächsten Jahr
 
+
 def get_semester_text(value):
     year = int(math.floor(value / 10))
     semnr = value % 10
     ret = ''
     if semnr == 1:
-        ret = 'SS ' + str(year)
+        ret = 'SoSe ' + str(year)
     if semnr == 2:
         sndyear = int((year + 1) % 100)
         fstyear = int(year % 100)
-        ret = 'WS '
+        ret = 'WiSe '
         ret += '0' + str(fstyear) if fstyear < 10 else str(fstyear)
         ret += '/'
         ret += '0' + str(sndyear) if sndyear < 10 else str(sndyear)
@@ -82,19 +84,8 @@ def month_delta(d1, d2):
 
 
 def semester_delta(d1, d2):
-    delta = 0
-    sem1 = get_semester_from_date(d1)
-    sem2 = get_semester_from_date(d2)
-
-    current = sem1
-    while current < sem2:
-        if current % 10 == 2:
-            current = (current // 10 + 1) * 10 + 1
-        else:
-            current += 1
-        delta += 1
-
-    return delta
+    delta = month_delta(d1, d2)
+    return int(round(float(delta) / 6.0))
 
 
 def calculate_age(born, today=datetime.today()):
@@ -116,4 +107,3 @@ def calc_avg_grade(examlist):
         bonussum += exam['bonus']
 
     return grades / bonussum if bonussum > 0 else 0.0
-
