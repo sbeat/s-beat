@@ -199,6 +199,7 @@ function ExamList(parentDOM) {
 	this.saveSettings = saveSettings;
 	this.removeSettings = removeSettings;
 	this.openSettingsDialog = openSettingsDialog;
+	this.removeColumn = removeDataColumn;
 
 	ExamList.prototype.init.call(this);
 }
@@ -511,15 +512,6 @@ ExamList.prototype.drawCellValue = function (exam, col, td) {
 
 
 };
-ExamList.prototype.removeColumn = function (col) {
-	var self = this;
-	var pos = self.columns.indexOf(col);
-	if (pos != -1) self.columns.splice(pos, 1);
-	if (self.columnData[col]) {
-		delete self.columnData[col];
-	}
-
-};
 ExamList.prototype.initMetadata = function (metadata) {
 	var self = this;
 	self.metadata = metadata;
@@ -583,6 +575,11 @@ ExamList.prototype.load = function () {
 		}
 		if(data.hide_exam_date) {
 			self.removeColumn('date');
+		}
+		if(data['hide_exam_fields']) {
+			data['hide_exam_fields'].forEach(function (field) {
+				self.removeColumn(field);
+			});
 		}
 		self.pagination.update(data);
 

@@ -446,6 +446,7 @@ function StudentList(parentDOM) {
 	this.removeSettings = removeSettings;
 	this.openSettingsDialog = openSettingsDialog;
 	this.openLoadSettingsDialog = openLoadSettingsDialog;
+	this.removeColumn = removeDataColumn;
 
 	StudentList.prototype.init.call(this);
 }
@@ -811,15 +812,7 @@ StudentList.prototype.drawCellValue = function (student, col, td) {
 
 
 };
-StudentList.prototype.removeColumn = function (col) {
-	var self = this;
-	var pos = self.columns.indexOf(col);
-	if (pos != -1) self.columns.splice(pos, 1);
-	if (self.columnData[col]) {
-		delete self.columnData[col];
-	}
 
-};
 StudentList.prototype.initDefinitions = function (definitions) {
 	var self = this;
 	self.definitions = definitions;

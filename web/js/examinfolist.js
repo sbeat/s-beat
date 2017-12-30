@@ -83,6 +83,7 @@ function ExamInfoList(parentDOM) {
 	this.saveSettings = saveSettings;
 	this.removeSettings = removeSettings;
 	this.openSettingsDialog = openSettingsDialog;
+	this.removeColumn = removeDataColumn;
 
 	ExamInfoList.prototype.init.call(this);
 }
@@ -336,7 +337,11 @@ ExamInfoList.prototype.load = function () {
 		self.data = data;
 		if (data.metadata) {
 			self.initMetadata(data.metadata);
-
+		}
+		if(data['hide_exam_fields']) {
+			data['hide_exam_fields'].forEach(function (field) {
+				self.removeColumn(field);
+			});
 		}
 		self.pagination.update(data);
 

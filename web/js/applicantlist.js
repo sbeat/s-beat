@@ -122,6 +122,7 @@ function ApplicantList(parentDOM) {
 	this.removeSettings = removeSettings;
 	this.openSettingsDialog = openSettingsDialog;
 	this.openLoadSettingsDialog = openLoadSettingsDialog;
+	this.removeColumn = removeDataColumn;
 
 	ApplicantList.prototype.init.call(this);
 }
@@ -436,16 +437,6 @@ ApplicantList.prototype.drawCellValue = function (applicant, col, td) {
 
 
 };
-ApplicantList.prototype.removeColumn = function (col) {
-	var self = this;
-	var pos = self.columns.indexOf(col);
-	if (pos != -1) self.columns.splice(pos, 1);
-	if (self.columnData[col]) {
-		delete self.columnData[col];
-	}
-
-};
-
 ApplicantList.prototype.setCustomFilters = function (ids) {
 	this.loadPresetSettings(this.settingId);
 
@@ -499,6 +490,12 @@ ApplicantList.prototype.load = function () {
 		self.data = data;
 
 		self.tableDOM.removeClass('loading');
+
+		if(data['hide_applicant_fields']) {
+			data['hide_applicant_fields'].forEach(function (field) {
+				self.removeColumn(field);
+			});
+		}
 
 		self.pagination.update(data);
 

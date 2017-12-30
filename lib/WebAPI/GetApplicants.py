@@ -231,8 +231,14 @@ def handle():
         'query': None,
         'sort': None
     }
-    if with_definitions == 'true':
-        ret['definitions'] = get_definitions()
+    # if with_definitions == 'true':
+    #     ret['definitions'] = get_definitions()
+
+    settings = DB.Settings.load_dict([
+        'hide_applicant_fields'
+    ])
+
+    ret['hide_applicant_fields'] = settings['hide_applicant_fields']
 
     db_query = dict()
     db_queries = []  # for restrictions

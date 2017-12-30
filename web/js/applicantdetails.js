@@ -81,6 +81,11 @@ ApplicantDetails.prototype.drawValue = function (field, el) {
 			$(this).hide();
 		});
 
+	} else if (field.match(/^display\.(.+)/)) {
+		if(self.isHiddenField(RegExp.$1)) {
+			el.hide();
+		}
+
 	} else {
 		value = getByPath(field, self.applicant);
 		el.empty();
@@ -104,12 +109,11 @@ ApplicantDetails.prototype.drawValue = function (field, el) {
 
 };
 
-ApplicantDetails.prototype.initDefinitions = function (definitions) {
+ApplicantDetails.prototype.isHiddenField = function (field) {
 	var self = this;
-	self.definitions = definitions;
-
+	return self.data && self.data.hide_applicant_fields
+		&& self.data.hide_applicant_fields.indexOf(field) !== -1;
 };
-
 
 ApplicantDetails.prototype.load = function () {
 	var self = this;
@@ -117,9 +121,6 @@ ApplicantDetails.prototype.load = function () {
 
 	var params = [];
 	params.push('ident=' + this.applicantId);
-	if (!self.definitions) {
-		params.push('definitions=true');
-	}
 
 	if(isTempActive()) params.push('temp=true');
 
@@ -134,9 +135,6 @@ ApplicantDetails.prototype.load = function () {
 		self.parentDOM.removeClass('loading');
 
 		self.data = data;
-		if (data.definitions) {
-			self.initDefinitions(data.definitions);
-		}
 		if (data.list[0]) {
 			self.applicant = data.list[0];
 		}

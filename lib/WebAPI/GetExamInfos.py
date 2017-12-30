@@ -95,6 +95,13 @@ def handle():
     # if with_metadata == 'true':
     # ret['metadata'] = get_definitions() # TODO implement meta data like name of exam
 
+    settings = DB.Settings.load_dict([
+        'hide_exam_fields'
+    ])
+
+    ret['hide_exam_fields'] = settings['hide_exam_fields']
+
+
     db_query = dict()
     db_sort = []
     if len(sort1) == 2 and sort1[0] in sortable:

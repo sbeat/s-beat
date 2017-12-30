@@ -89,7 +89,8 @@ def handle():
     settings = DB.Settings.load_dict([
         'compare_averages',
         'hide_exam_date',
-        'student_ident_string'
+        'student_ident_string',
+        'hide_exam_fields'
     ])
 
     student_id = request.args.get('student_id', default=None, type=unicode)
@@ -137,6 +138,7 @@ def handle():
 
         ret['compare_averages'] = settings['compare_averages']
         ret['hide_exam_date'] = settings['hide_exam_date']
+        ret['hide_exam_fields'] = settings['hide_exam_fields']
 
     if with_metadata == 'true' and student_id:
         meta_query = {'student_id': student_id}
