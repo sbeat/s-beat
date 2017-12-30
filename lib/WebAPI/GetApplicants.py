@@ -192,7 +192,7 @@ def handle():
         'hzb_date': 'datetime',
         'hzb_grade': 'int',
         'hzb_type': 'str',
-        'ident': 'int',
+        'ident': 'str',
         'country': 'str',
         'zip': 'str',
         'citship': 'str',

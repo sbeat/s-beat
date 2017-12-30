@@ -3,7 +3,7 @@
 
 function ApplicantDetails(parentDOM) {
 	this.parentDOM = parentDOM;
-	this.applicantId = parseInt(parentDOM.attr('data-id'));
+	this.applicantId = parentDOM.attr('data-id');
 	this.applicant = null;
 
 	this.fieldData = {};
@@ -120,7 +120,7 @@ ApplicantDetails.prototype.load = function () {
 	var url = '/api/GetApplicants';
 
 	var params = [];
-	params.push('ident=' + this.applicantId);
+	params.push('ident=' + encodeURIComponent(this.applicantId));
 
 	if(isTempActive()) params.push('temp=true');
 
