@@ -39,5 +39,8 @@
 	"hide_median_risk": true,
 	"student_ident_string": false,
 	"unique_student_id": ["ident_original"],
-	"max_valid_cp": 220
+	"max_valid_cp": 220,
+	"hide_student_fields": [],
+	"hide_applicant_fields": [],
+	"hide_exam_fields": []
 }

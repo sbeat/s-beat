@@ -108,7 +108,13 @@ function StudentList(parentDOM) {
 	};
 
 	this.columnData = {
-		'ident': {id: 'ident', label: CONFIG.student_ident_label, title: CONFIG.student_ident_desc, formatting: 'str', sortBy: '_id'},
+		'ident': {
+			id: 'ident',
+			label: CONFIG.student_ident_label,
+			title: CONFIG.student_ident_desc,
+			formatting: 'str',
+			sortBy: '_id'
+		},
 		'stg': {id: 'stg', label: 'STG', title: 'Studiengangsgruppe', formatting: 'stg'},
 		'stg_original': {id: 'stg_original', label: 'Studiengang', title: 'Studiengang', formatting: 'stg'},
 		'degree_type': {id: 'degree_type', label: 'Abschluss', title: 'Abschluss', formatting: 'str'},
@@ -443,6 +449,7 @@ function StudentList(parentDOM) {
 
 	StudentList.prototype.init.call(this);
 }
+
 /**
  * Gets called once this MarkedList is initialized
  */
@@ -819,6 +826,10 @@ StudentList.prototype.initDefinitions = function (definitions) {
 	var query;
 	var usedQueries = [];
 
+	if (!self.definitions['hide_student_fields']) {
+		self.definitions['hide_student_fields'] = [];
+	}
+
 	if (!self.definitions.risk_value_allowed) {
 		self.definitions.restricted.push('risk.median_scaled');
 		self.removeColumn('risk.median_scaled');
@@ -852,7 +863,7 @@ StudentList.prototype.initDefinitions = function (definitions) {
 	}
 
 	if (self.definitions['hide_resigned']) {
-		[
+		self.definitions['hide_student_fields'].push(
 			'exam_count_resigned',
 			'cnt_delayed_exams',
 			'cnt_unauthorized_delayed_exams',
@@ -860,12 +871,13 @@ StudentList.prototype.initDefinitions = function (definitions) {
 			'semester_data.sem_4.delayed',
 			'semester_data.sem_2.delayed',
 			'semester_data.sem_1.delayed'
-		].forEach(function (field) {
-				self.definitions.restricted.push(field);
-				self.removeColumn(field);
-			});
-
+		);
 	}
+
+	self.definitions['hide_student_fields'].forEach(function (field) {
+		self.definitions.restricted.push(field);
+		self.removeColumn(field);
+	});
 
 	for (var peId in self.definitions['path_elements']) {
 		var pe = self.definitions['path_elements'][peId];
@@ -964,7 +976,7 @@ StudentList.prototype.load = function () {
 		params.push('mlist=' + this.mlistId);
 	}
 
-	if(isTempActive()) params.push('temp=true');
+	if (isTempActive()) params.push('temp=true');
 
 	if (params.length) url += '?';
 	url += params.join('&');

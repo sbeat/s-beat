@@ -271,6 +271,24 @@ function SettingsManager(parentDOM) {
 			desc: 'Soll der unskalierte median Risikowert für einen Studierenden ausgeblendet werden?',
 			defaultVal: false,
 			group: 'Anzeige'
+		},
+		"hide_student_fields": {
+			type: 'list',
+			name: 'Student Felder ausblenden',
+			desc: 'Liste der technischen Felder, welche ausgeblendet werden sollen. Z.B. weil diese Daten nicht verfügbar sind.',
+			group: 'Anzeige'
+		},
+		"hide_applicant_fields": {
+			type: 'list',
+			name: 'Bewerber Felder ausblenden',
+			desc: 'Liste der technischen Felder, welche ausgeblendet werden sollen. Z.B. weil diese Daten nicht verfügbar sind.',
+			group: 'Anzeige'
+		},
+		"hide_exam_fields": {
+			type: 'list',
+			name: 'Prüfungs Felder ausblenden',
+			desc: 'Liste der technischen Felder, welche ausgeblendet werden sollen. Z.B. weil diese Daten nicht verfügbar sind.',
+			group: 'Anzeige'
 		}
 	};
 

@@ -72,17 +72,17 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 		<h2>Person</h2>
 		<table class="tbl detailTable">
 
-			<tr>
+			<tr data-student="display.birth_date">
 				<td>Geburtsdatum</td>
 				<td data-student="birth_date"></td>
 				<td></td>
 			</tr>
-			<tr>
+			<tr data-student="display.age">
 				<td>Alter bei Immatrikulation</td>
 				<td data-student="age"></td>
 				<td data-path-risk="age"></td>
 			</tr>
-			<tr>
+			<tr data-student="display.gender">
 				<td>Geschlecht</td>
 				<td data-student="gender"></td>
 				<td data-path-risk="gender"></td>
@@ -90,12 +90,12 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 		</table>
 		<br>
 		<table class="tbl detailTable" id="identification_data" style="display: none">
-			<tr>
+			<tr data-student="display.matrikelno">
 				<td>Matrikel-Nr.*</td>
 				<td data-student="matrikelno"></td>
 				<td></td>
 			</tr>
-			<tr>
+			<tr data-student="display.forename">
 				<td>Name*</td>
 				<td>
 					<span data-student="forename"></span>
@@ -103,7 +103,7 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 				</td>
 				<td></td>
 			</tr>
-			<tr>
+			<tr data-student="display.email">
 				<td>E-Mail*</td>
 				<td data-student="email"></td>
 				<td></td>
@@ -126,17 +126,17 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 	<article>
 		<h2>Hochschulzugangsberechtigung</h2>
 		<table class="tbl detailTable">
-			<tr>
+			<tr data-student="display.hzb_type">
 				<td>HZB Gruppe</td>
 				<td data-student="hzb_type"></td>
 				<td data-path-risk="hzb_type"></td>
 			</tr>
-			<tr>
+			<tr data-student="display.hzb_grade">
 				<td>HZB Note</td>
 				<td data-student="hzb_grade"></td>
 				<td data-path-risk="hzb_grade"></td>
 			</tr>
-			<tr>
+			<tr data-student="display.hzb_date">
 				<td>HZB Datum</td>
 				<td data-student="hzb_date"></td>
 				<td data-path-risk="hzb_date"></td>
@@ -145,37 +145,37 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 
 		<h2>Leistungsdaten</h2>
 		<table class="tbl detailTable">
-			<tr>
+			<tr data-student="display.exam_count">
 				<td>Anzahl Leistungen</td>
 				<td data-student="exam_count"></td>
 				<td></td>
 			</tr>
-			<tr>
+			<tr data-student="display.exam_count_success">
 				<td>Bestandene Versuche</td>
 				<td data-student="exam_count_success"></td>
 				<td></td>
 			</tr>
-			<tr>
+			<tr data-student="display.exam_count_failed">
 				<td>Nicht bestandene Versuche</td>
 				<td data-student="exam_count_failed"></td>
 				<td></td>
 			</tr>
-			<tr data-student="hide_resigned">
+			<tr data-student="display.cnt_delayed_exams">
 				<td>Entschuldigte Rücktritte</td>
 				<td data-student="cnt_delayed_exams"></td>
 				<td></td>
 			</tr>
-			<tr>
+			<tr data-student="display.bonus_total">
 				<td><span data-config="cp_label"></span> gesamt</td>
 				<td data-student="bonus_total"></td>
 				<td></td>
 			</tr>
-			<tr>
+			<tr data-student="display.grade_current">
 				<td>&Oslash; Note aktuell<sup>1</sup></td>
 				<td data-student="grade_current"></td>
 				<td></td>
 			</tr>
-			<tr>
+			<tr data-student="display.grade_nb_current">
 				<td>&Oslash; Note aktuell inkl. NB, EN<sup>1</sup></td>
 				<td data-student="grade_nb_current"></td>
 				<td></td>
@@ -185,17 +185,17 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 				<td data-student="grade_total"></td>
 				<td></td>
 			</tr>-->
-			<tr>
+			<tr data-student="display.grade_basic_studies">
 				<td>&Oslash; Note Grundstudium<sup>1</sup></td>
 				<td data-student="grade_basic_studies"></td>
 				<td></td>
 			</tr>
-			<tr>
+			<tr data-student="display.grade_main_studies">
 				<td>&Oslash; Note Hauptstudium<sup>1</sup></td>
 				<td data-student="grade_main_studies"></td>
 				<td></td>
 			</tr>
-			<tr>
+			<tr data-student="display.final_grade">
 				<td>Abschlussnote</td>
 				<td data-student="final_grade"></td>
 				<td></td>
@@ -364,7 +364,7 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 			<col width="12%">
 			<col width="12%">
 			<col width="12%">
-			<col data-student="hide_resigned" width="12%">
+			<col data-student="display.cnt_delayed_exams" width="12%">
 		</colgroup>
 		<thead>
 		<tr>
@@ -376,7 +376,7 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 			<th><span>Leistungen</span></th>
 			<th><span>Leistungen bestanden</span></th>
 			<th><span>Leistungen nicht bestanden</span></th>
-			<th data-student="hide_resigned"><span>Entschuldigte Rücktritte</span></th>
+			<th data-student="display.cnt_delayed_exams"><span>Entschuldigte Rücktritte</span></th>
 		</tr>
 		</thead>
 		<tbody data-student="semester_data">

@@ -78,7 +78,8 @@ def get_definitions():
         'compare_averages',
         'cp_label',
         'hide_resigned',
-        'hide_median_risk'
+        'hide_median_risk',
+        'hide_student_fields'
     ])
 
     data['queries'] = get_queries(settings)
@@ -92,6 +93,7 @@ def get_definitions():
     data['compare_averages'] = settings['compare_averages']
     data['hide_resigned'] = settings['hide_resigned']
     data['hide_median_risk'] = settings['hide_median_risk']
+    data['hide_student_fields'] = settings['hide_student_fields']
 
     return data
 

@@ -225,11 +225,10 @@ StudentDetails.prototype.drawValue = function (field, el) {
 			$(this).hide();
 		});
 
-	} else if (field == 'hide_resigned' && self.definitions && self.definitions.hide_resigned) {
-		el.remove();
-
-	} else if (field == 'hide_resigned') {
-		return;
+	} else if (field.match(/^display\.(.+)/)) {
+		if(self.isHiddenField(RegExp.$1)) {
+			el.hide();
+		}
 
 	} else {
 		value = getByPath(field, self.student);
@@ -255,7 +254,11 @@ StudentDetails.prototype.drawValue = function (field, el) {
 	}
 
 };
-
+StudentDetails.prototype.isHiddenField = function (field) {
+	var self = this;
+	return self.definitions && self.definitions.hide_student_fields
+		&& self.definitions.hide_student_fields.indexOf(field) !== -1;
+};
 StudentDetails.prototype.findRiskQueries = function () {
 	var self = this;
 	var ret = {elements: [], in_filter_elements: []};
@@ -658,6 +661,18 @@ StudentDetails.prototype.initDefinitions = function (definitions) {
 	$("[data-lights=lights_0]").text(lightsSetting[0] * 100);
 	$("[data-lights=lights_1]").text(lightsSetting[1] * 100);
 	$("[data-lights=lights_2]").text(lightsSetting[2] * 100);
+
+	if (self.definitions['hide_resigned']) {
+		self.definitions['hide_student_fields'].push(
+			'exam_count_resigned',
+			'cnt_delayed_exams',
+			'cnt_unauthorized_delayed_exams',
+			'semester_data.sem_3.delayed',
+			'semester_data.sem_4.delayed',
+			'semester_data.sem_2.delayed',
+			'semester_data.sem_1.delayed'
+		);
+	}
 
 };
 StudentDetails.prototype.findQuery = function (q) {
