@@ -40,3 +40,4 @@ import ManageDefinitions
 import GetStudentInfo
 import GetApplicants
 import GetLogs
+import ManageTags

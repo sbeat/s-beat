@@ -83,6 +83,7 @@ class Student(DBDocument):
         self.success = False  # Whether the study is finished successful
         self.aborted = False  # Whether the study has been aborted
         self.status = None  # Status 1=Finished, 2=Aborted, 3=Successful, 4=Studying
+        self.tags = []
 
         # Identity
         self.matrikelno = None

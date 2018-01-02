@@ -34,6 +34,8 @@ from CourseSemesterInfo import CourseSemesterInfo
 from MetaData import MetaData
 from MarkedList import MarkedList
 from UserLog import UserLog
+from Tag import Tag
+from StudentTag import StudentTag
 
 
 def enable_temp_data():
