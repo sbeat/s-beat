@@ -58,13 +58,14 @@ def get_tags():
 
 
 def add_tag(data):
+    print 'data', data
     if not UserTools.has_right('admin_access', g.user_role):
         return respond({'error': 'no_rights'}, 403)
 
     if not isinstance(data.get('name'), unicode):
         return respond({'error': 'invalid_name'}, 200)
 
-    if not isinstance(data.get('order'), float):
+    if not isinstance(data.get('order'), int):
         return respond({'error': 'invalid_order'}, 200)
 
     tag = DB.Tag()
@@ -87,7 +88,7 @@ def edit_tag(data):
     if not isinstance(data.get('name'), unicode):
         return respond({'error': 'invalid_name'}, 200)
 
-    if not isinstance(data.get('order'), float):
+    if not isinstance(data.get('order'), int):
         return respond({'error': 'invalid_order'}, 200)
 
     tag = DB.Tag.find_one({'_id': data.get('id')})
