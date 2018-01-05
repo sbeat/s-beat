@@ -1261,6 +1261,10 @@ h2.toggle:hover {
 	margin: 5px 0;
 }
 
+.tagsManager {
+	max-width: 300px;
+}
+
 @media print {
 	#side {
 		display: none;

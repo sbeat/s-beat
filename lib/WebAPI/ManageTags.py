@@ -58,7 +58,6 @@ def get_tags():
 
 
 def add_tag(data):
-    print 'data', data
     if not UserTools.has_right('admin_access', g.user_role):
         return respond({'error': 'no_rights'}, 403)
 

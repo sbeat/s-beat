@@ -49,6 +49,11 @@ TagsManager.prototype.draw = function () {
 
 		this.parentDOM.append(this.listDOM);
 
+		this.listDOM = $(createDom('ul', 'columnlist')).appendTo(this.listDOM);
+		this.listDOM.on('sortstop', function() {
+			self.saveOrder();
+		});
+
 	}
 
 	self.listDOM.empty();
@@ -60,19 +65,26 @@ TagsManager.prototype.draw = function () {
 		}
 	}
 
+	self.listDOM.sortable();
+
 };
 TagsManager.prototype.drawTag = function (tag) {
 	var self = this;
 
-	var catO = createDom('div', 'bcategory');
-	var nameO = createDom('div', 'name', catO);
-	var linkO = $(createDom('a', '', nameO));
+	var catO = createDom('li', 'colrow');
+	catO.tag = tag;
+
+	var linkO = $(createDom('a', '', catO));
 	linkO.text(tag.name);
 	linkO.attr('href', 'javascript:');
 	linkO.click(function(e) {
 		e.preventDefault();
 		self.openTagDialog(tag.name, tag);
 	});
+
+	var orderBox = document.createElement('div');
+	orderBox.className = 'orderbox';
+	catO.appendChild(orderBox);
 
 	return catO;
 };
@@ -158,6 +170,23 @@ TagsManager.prototype.openTagDialog = function (tag_id, tag) {
 		modal: true
 	});
 
+};
+
+TagsManager.prototype.saveOrder = function () {
+	var self = this;
+	var pos = 1;
+	var updates = {};
+	self.listDOM.find('li').each(function() {
+		var elPos = pos++;
+		if(this.tag && this.tag.order !== elPos) {
+			this.tag.order = elPos;
+			self.action('edit_tag', {
+				id: this.tag.id,
+				name: this.tag.name,
+				order: this.tag.order
+			}, $(this));
+		}
+	});
 };
 
 TagsManager.prototype.load = function () {
