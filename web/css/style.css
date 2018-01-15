@@ -1264,6 +1264,18 @@ h2.toggle:hover {
 .tagsManager {
 	max-width: 300px;
 }
+.tagitem .status {
+	display: inline-block;
+	width: 20px;
+	height: 16px;
+	background: url('../img/icons/cross.png') 50% 50% no-repeat;
+	cursor: pointer;
+	float: right;
+}
+
+.tagitem .status.active {
+	background: url('../img/icons/tick.png') 50% 50% no-repeat;
+}
 
 @media print {
 	#side {

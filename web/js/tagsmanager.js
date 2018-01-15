@@ -17,6 +17,7 @@ function TagsManager(parentDOM) {
 
 	TagsManager.prototype.init.call(this);
 }
+
 /**
  * Gets called once this TagsManager is initialized
  */
@@ -50,7 +51,7 @@ TagsManager.prototype.draw = function () {
 		this.parentDOM.append(this.listDOM);
 
 		this.listDOM = $(createDom('ul', 'columnlist')).appendTo(this.listDOM);
-		this.listDOM.on('sortstop', function() {
+		this.listDOM.on('sortstop', function () {
 			self.saveOrder();
 		});
 
@@ -58,7 +59,7 @@ TagsManager.prototype.draw = function () {
 
 	self.listDOM.empty();
 
-	if(self.data && self.data.result.length) {
+	if (self.data && self.data.result.length) {
 		for (var i = 0; i < self.data.result.length; i++) {
 			var item = self.data.result[i];
 			self.listDOM.append(self.drawTag(item));
@@ -71,13 +72,13 @@ TagsManager.prototype.draw = function () {
 TagsManager.prototype.drawTag = function (tag) {
 	var self = this;
 
-	var catO = createDom('li', 'colrow');
+	var catO = createDom('li', 'colrow tagitem');
 	catO.tag = tag;
 
 	var linkO = $(createDom('a', '', catO));
 	linkO.text(tag.name);
 	linkO.attr('href', 'javascript:');
-	linkO.click(function(e) {
+	linkO.click(function (e) {
 		e.preventDefault();
 		self.openTagDialog(tag.name, tag);
 	});
@@ -85,6 +86,26 @@ TagsManager.prototype.drawTag = function (tag) {
 	var orderBox = document.createElement('div');
 	orderBox.className = 'orderbox';
 	catO.appendChild(orderBox);
+
+	var statusBox = document.createElement('div');
+	statusBox.className = 'status';
+	catO.appendChild(statusBox);
+
+	if (tag.active) {
+		statusBox.title = 'Ist aktiv';
+		statusBox.className += ' active';
+	} else {
+		statusBox.title = 'Ist deaktiviert';
+	}
+
+	$(statusBox).tooltip()
+		.click(function (e) {
+			tag.active = !tag.active;
+			var data = Object.assign({}, tag);
+			data.id = tag.name;
+			self.action('edit_tag', data, $(catO));
+			$(catO).replaceWith(self.drawTag(tag));
+		});
 
 	return catO;
 };
@@ -107,7 +128,7 @@ TagsManager.prototype.openTagDialog = function (tag_id, tag) {
 
 	var buttons = {};
 	buttons['Speichern'] = function () {
-		var data = {id: tag_id};
+		var data = {id: tag_id, active: true};
 		for (var field in form) {
 			data[field] = form[field].getValue();
 		}
@@ -126,7 +147,7 @@ TagsManager.prototype.openTagDialog = function (tag_id, tag) {
 			action = 'edit_tag';
 		} else {
 			status.text('Erstelle ...');
-			if(self.data && self.data.result) {
+			if (self.data && self.data.result) {
 				data.order = self.data.result.length + 1;
 			}
 		}
@@ -176,15 +197,13 @@ TagsManager.prototype.saveOrder = function () {
 	var self = this;
 	var pos = 1;
 	var updates = {};
-	self.listDOM.find('li').each(function() {
+	self.listDOM.find('li').each(function () {
 		var elPos = pos++;
-		if(this.tag && this.tag.order !== elPos) {
+		if (this.tag && this.tag.order !== elPos) {
 			this.tag.order = elPos;
-			self.action('edit_tag', {
-				id: this.tag.id,
-				name: this.tag.name,
-				order: this.tag.order
-			}, $(this));
+			var data = Object.assign({}, this.tag);
+			data.id = this.tag.name;
+			self.action('edit_tag', data, $(this));
 		}
 	});
 };
@@ -222,7 +241,9 @@ TagsManager.prototype.action = function (action, data, parent, callb) {
 	}).success(function (data) {
 		parent.removeClass('loading');
 
-		callb(data);
+		if (callb) {
+			callb(data);
+		}
 
 	}).fail(function () {
 		parent.removeClass('loading');

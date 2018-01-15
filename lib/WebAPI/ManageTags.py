@@ -51,7 +51,7 @@ def handle():
 
 def get_tags():
     data = {'result': []}
-    for item in DB.Tag.find({}):
+    for item in DB.Tag.find({}, sort=[['order', 1]]):
         data['result'].append(item.get_dict())
 
     return respond(data, 200)
@@ -97,6 +97,9 @@ def edit_tag(data):
     tag.name = data.get('name')
     tag.order = data.get('order')
 
+    if isinstance(data.get('active'), bool):
+        tag.active = data.get('active')
+
     if tag.db_update():
         return respond({'status': 'ok', 'query': tag.get_dict()}, 200)
     else:
@@ -131,6 +134,9 @@ def assign_tag(data):
     if tag is None:
         return respond({'error': 'tag_not_found'}, 200)
 
+    if not tag.active:
+        return respond({'error': 'tag_disabled'}, 200)
+
     student = DB.Student.find_one({'_id': data.get('student_id')})
     if student is None:
         return respond({'error': 'student_not_found'}, 200)
@@ -153,6 +159,13 @@ def unlink_tag(data):
 
     if not isinstance(data.get('student_id'), unicode):
         return respond({'error': 'student_id'}, 200)
+
+    tag = DB.Tag.find_one({'_id': data.get('id')})
+    if tag is None:
+        return respond({'error': 'tag_not_found'}, 200)
+
+    if not tag.active:
+        return respond({'error': 'tag_disabled'}, 200)
 
     student = DB.Student.find_one({'_id': data.get('student_id')})
     if student is None:

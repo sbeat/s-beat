@@ -97,6 +97,10 @@ def get_definitions():
     data['hide_student_fields'] = settings['hide_student_fields']
     data['hide_applicant_fields'] = settings['hide_applicant_fields']
 
+    data['tags'] = []
+    for item in DB.Tag.find({}, sort=[['order', 1]]):
+        data['tags'].append(item.get_dict())
+
     return data
 
 

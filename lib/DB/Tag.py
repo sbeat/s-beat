@@ -26,6 +26,7 @@ class Tag(DBDocument):
     def __init__(self, **kwargs):
         self.name = None  # name of the tag
         self.order = 0
+        self.active = False  # whether it is allowed to assign the tag to students
 
     def __repr__(self):
         return 'Tag(' + repr(self.__dict__) + ')'
