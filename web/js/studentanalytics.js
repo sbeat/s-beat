@@ -699,7 +699,7 @@ StudentAnalytics.prototype.drawCellValue = function (entry, col, td) {
 	} else {
 		var value = entry[col.id];
 		var formatting = cd.formatting;
-		if (this.allowedTableFormats.indexOf(formatting) === -1) formatting = 'int';
+		if (this.allowedTableFormats.indexOf(formatting) === -1  || col.type === 'group') formatting = 'int';
 		td.appendChild(getFormattedHTML(value, formatting));
 	}
 

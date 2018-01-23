@@ -34,7 +34,7 @@ fi
 
 echo $$ > data/run_all.pid
 
-python sbeat.py run_all | tee logs/run_all.log
+python sbeat.py run_all
 
 rm data/run_all.pid
 
