@@ -137,7 +137,15 @@ def assign_tag(data):
     if not tag.active:
         return respond({'error': 'tag_disabled'}, 200)
 
-    student = DB.Student.find_one({'_id': data.get('student_id')})
+    settings = DB.Settings.load_dict([
+        'student_ident_string'
+    ])
+
+    student_id = data.get('student_id')
+    if not settings['student_ident_string']:
+        student_id = int(student_id)
+
+    student = DB.Student.find_one({'_id': student_id})
     if student is None:
         return respond({'error': 'student_not_found'}, 200)
 
@@ -167,11 +175,19 @@ def unlink_tag(data):
     if not tag.active:
         return respond({'error': 'tag_disabled'}, 200)
 
-    student = DB.Student.find_one({'_id': data.get('student_id')})
+    settings = DB.Settings.load_dict([
+        'student_ident_string'
+    ])
+
+    student_id = data.get('student_id')
+    if not settings['student_ident_string']:
+        student_id = int(student_id)
+
+    student = DB.Student.find_one({'_id': student_id})
     if student is None:
         return respond({'error': 'student_not_found'}, 200)
 
-    link = DB.StudentTag.find_by_id(data.get('id'), data.get('student_id'))
+    link = DB.StudentTag.find_by_id(tag.name, student_id)
     if link is None:
         return respond({'error': 'link_not_found'}, 200)
 

@@ -229,14 +229,14 @@ class DBDocument(object):
             c = get_collection(self.collection_name)
             data = self.db_transform()
             if custom_set is not None:
-                c.update_one({'_id': data['_id']}, custom_set)
+                return c.update_one({'_id': data['_id']}, custom_set)
 
             elif changed is not None:
                 upd = {'$set': {}}
                 for field in changed:
                     if field in data:
                         upd['$set'][field] = data[field]
-                c.update_one({'_id': data['_id']}, upd)
+                return c.update_one({'_id': data['_id']}, upd)
 
             else:
                 return c.replace_one({'_id': data['_id']}, data)
