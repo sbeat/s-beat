@@ -6,14 +6,14 @@
  * Depends on studentlist
  * @constructor
  */
-function StudentAnalytics(parentDOM, settingsPrefix) {
+function StudentAnalytics(parentDOM, noInit) {
 	this.parentDOM = parentDOM;
 
 	this.settingId = this.parentDOM.attr('data-preset') || 'default';
 	this.query = this.parentDOM.attr('data-query') || '';
 	this.settingsRev = 1; // changing this forces a reset of settings for all users
-	this.settingsPrefix = settingsPrefix || 'sanalytics_';
-	this.tooltipPrefix = settingsPrefix || 'tooltip_';
+	this.settingsPrefix = 'sanalytics_';
+	this.tooltipPrefix = 'tooltip_';
 	this.settings = {
 		'default': {
 			limit: 0,
@@ -112,7 +112,9 @@ function StudentAnalytics(parentDOM, settingsPrefix) {
 	this.removeSettings = removeSettings;
 	this.openSettingsDialog = openSettingsDialog;
 
-	StudentAnalytics.prototype.init.call(this);
+	if(!noInit) {
+		StudentAnalytics.prototype.init.call(this);
+	}
 }
 
 StudentAnalytics.prototype.defineColumn = function (id, label, title, formatting, groupable, calculations, category) {

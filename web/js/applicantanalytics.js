@@ -6,10 +6,10 @@
  * Depends on applicantlist and studentanalytics
  * @constructor
  */
-function ApplicantAnalytics(parentDOM, settingsPrefix) {
-	StudentAnalytics.call(this, parentDOM, settingsPrefix);
+function ApplicantAnalytics(parentDOM) {
+	StudentAnalytics.call(this, parentDOM, true);
 
-	this.settingsPrefix = settingsPrefix || 'aanalytics_';
+	this.settingsPrefix = 'aanalytics_';
 
 	this.addFilterForData = ApplicantList.prototype.addFilterForData;
 	this.loadValuesOfColumn = ApplicantList.prototype.loadValuesOfColumn;
