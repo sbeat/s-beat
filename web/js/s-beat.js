@@ -1651,6 +1651,70 @@ function openLogoutDialog() {
 	});
 }
 
+function selectTagsDialog(tagDefinitions, selectedTags, callb) {
+
+	var dialogBox = $(document.createElement('div'));
+	dialogBox.attr('title', 'Tags bearbeiten');
+
+	var ul = $(document.createElement('ul'));
+	ul.addClass('columnlist');
+	var i, tag;
+	for (i = 0; i < tagDefinitions.length; i++) {
+		tag = tagDefinitions[i];
+		ul.append(drawTagEntry(tag));
+	}
+
+	function drawTagEntry(tag) {
+
+		var boxO = document.createElement('li');
+		boxO.className = 'colrow';
+		boxO.tagId = tag.name;
+
+		var labelO = boxO.appendChild(document.createElement('label'));
+
+		var checkO = labelO.appendChild(document.createElement('input'));
+		checkO.className = 'name';
+		checkO.type = 'checkbox';
+
+		checkO.checked = selectedTags.indexOf(tag.name) !== -1;
+		if (!tag.active) {
+			checkO.disabled = true;
+		}
+
+		labelO.appendChild(document.createTextNode(tag.name));
+
+		return boxO;
+	}
+
+	dialogBox.append(ul);
+
+	dialogBox.dialog({
+		width: 300,
+		maxHeight: 500,
+		modal: true,
+		buttons: {
+			OK: function () {
+
+				var newSelectedTags = [];
+				$(this).find('li').each(function () {
+					var checkO = $('input', this)[0];
+					var tagName = this.tagId;
+					if (checkO.checked) {
+						newSelectedTags.push(tagName);
+					}
+				});
+				callb(newSelectedTags);
+
+			},
+			'Abbrechen': function () {
+				dialogBox.dialog("close");
+			}
+		}
+	});
+
+	return dialogBox;
+}
+
 function downloadFile(contents, type, fileName) {
 	const data = new Blob(contents, {type: type});
 	if(navigator.msSaveBlob) {

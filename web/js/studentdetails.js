@@ -421,7 +421,9 @@ StudentDetails.prototype.drawTagsInfo = function (el) {
 		.text('Bearbeiten')
 		.click(function (e) {
 			e.preventDefault();
-			drawAddTagDialog();
+			var dialog = selectTagsDialog(self.definitions.tags, self.student.tags, function(tags) {
+				saveTagsSelection(tags, dialog);
+			});
 		})
 		.appendTo(el);
 
@@ -434,102 +436,49 @@ StudentDetails.prototype.drawTagsInfo = function (el) {
 
 	function drawTag(tag) {
 		var tagO = createDom('span', 'singletag');
-		tagO.href = 'javascript:';
 		tagO.appendChild(document.createTextNode(tag.name));
 		return tagO;
 	}
 
-	function drawAddTagDialog() {
-
-		var dialogBox = $(document.createElement('div'));
-		dialogBox.attr('title', 'Tags bearbeiten');
-
-		var ul = $(document.createElement('ul'));
-		ul.addClass('columnlist');
-		var i, tag;
-		for (i = 0; i < self.definitions.tags.length; i++) {
-			tag = self.definitions.tags[i];
-			ul.append(drawAddTag(tag));
-		}
-
-		dialogBox.append(ul);
-
-		dialogBox.dialog({
-			width: 300,
-			maxHeight: 500,
-			modal: true,
-			buttons: {
-				OK: function () {
-					var running = 0;
-
-					$(this).find('li').each(function () {
-						var checkO = $('input', this)[0];
-						var tagName = this.tagId;
-						var index = self.student.tags.indexOf(tagName);
-						if (checkO.checked && index === -1) {
-							running++;
-							tagAction('assign_tag', {
-								id: tagName,
-								student_id: self.studentId
-							}, $(this), function (result) {
-								if (result && result.status === 'ok') {
-									self.student.tags.push(tagName);
-									finish();
-								}
-							});
-						} else if (!checkO.checked && index !== -1) {
-							running++;
-							tagAction('unlink_tag', {
-								id: tagName,
-								student_id: self.studentId
-							}, $(this), function (result) {
-								if (result && result.status === 'ok') {
-									index = self.student.tags.indexOf(tagName);
-									self.student.tags.splice(index, 1);
-									finish();
-								}
-							});
-						}
-					});
-
-					function finish() {
-						running--;
-						if (running === 0) {
-							dialogBox.dialog("close");
-							self.drawTagsInfo(el);
-						}
+	function saveTagsSelection(tagNames, dialogBox) {
+		var running = 0;
+		self.definitions.tags.forEach(function(tag) {
+			var tagName = tag.name;
+			var index = self.student.tags.indexOf(tagName);
+			var selected = tagNames.indexOf(tagName) !== -1;
+			if (selected && index === -1) {
+				running++;
+				tagAction('assign_tag', {
+					id: tagName,
+					student_id: self.studentId
+				}, $('<div></div>').appendTo(dialogBox), function (result) {
+					if (result && result.status === 'ok') {
+						self.student.tags.push(tagName);
+						finish();
 					}
-
-				},
-				'Abbrechen': function () {
-					dialogBox.dialog("close");
-				}
+				});
+			} else if (!selected && index !== -1) {
+				running++;
+				tagAction('unlink_tag', {
+					id: tagName,
+					student_id: self.studentId
+				}, $('<div></div>').appendTo(dialogBox), function (result) {
+					if (result && result.status === 'ok') {
+						index = self.student.tags.indexOf(tagName);
+						self.student.tags.splice(index, 1);
+						finish();
+					}
+				});
 			}
+
 		});
-
-
-	}
-
-	function drawAddTag(tag) {
-
-		var boxO = document.createElement('li');
-		boxO.className = 'colrow';
-		boxO.tagId = tag.name;
-
-		var labelO = boxO.appendChild(document.createElement('label'));
-
-		var checkO = labelO.appendChild(document.createElement('input'));
-		checkO.className = 'name';
-		checkO.type = 'checkbox';
-
-		checkO.checked = self.student.tags.indexOf(tag.name) !== -1;
-		if (!tag.active) {
-			checkO.disabled = true;
+		function finish() {
+			running--;
+			if (running === 0) {
+				dialogBox.dialog("close");
+				self.drawTagsInfo(el);
+			}
 		}
-
-		labelO.appendChild(document.createTextNode(tag.name));
-
-		return boxO;
 	}
 
 	function tagAction(action, data, parent, callb) {
