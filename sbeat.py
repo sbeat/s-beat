@@ -362,6 +362,7 @@ def import_students():
     try:
         MarkedList.db_setup()
         Student.db_setup()
+        StudentTag.db_setup()
         file_list = ImportTools.get_files_info('students')
         file_list2 = ImportTools.get_files_info('studentidents')
         num = 0

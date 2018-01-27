@@ -37,6 +37,7 @@ from MarkedList import MarkedList
 from Path import Path
 from ProcessTracking import ProcessTracking
 from Settings import Settings
+from StudentTag import StudentTag
 from ImportTools import get_date_from_csv, get_int, get_unicode, get_boolean, clean_db_string
 
 encoding = 'windows-1252'
@@ -323,6 +324,7 @@ class Student(DBDocument):
             if student is not None:
                 if consulted_list and student.ident in consulted_list.list:
                     student.consulted = True
+                student.tags = StudentTag.find_student_tags(student.ident)
                 result = student.db_save()
                 logger.info('student %d %s', num, (result.upserted_id if result else None))
                 num_success += 1

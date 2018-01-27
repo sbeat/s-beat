@@ -248,11 +248,10 @@ StudentDetails.prototype.drawValue = function (field, el) {
 	}
 
 
-	if (field == 'hzb_grade') {
+	if (field === 'hzb_grade') {
 
 		var hzb_value = getByPath(field, self.student);
-		console.log(hzb_value);
-		if (hzb_value == 990) {
+		if (hzb_value === 990) {
 			el.append(" (Es liegt keine HZB Note vor.)");
 		}
 	}
@@ -384,10 +383,10 @@ StudentDetails.prototype.drawMarkedListInfo = function (el) {
 
 	el.empty();
 
-	var addbtn = $(document.createElement('a'))
+	$(document.createElement('a'))
 		.addClass('modbtn')
 		.attr('href', '')
-		.text('Vormerkungen bearbeiten')
+		.text('Bearbeiten')
 		.click(function (e) {
 			e.preventDefault();
 			self.drawMarkedListDialog(el);
@@ -416,6 +415,15 @@ StudentDetails.prototype.drawTagsInfo = function (el) {
 
 	el.empty();
 
+	$(document.createElement('a'))
+		.addClass('modbtn')
+		.attr('href', '')
+		.text('Bearbeiten')
+		.click(function (e) {
+			e.preventDefault();
+			drawAddTagDialog();
+		})
+		.appendTo(el);
 
 	self.definitions.tags.forEach(function (tag) {
 		if (self.student.tags.indexOf(tag.name) !== -1) {
@@ -423,17 +431,9 @@ StudentDetails.prototype.drawTagsInfo = function (el) {
 		}
 	});
 
-	var fBox = $(document.createElement('a'));
-	fBox.attr('href', 'javascript:');
-	fBox.text('Tags bearbeiten');
-	el.append(fBox);
-	fBox.click(function (e) {
-		e.stopPropagation();
-		drawAddTagDialog();
-	});
 
 	function drawTag(tag) {
-		var tagO = createDom('span', 'item');
+		var tagO = createDom('span', 'singletag');
 		tagO.href = 'javascript:';
 		tagO.appendChild(document.createTextNode(tag.name));
 		return tagO;

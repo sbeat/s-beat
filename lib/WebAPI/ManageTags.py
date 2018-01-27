@@ -71,6 +71,9 @@ def add_tag(data):
     tag.name = data.get('name')
     tag.order = data.get('order')
 
+    if isinstance(data.get('active'), bool):
+        tag.active = data.get('active')
+
     if tag.db_insert():
         return respond({'status': 'ok', 'tag': tag.get_dict()}, 200)
     else:

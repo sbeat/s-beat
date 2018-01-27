@@ -54,6 +54,10 @@ class StudentTag(DBDocument):
     def find_by_id(cls, name, student_id):
         return cls.find_one({'_id': name + '_' + student_id})
 
+    @classmethod
+    def find_student_tags(cls, student_id):
+        return [x.name for x in cls.find({'student_id': student_id})]
+
     def db_transform(self):
         """
         Transforms self to a database dictionary object.
@@ -77,3 +81,8 @@ class StudentTag(DBDocument):
         del son['_id']
         p.__dict__.update(son)
         return p
+
+    @classmethod
+    def db_setup(cls):
+        c = cls.get_collection()
+        c.create_index([('student_id', 1)])
