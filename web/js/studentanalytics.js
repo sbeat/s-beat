@@ -112,7 +112,7 @@ function StudentAnalytics(parentDOM, noInit) {
 	this.removeSettings = removeSettings;
 	this.openSettingsDialog = openSettingsDialog;
 
-	if(!noInit) {
+	if (!noInit) {
 		StudentAnalytics.prototype.init.call(this);
 	}
 }
@@ -331,6 +331,9 @@ StudentAnalytics.prototype.draw = function () {
 		this.addLink('Alle Gruppen einklappen', function () {
 			self.openCloseAll(false);
 		}, this.tableLinks);
+		this.addLink('Download', function () {
+			self.download();
+		}, this.tableLinks);
 
 		this.drawn = true;
 	}
@@ -381,7 +384,7 @@ StudentAnalytics.prototype.drawGraph = function () {
 
 	for (var i = 0; i < this.entries.length; i++) {
 		var entry = this.entries[i];
-		var id = getBarLabel(entry);
+		var id = this.getBarLabel(entry);
 		this.graph.addBar(id, id);
 
 		for (var j = 0; j < this.columns.length; j++) {
@@ -397,17 +400,108 @@ StudentAnalytics.prototype.drawGraph = function () {
 
 	this.graph.draw();
 
-	function getBarLabel(entry) {
-		var text = [];
+};
+StudentAnalytics.prototype.getBarLabel = function (entry) {
+	var self = this;
+	var text = [];
+	for (var i = 0; i < self.rows.length; i++) {
+		var cd = self.columnData[self.rows[i]];
+		var value = entry.ident[i];
+		if (value !== undefined) {
+			text.push(getNumericValueOutput(value, cd.formatting));
+		}
+	}
+	return text.join(', ');
+};
+StudentAnalytics.prototype.download = function () {
+	var self = this;
+	var rows = [];
+	var cellDivider = ';';
+	var lineDivider = '\r\n';
+
+	var header = [];
+	self.columns.forEach(function (col) {
+		var cd = self.columnData[col.cdId];
+		if (!cd) return;
+
+		if (col.cdId === 'group') {
+			for (var i = 0; i < self.rows.length; i++) {
+				var gcd = self.columnData[self.rows[i]];
+				header.push(gcd.label);
+			}
+		} else if (self.getColumnLabel) {
+			var text = self.getColumnLabel(col);
+			if (text.innerText !== undefined) {
+				header.push(text.innerText);
+			} else if (text.textContent) {
+				header.push(text.textContent);
+			} else {
+				header.push(col.cdId);
+			}
+		} else {
+			header.push(cd.label);
+		}
+	});
+	rows.push(header.join(cellDivider) + lineDivider);
+
+	self.entries.forEach(function (entry) {
+		if(Object.keys(entry.ident).length < self.rows.length) return;
+		var row = [];
+		self.columns.forEach(function (col) {
+			if (col.cdId === 'group') {
+				drawGroupCells(row, entry);
+			} else {
+				drawCells(row, entry, col);
+			}
+		});
+		rows.push(row.join(cellDivider) + lineDivider);
+	});
+
+	downloadFile(rows, 'text/csv;charset=UTF-8', 'sbeat_analytics.csv');
+
+	function formatNumber(value) {
+		if(!isNaN(value)) {
+			return String(value).replace('.', ',');
+		}
+		if(value === '-') {
+			return '0';
+		}
+		return value;
+	}
+
+	function drawGroupCells(row, entry) {
 		for (var i = 0; i < self.rows.length; i++) {
-			var cd = self.columnData[self.rows[i]];
+			var gcd = self.columnData[self.rows[i]];
 			var value = entry.ident[i];
-			if(value !== undefined) {
-				text.push(getNumericValueOutput(value, cd.formatting));
+			if (value !== undefined) {
+				row.push(formatNumber(getNumericValueOutput(value, gcd.formatting)));
+			} else {
+				row.push('-');
 			}
 		}
-		return text.join(', ');
 	}
+
+	function drawCells(row, entry, col) {
+		var cd = self.columnData[col.cdId];
+		if (!cd) return;
+		if (cd.drawValue && cd.drawValue instanceof Function) {
+			cd.drawValue(entry, col, td);
+
+		} else {
+			var value = entry[col.id];
+			var formatting = cd.formatting;
+			if (self.allowedTableFormats.indexOf(formatting) === -1 || col.type === 'group') formatting = 'int';
+			var text = getFormattedHTML(value, formatting);
+			if (text.innerText !== undefined) {
+				row.push(formatNumber(text.innerText));
+			} else if (text.textContent) {
+				row.push(formatNumber(text.textContent));
+			} else {
+				row.push(0);
+			}
+		}
+	}
+
 
 };
 StudentAnalytics.prototype.drawTable = function () {
@@ -663,11 +757,14 @@ StudentAnalytics.prototype.drawEntry = function (entry) {
 };
 StudentAnalytics.prototype.drawCellValue = function (entry, col, td) {
 	var cd = this.columnData[col.cdId];
+	if (!cd) {
+		return;
+	}
 	if (col.id === 'group') {
 
 		if (entry.open !== undefined) {
 			var link = $('<a class="openable" href="javascript:"></a>');
-			entry.toggleOpenWithView = function() {
+			entry.toggleOpenWithView = function () {
 				if (entry.open) {
 					link.removeClass('open');
 				} else {
@@ -693,7 +790,9 @@ StudentAnalytics.prototype.drawCellValue = function (entry, col, td) {
 			td.title = rCd.label;
 		}
 		td.classList.add('level' + level);
-		td.appendChild(lastValue);
+		if (lastValue) {
+			td.appendChild(lastValue);
+		}
 
 	} else if (cd.drawValue && cd.drawValue instanceof Function) {
 		cd.drawValue(entry, col, td);
@@ -701,7 +800,7 @@ StudentAnalytics.prototype.drawCellValue = function (entry, col, td) {
 	} else {
 		var value = entry[col.id];
 		var formatting = cd.formatting;
-		if (this.allowedTableFormats.indexOf(formatting) === -1  || col.type === 'group') formatting = 'int';
+		if (this.allowedTableFormats.indexOf(formatting) === -1 || col.type === 'group') formatting = 'int';
 		td.appendChild(getFormattedHTML(value, formatting));
 	}
 
@@ -1134,7 +1233,7 @@ StudentAnalytics.prototype.openGroupDialog = function () {
 		'Es können maximal 3 Gruppen gewählt werden.').appendTo(dialogBox);
 
 	function drawRow(cd) {
-		if (cd.presets && cd.presets.indexOf(self.settingId) === -1) return null;
+		if (!cd || cd.presets && cd.presets.indexOf(self.settingId) === -1) return null;
 
 		var boxO = document.createElement('li');
 		boxO.className = 'colrow';

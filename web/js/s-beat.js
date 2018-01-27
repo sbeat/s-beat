@@ -1651,6 +1651,20 @@ function openLogoutDialog() {
 	});
 }
 
+function downloadFile(contents, type, fileName) {
+	const data = new Blob(contents, {type: type});
+	if(navigator.msSaveBlob) {
+		navigator.msSaveBlob(data, fileName);
+	} else {
+		var url = URL.createObjectURL(data);
+		var link = createDom('a');
+		link.href = url;
+		link.download = fileName;
+		link.click();
+		URL.revokeObjectURL(url);
+	}
+}
+
 $(function onReady() {
 
 	/*$(".tbl").each(function () {

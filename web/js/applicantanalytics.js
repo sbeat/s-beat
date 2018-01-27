@@ -11,6 +11,8 @@ function ApplicantAnalytics(parentDOM) {
 
 	this.settingsPrefix = 'aanalytics_';
 
+	this.valueStats = {};
+
 	this.addFilterForData = ApplicantList.prototype.addFilterForData;
 	this.loadValuesOfColumn = ApplicantList.prototype.loadValuesOfColumn;
 
@@ -35,9 +37,10 @@ ApplicantAnalytics.prototype.init = function () {
 	this.defineColumn('admitted', 'Zulassung', 'Anzahl Bewerber aus mit dem Zulassungsstatus', 'yesno', true);
 	this.defineColumn('hzb_type', 'HZB Gruppe', 'Anzahl Bewerber mit der HZB Gruppe', 'str', true);
 	this.defineColumn('hzb_grade', 'HZB Note', null, 'grade', true, ['min', 'max', 'avg']);
-	this.defineColumn('status', 'Status', null, 'status', true);
 	this.defineColumn('start_semester', 'Start Semester', null, 'semester', true);
 	this.defineColumn('stg', 'Studiengangsgruppe', null, 'str', true);
+
+	var noFilter = ['count', 'group'];
 
 	this.settings.default.columns.push(this.getColumnObject('group'));
 	this.settings.default.columns.push(this.getColumnObject('count'));
@@ -60,7 +63,9 @@ ApplicantAnalytics.prototype.init = function () {
 	for (var colId in this.columnData) {
 		var col = this.columnData[colId];
 
-		this.addFilterForData(col);
+		if(noFilter.indexOf(col.id) === -1) {
+			this.addFilterForData(col);
+		}
 
 		var sf = col.id;
 		if (col.sortBy) {
