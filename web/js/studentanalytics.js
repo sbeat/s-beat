@@ -652,6 +652,7 @@ StudentAnalytics.prototype.getEntries = function () {
 
 	function toggleOpen() {
 		var childEntries = getChildEntries(this.ident);
+		console.log('toggle open', childEntries);
 		for (var i = 0; i < childEntries.length; i++) {
 			var entry = childEntries[i];
 			if (this.open && entry.open) {
@@ -704,10 +705,12 @@ StudentAnalytics.prototype.getEntries = function () {
 };
 StudentAnalytics.prototype.setEntryDisplay = function (ident, open) {
 	var keyStr = ident.join(',');
+
 	this.tableDOM.find('tr[id]').each(function () {
 		if (this.id === keyStr) {
+			console.log('setEntryDisplay', keyStr, this);
 			if (open) {
-				this.style.display = null;
+				this.style.display = '';
 			} else {
 				this.style.display = 'none';
 			}
@@ -772,7 +775,8 @@ StudentAnalytics.prototype.drawCellValue = function (entry, col, td) {
 				}
 				entry.toggleOpen();
 			};
-			link.click(function () {
+			link.click(function (e) {
+				e.preventDefault();
 				entry.toggleOpenWithView();
 			});
 			td.appendChild(link[0]);
