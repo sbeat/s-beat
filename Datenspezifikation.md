@@ -87,7 +87,7 @@ Hochschulzugangsberechtigungsnote (Hinweis: ist an dieser Stelle eine Note von 9
 Hochschulzugangsberechtigungsdatum (Datumsfeld)
 
 
-#### `HZBART`
+#### `HZBART` <small>(veraltet)</small>
 
 Nummer der Hochschulzugangsberechtigungsart. (Optional, wenn HZBGRP gegeben ist)
 Die Nummer wird über die [mappings.json](data/mappings.default.json) eine der folgenden Hochschulzugangsberechtigungsgruppen zugeordnet: 
@@ -106,9 +106,9 @@ Die Hochzugangsberechtigungsgruppe, welche statt der HZBART verwendet werden kan
 
 
 
-## Studienleistungsdaten CSV Datei
+## Prüfungsleistungsdaten CSV Datei
 
-Die Studienleistungsdaten werden während des Studiums erfasst und werden jedes Semester aktualisiert.
+Die Prüfungsleistungsdaten werden während des Studiums erfasst und werden jedes Semester aktualisiert.
 
 ### Spalten
 
@@ -137,7 +137,7 @@ Art des Abschlusses auf den diese Leistung angerechnet wird (Optional, wenn ABSC
 * Bachelor
 
 
-#### `ABSCHL`
+#### `ABSCHL` <small>(veraltet)</small>
 
 Nummer der Abschlussart (Optional, wenn ABSCHLART gegeben ist): 
 
@@ -348,7 +348,7 @@ Die Studiengangsgruppe. (Optionales Feld)
 Wenn die Gruppe nicht angegeben ist, wird eine eigene Gruppe für STG erstellt.
 
 
-#### `ABSCHL`
+#### `ABSCHL` <small>(veraltet)</small>
 
 Nummer der Abschlussart (Optional, wenn ABSCHLART gegeben ist):
 * 51=Diplom
@@ -428,7 +428,7 @@ Hochschulzugangsberechtigungsnote (Hinweis: eine Note von 9.9 bedeutet hier, das
 Hochschulzugangsberechtigungsdatum (Datumsfeld)
 
 
-#### `HZBART`
+#### `HZBART` <small>(veraltet)</small>
 
 Nummer der Hochschulzugangsberechtigungsart. (Optional wenn HZBGRP gegeben ist)
 Die Nummer wird über die [mappings.json](data/mappings.default.json) eine der folgenden Hochschulzugangsberechtigungsgruppen zugeordnet: 

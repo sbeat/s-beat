@@ -26,17 +26,7 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 			<h1>Studentendaten</h1>
 			<div data-load="DataFileBrowser" data-type="students"></div>
 			<p>
-				Eine CSV Datei mit Studentendaten muss folgende Spalten enthalten:<br>
-				<code>
-				identnr, stg, immdat, exmdat, sperrart1, pnr, pdatum, geschl, gebdat, hzbdatum, hzbart, hzbnote
-				</code><br>
-				Statt <code>hzbart</code> ist auch <code>hzbgrp</code> mit der Bezeichnung der hzbart-Nummer möglich.
-				<br>
-				Die Datumsfelder
-				<code>immdat, exmdat, pdatum, gebdat, hzbdatum</code>
-				müssen das Format TT-MMM-YY haben. TT steht hierbei für den zweistelligen Tag des Monats. MMM bezeichnet die ersten drei
-				Buchstaben des deutschen Monatsnamens, wobei Umlaute übersprungen werden. YY steht für die zweistellige Schreibweise der Jahreszahl.
-
+				Eine CSV Datei mit Studentendaten muss der <a href="https://github.com/sbeat/s-beat/blob/master/Datenspezifikation.md#studentendaten-csv-datei" target="datenspezifikation">Datenspezifikation</a> entsprechen.
 			</p>
 		</article>
 
@@ -44,12 +34,9 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 			<h1>Studenten Identifikationsdaten</h1>
 			<div data-load="DataFileBrowser" data-type="studentidents"></div>
 			<p>
-				Eine CSV Datei mit Identifikationsdaten der Studenten muss folgende Spalten enthalten:
-				<code>
-				identnr, matrikelnr, vorname, nachname, email
-				</code><br>
-				Folgende Spalte ist optional:
-				<code>kuerzel</code>
+				Die Identifikationsdaten sind optional und werden nicht für Berechnungen verwendet.
+				Eine CSV Datei mit Identifikationsdaten der Studenten muss der <a href="https://github.com/sbeat/s-beat/blob/master/Datenspezifikation.md#studentenidentifikationsdaten-csv-datei" target="datenspezifikation">Datenspezifikation</a> entsprechen.<br>
+				Die Spalten aus den Identifikationsdaten können alternativ in den Studentendaten enthalten sein.
 
 			</p>
 		</article>
@@ -58,13 +45,7 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 			<h1>Bewerberdaten</h1>
 			<div data-load="DataFileBrowser" data-type="applicants"></div>
 			<p>
-				Eine CSV Datei mit Bewerbern muss folgende Spalten enthalten:
-				<code>
-					identnr, stg, appldat, zuldat, geschl, gebdat, hzbdatum, hzbart oder hzbgrp, hzbnote
-				</code><br>
-				Folgende Spalten sind optional:
-				<code>sem, vorname, nachname, email, land, plz, stang, eu</code>
-
+				Eine CSV Datei mit Bewerberdaten muss der <a href="https://github.com/sbeat/s-beat/blob/master/Datenspezifikation.md#bewerberdaten-csv-datei" target="datenspezifikation">Datenspezifikation</a> entsprechen.
 			</p>
 		</article>
 	</div>
@@ -73,12 +54,7 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 			<h1>Prüfungsleistungsdaten</h1>
 			<div data-load="DataFileBrowser" data-type="exams"></div>
 			<p>
-				Eine CSV Datei mit Prüfungsleistungsdaten muss folgende Spalten enthalten:<br>
-				<code>IDENTNR, PNR, PDTXT, ABSCHL, STG, PSEM, BONUS, PSTATUS, PART, PNOTE, PVERMERK, PVERSUCH,
-					PFORM, PPFLICHT, PABSCHN</code><br>
-				Statt <code>ABSCHL</code> ist auch <code>ABSCHLART</code> mit der Bezeichnung der ABSCHL-Nummer möglich.<br>
-				Folgende Spalten sind optional:
-				<code>NACHNAME, PANERK, VORNAME, PDATUM</code>
+				Eine CSV Datei mit Prüfungsleistungsdaten muss der <a href="https://github.com/sbeat/s-beat/blob/master/Datenspezifikation.md#studienleistungsdaten-csv-datei" target="datenspezifikation">Datenspezifikation</a> entsprechen.
 				<br>
 				Vor dem Import jeder Datei, wird geprüft welche Semester in der Datei vorkommen. Die Anmeldungen dieser
 				Semester werden vor dem Import aus der Datenbank gelöscht.
@@ -105,9 +81,9 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 			Alle CSV Dateien verwenden ; (Semikolon) als Trennzeichen für die Spalten. Die Zeilen werden mit einem
 			Windows-Zeilenumbruch CR-LF (\r\n) getrennt. Als Textbegrenzungszeichen werden " (Double quotes) verwendet.
 			Die Feldnamen müssen in der ersten Zeile stehen. Die Groß-/Kleinschreibung der Feldnamen muss dabei nicht
-			beachtet werden. Die CSV Dateien sind im ANSI Format mit Windows-1252 Zeichenkodierung formatiert. Diese
-			Zeichenkodierung wird üblicherweise von deutschen Microsoft Access und Excel Programmen beim Export von CSV
-			bzw. Textdaten verwendet.
+			beachtet werden. Die CSV Dateien müssen alle in der eingestellten Zeichenkodierung (Standard: windows-1252)
+			kodiert sein. Die windows-1252 Zeichenkodierung wird üblicherweise von deutschen Microsoft Access und Excel
+			Programmen beim Export von CSV bzw. Textdaten verwendet.
 		</p>
 	</article>
 	<article>
