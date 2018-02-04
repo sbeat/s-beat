@@ -61,7 +61,7 @@ function SettingsManager(parentDOM) {
 		"ignore_exam_numbers": {
 			type: 'list',
 			name: 'Ignorierte Prüfungsnummern',
-			desc: 'Liste der Prüfungsleistungen, welche beim Import nicht importiert werden sollen. Ein Nummer oder ein Bereich, z.B.: 1-22, 23',
+			desc: 'Liste der Prüfungsleistungen, welche beim Import nicht importiert werden sollen. Eingabe einer Nummer oder eines Bereichs, z.B.: 1-22, 23',
 			group: 'Import',
 			perStg: true
 		},
@@ -123,7 +123,7 @@ function SettingsManager(parentDOM) {
 		},
 		"student_ident_string": {
 			type: 'boolean',
-			name: 'Studenten Id als String',
+			name: 'Studenten-ID als String',
 			desc: 'Soll die IDENTNR aus den Studentendaten, Bewerberdaten und Identifikationsdaten als String importiert werden?',
 			group: 'Import',
 			defaultVal: false
@@ -227,7 +227,7 @@ function SettingsManager(parentDOM) {
 		"hide_finished_ident_data": {
 			type: 'boolean',
 			name: 'Ident. Daten von exmat. verstecken',
-			desc: 'Sollen indentifizierende Daten bei exmatrikulierten Studenten ausgebeldent werden?',
+			desc: 'Sollen indentifizierende Daten bei exmatrikulierten Studenten ausgeblendet werden?',
 			group: 'Anzeige'
 		},
 		"hide_finished_after_days": {
@@ -239,7 +239,7 @@ function SettingsManager(parentDOM) {
 		"update_manual_apply": {
 			type: 'boolean',
 			name: 'Update manuell übernehmen',
-			desc: 'Sollen die Daten nach einem Update mannuel von einem Administrator in den Produktivstand übernommen werden?',
+			desc: 'Sollen die Daten nach einem Update manuell von einem Administrator in den Produktivstand übernommen werden?',
 			defaultVal: false,
 			group: 'Import'
 		},
@@ -254,21 +254,21 @@ function SettingsManager(parentDOM) {
 		"hide_exam_date": {
 			type: 'boolean',
 			name: 'Prüfungsleistungsdatum ausblenden',
-			desc: 'Sollen die Datumsspalte bei Prüfungsleistungsdaten ausgeblendet werden?',
+			desc: 'Soll die Datumsspalte bei Prüfungsleistungsdaten ausgeblendet werden?',
 			defaultVal: true,
 			group: 'Anzeige'
 		},
 		"always_display_all_courses": {
 			type: 'boolean',
-			name: 'Alle Stg für eingeschr. User',
-			desc: 'Sollen alle Studiengänge für eingeschränkte Benutzer angezeigt werden? Studenten von eingeschränkten Studiengangsgruppen bleiben nicht sichtbar.',
+			name: 'Anzeige aller Studiengänge für eingeschr. User',
+			desc: 'Sollen alle Studiengänge für eingeschränkte Benutzer angezeigt werden? Studenten von eingeschränkten Studiengangsgruppen bleiben für diese User nicht sichtbar.',
 			defaultVal: false,
 			group: 'Anzeige'
 		},
 		"hide_median_risk": {
 			type: 'boolean',
 			name: 'Median Risikowert ausblenden',
-			desc: 'Soll der unskalierte median Risikowert für einen Studierenden ausgeblendet werden?',
+			desc: 'Soll der unskalierte Median Risikowert für einen Studierenden ausgeblendet werden?',
 			defaultVal: false,
 			group: 'Anzeige'
 		},
@@ -286,7 +286,7 @@ function SettingsManager(parentDOM) {
 		},
 		"hide_exam_fields": {
 			type: 'list',
-			name: 'Prüfungs Felder ausblenden',
+			name: 'Prüfungsfelder ausblenden',
 			desc: 'Liste der technischen Felder, welche ausgeblendet werden sollen. Z.B. weil diese Daten nicht verfügbar sind.',
 			group: 'Anzeige'
 		}
