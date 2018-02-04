@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
-
+import CalcTools
 from Db import DBDocument
 from Course import Course
 
@@ -102,6 +102,27 @@ class CourseSemesterInfo(DBDocument):
         self.hzb_type_values = {}
 
         self.age_data = {
+            'min': None,
+            'max': None,
+            'mean': None,
+            'values': {}
+        }
+
+        self.semesters_data = {
+            'min': None,
+            'max': None,
+            'mean': None,
+            'values': {}
+        }
+
+        self.semesters_success_data = {
+            'min': None,
+            'max': None,
+            'mean': None,
+            'values': {}
+        }
+
+        self.semesters_failed_data = {
             'min': None,
             'max': None,
             'mean': None,
@@ -233,8 +254,10 @@ class CourseSemesterInfo(DBDocument):
             d.students['finished'] += 1
         if student.success:
             d.students['successful'] += 1
+            CalcTools.add_to_stat_dict(d.semesters_success_data, student.semesters)
         if student.aborted:
             d.students['failed'] += 1
+            CalcTools.add_to_stat_dict(d.semesters_failed_data, student.semesters)
 
         if student.risk and not student.finished and student.risk['median_scaled'] is not None:
             risk_id = str(int(student.risk['median_scaled'] * 100))
@@ -272,15 +295,6 @@ class CourseSemesterInfo(DBDocument):
 
         Course.update_hzb_age_stat_by_entity(d.applicants, applicant)
 
-    @staticmethod
-    def update_stat_dict_by_values(d):
-        total_count = sum(d['values'].values())
-        if total_count:
-            exams_values = [int(x) for x in d['values'] if x != 'None']
-            d['min'] = min(exams_values)
-            d['max'] = max(exams_values)
-            values_sum = [int(x) * c for x, c in d['values'].iteritems() if x != 'None']
-            d['mean'] = float(sum(values_sum)) / total_count
 
     @classmethod
     def update_totals_dict_by_semester_data(cls, d):
@@ -306,22 +320,26 @@ class CourseSemesterInfo(DBDocument):
                 d['students']['failed_perc'] = 0.0
 
         if 'exams' in d:
-            cls.update_stat_dict_by_values(d['exams'])
+            CalcTools.update_stat_dict_by_values(d['exams'])
         if 'bonus_data' in d:
-            cls.update_stat_dict_by_values(d['bonus_data'])
+            CalcTools.update_stat_dict_by_values(d['bonus_data'])
         if 'exam_count' in d:
-            cls.update_stat_dict_by_values(d['exam_count'])
+            CalcTools.update_stat_dict_by_values(d['exam_count'])
         if 'bonus_total_data' in d:
-            cls.update_stat_dict_by_values(d['bonus_total_data'])
+            CalcTools.update_stat_dict_by_values(d['bonus_total_data'])
         if 'grade_data' in d:
-            cls.update_stat_dict_by_values(d['grade_data'])
+            CalcTools.update_stat_dict_by_values(d['grade_data'])
         if 'risk_data' in d:
-            cls.update_stat_dict_by_values(d['risk_data'])
+            CalcTools.update_stat_dict_by_values(d['risk_data'])
 
         if 'hzb_grade_data' in d:
-            cls.update_stat_dict_by_values(d['hzb_grade_data'])
+            CalcTools.update_stat_dict_by_values(d['hzb_grade_data'])
         if 'age_data' in d:
-            cls.update_stat_dict_by_values(d['age_data'])
+            CalcTools.update_stat_dict_by_values(d['age_data'])
+        if 'semesters_failed_data' in d:
+            CalcTools.update_stat_dict_by_values(d['semesters_failed_data'])
+        if 'semesters_success_data' in d:
+            CalcTools.update_stat_dict_by_values(d['semesters_success_data'])
 
     @staticmethod
     def update_dict_by_semester_data(d, semester_data, no_students=False):
@@ -335,31 +353,14 @@ class CourseSemesterInfo(DBDocument):
             if key in semester_data:
                 d['exams'][key] += semester_data[key]
 
-        count_id = str(semester_data['count'])
-        if count_id not in d['exams']['values']:
-            d['exams']['values'][count_id] = 1
-        else:
-            d['exams']['values'][count_id] += 1
-
-        bonus_id = str(semester_data['bonus'])
-        if bonus_id not in d['bonus_data']['values']:
-            d['bonus_data']['values'][bonus_id] = 1
-        else:
-            d['bonus_data']['values'][bonus_id] += 1
+        CalcTools.add_to_stat_dict(d['exams'], semester_data['count'])
+        CalcTools.add_to_stat_dict(d['bonus_data'], semester_data['bonus'])
 
         if 'bonus_total' in semester_data and 'bonus_total_data' in d:
-            bonus_total_id = str(semester_data['bonus_total'])
-            if bonus_total_id not in d['bonus_total_data']['values']:
-                d['bonus_total_data']['values'][bonus_total_id] = 1
-            else:
-                d['bonus_total_data']['values'][bonus_total_id] += 1
+            CalcTools.add_to_stat_dict(d['bonus_total_data'], semester_data['bonus_total'])
 
         if semester_data['grade']:
-            grade_id = str(semester_data['grade'] / 10 * 10)
-            if grade_id not in d['grade_data']['values']:
-                d['grade_data']['values'][grade_id] = 1
-            else:
-                d['grade_data']['values'][grade_id] += 1
+            CalcTools.add_to_stat_dict(d['grade_data'], semester_data['grade'] / 10 * 10)
 
     def update_by_semester_data(self, sem_nr_id, semester_data):
         if sem_nr_id not in self.semester_data:

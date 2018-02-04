@@ -103,7 +103,7 @@ function CourseSemesterList(parentDOM) {
 			id: 'age_data.mean',
 			label: 'Ø Alter',
 			title: 'Durchschnittliches Alter bei Immatrikulation',
-			formatting: 'int'
+			formatting: 'float'
 		},
 		'age_data.max': {
 			id: 'age_data.max',
@@ -115,6 +115,42 @@ function CourseSemesterList(parentDOM) {
 			id: 'age_data.min',
 			label: 'Niedrigstes Alter',
 			title: 'Niedrigstes Alter eines Studenten',
+			formatting: 'int'
+		},
+		'semesters_failed_data.mean': {
+			id: 'semesters_failed_data.mean',
+			label: 'Ø Semester bei Abbruch',
+			title: 'Durchschnittliche Semesteranzahl bei Abbruch',
+			formatting: 'float'
+		},
+		'semesters_failed_data.max': {
+			id: 'semesters_failed_data.max',
+			label: 'Max. Semester bei Abbruch',
+			title: 'Max. Semester bei Abbruch',
+			formatting: 'int'
+		},
+		'semesters_failed_data.min': {
+			id: 'semesters_failed_data.min',
+			label: 'Min. Semester bei Abbruch',
+			title: 'Min. Semester bei Abbruch',
+			formatting: 'int'
+		},
+		'semesters_success_data.mean': {
+			id: 'semesters_success_data.mean',
+			label: 'Ø Semester bei Erfolg',
+			title: 'Durchschnittliche Semesteranzahl bei Erfolg',
+			formatting: 'float'
+		},
+		'semesters_success_data.max': {
+			id: 'semesters_success_data.max',
+			label: 'Max. Semester bei Erfolg',
+			title: 'Max. Semester bei Erfolg',
+			formatting: 'int'
+		},
+		'semesters_success_data.min': {
+			id: 'semesters_success_data.min',
+			label: 'Min. Semester bei Erfolg',
+			title: 'Min. Semester bei Erfolg',
 			formatting: 'int'
 		},
 		'hzb_grade_data.mean': {

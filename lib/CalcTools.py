@@ -107,3 +107,21 @@ def calc_avg_grade(examlist):
         bonussum += exam['bonus']
 
     return grades / bonussum if bonussum > 0 else 0.0
+
+
+def update_stat_dict_by_values(d):
+    total_count = sum(d['values'].values())
+    if total_count:
+        exams_values = [int(x) for x in d['values'] if x != 'None']
+        d['min'] = min(exams_values)
+        d['max'] = max(exams_values)
+        values_sum = [int(x) * c for x, c in d['values'].iteritems() if x != 'None']
+        d['mean'] = float(sum(values_sum)) / total_count
+
+
+def add_to_stat_dict(d, value):
+    value_id = str(value)
+    if value_id not in d['values']:
+        d['values'][value_id] = 1
+    else:
+        d['values'][value_id] += 1
