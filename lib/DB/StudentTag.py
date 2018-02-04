@@ -18,7 +18,7 @@ along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
 from datetime import datetime
 
-from Db import DBDocument
+from Db import DBDocument, get_collection
 
 
 class StudentTag(DBDocument):
@@ -53,6 +53,11 @@ class StudentTag(DBDocument):
     @classmethod
     def find_by_id(cls, name, student_id):
         return cls.find_one({'_id': name + '_' + student_id})
+
+    @classmethod
+    def remove_by_tag(cls, name):
+        c = get_collection(cls.collection_name)
+        return c.delete_many({'name': name})
 
     @classmethod
     def find_student_tags(cls, student_id):

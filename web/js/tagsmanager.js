@@ -122,6 +122,7 @@ TagsManager.prototype.openTagDialog = function (tag_id, tag) {
 	dialogBox.append(form.name);
 	if (tag) {
 		form.name.setValue(tag.name);
+		form.name.input.disabled = true;
 	}
 
 	var status = $(document.createElement('p')).appendTo(dialogBox);

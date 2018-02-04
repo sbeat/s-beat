@@ -836,6 +836,8 @@ StudentList.prototype.initDefinitions = function (definitions) {
 	var query;
 	var usedQueries = [];
 
+	self.filter.tagsDefinition = self.definitions.tags;
+
 	if (!self.definitions['hide_student_fields']) {
 		self.definitions['hide_student_fields'] = [];
 	}
@@ -939,6 +941,8 @@ StudentList.prototype.initDefinitions = function (definitions) {
 			'green': 'Grün'
 		}, null);
 	}
+
+	self.filter.addAttributeFilter('tags', 'Tags', 'Student', 'tags', '');
 
 	self.filter.sortFilters();
 

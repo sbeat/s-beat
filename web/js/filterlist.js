@@ -19,6 +19,8 @@ function FilterList(parentDOM) {
 	this.filters = []; // {id, type, query, condition}
 	this.drawn = false;
 
+	this.tagsDefinition = null;
+
 	FilterList.prototype.init.call(this);
 }
 
@@ -987,6 +989,16 @@ FilterList.prototype.openMulitValueDialog = function (filter_ids, mainFilter_id,
 
 FilterList.prototype.openValueDialog = function (filter, callb) {
 	var self = this;
+	if(filter.type === 'attribute' && filter.formatting === 'tags') {
+		var tagsArray = filter.value ? filter.value.split(','): [];
+		var tagsDialogBox = selectTagsDialog(this.tagsDefinition, tagsArray, function(tags) {
+			filter.value = tags.join(',');
+			tagsDialogBox.dialog("close");
+			callb(filter);
+		});
+		return;
+	}
+
 	var dialogBox = $(document.createElement('div'));
 	var selector;
 	var buttons = {};

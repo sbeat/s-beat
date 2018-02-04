@@ -1654,7 +1654,7 @@ function openLogoutDialog() {
 function selectTagsDialog(tagDefinitions, selectedTags, callb) {
 
 	var dialogBox = $(document.createElement('div'));
-	dialogBox.attr('title', 'Tags bearbeiten');
+	dialogBox.attr('title', 'Tags auswählen');
 
 	var ul = $(document.createElement('ul'));
 	ul.addClass('columnlist');

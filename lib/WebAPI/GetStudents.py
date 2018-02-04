@@ -330,6 +330,16 @@ def handle():
             except ValueError:
                 return respond({'error': 'invalid_filter', 'name': name}, 400)
 
+        if name == 'tags':
+            try:
+                value = request.args.get(name).split(',')
+                db_query[name] = {'$all': value}
+                continue
+
+            except ValueError:
+                return respond({'error': 'invalid_filter', 'name': name}, 400)
+
+
         if name not in DataDefinitions.get_queries():
             continue
 

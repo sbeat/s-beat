@@ -97,14 +97,14 @@ def edit_tag(data):
     if tag is None:
         return respond({'error': 'tag_not_found'}, 200)
 
-    tag.name = data.get('name')
+    # tag.name = data.get('name')
     tag.order = data.get('order')
 
     if isinstance(data.get('active'), bool):
         tag.active = data.get('active')
 
-    if tag.db_update():
-        return respond({'status': 'ok', 'query': tag.get_dict()}, 200)
+    if tag.db_update(['name', 'order']):
+        return respond({'status': 'ok', 'tag': tag.get_dict()}, 200)
     else:
         return respond({'error': 'edit_failed'}, 200)
 
@@ -120,8 +120,11 @@ def remove_tag(data):
     if tag is None:
         return respond({'error': 'tag_not_found'}, 200)
 
+    if not DB.StudentTag.remove_by_tag(tag.name):
+        return respond({'error': 'remove_failed'}, 200)
+
     if tag.db_remove():
-        return respond({'status': 'ok', 'query': tag.get_dict()}, 200)
+        return respond({'status': 'ok', 'tag': tag.get_dict()}, 200)
     else:
         return respond({'error': 'remove_failed'}, 200)
 
