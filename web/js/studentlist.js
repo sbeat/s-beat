@@ -784,10 +784,10 @@ StudentList.prototype.drawCellValue = function (student, col, td) {
 			td.text('-');
 		}
 
-	} else if(col.id === 'tags') {
-		if(student.tags && self.definitions.tags) {
-			self.definitions.tags.forEach(function(tag) {
-				if(student.tags.indexOf(tag.name) !== -1) {
+	} else if (col.id === 'tags') {
+		if (student.tags && self.definitions.tags) {
+			self.definitions.tags.forEach(function (tag) {
+				if (student.tags.indexOf(tag.name) !== -1) {
 					var tagO = createDom('span', 'singletag');
 					tagO.appendChild(document.createTextNode(tag.name));
 					td.append(tagO);
@@ -942,7 +942,9 @@ StudentList.prototype.initDefinitions = function (definitions) {
 		}, null);
 	}
 
-	self.filter.addAttributeFilter('tags', 'Tags', 'Student', 'tags', '');
+	if (self.definitions.tags.length) {
+		self.filter.addAttributeFilter('tags', 'Tags', 'Student', 'tags', '');
+	}
 
 	self.filter.sortFilters();
 

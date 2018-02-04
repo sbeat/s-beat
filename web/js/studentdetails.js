@@ -100,7 +100,16 @@ StudentDetails.prototype.drawValue = function (field, el) {
 		self.drawMarkedListInfo(el);
 
 	} else if (field == 'tags') {
-		self.drawTagsInfo(el);
+		if (self.definitions && self.definitions.tags.length) {
+			self.drawTagsInfo(el);
+		}
+
+	} else if (field == 'display_tags') {
+		if (!self.definitions || !self.definitions.tags.length) {
+			el.hide();
+		} else {
+			el.show();
+		}
 
 	} else if (field == 'risk_graph') {
 		var ig = new InfoGraph(el);
@@ -421,7 +430,7 @@ StudentDetails.prototype.drawTagsInfo = function (el) {
 		.text('Bearbeiten')
 		.click(function (e) {
 			e.preventDefault();
-			var dialog = selectTagsDialog(self.definitions.tags, self.student.tags, function(tags) {
+			var dialog = selectTagsDialog(self.definitions.tags, self.student.tags, function (tags) {
 				saveTagsSelection(tags, dialog);
 			});
 		})
@@ -442,7 +451,7 @@ StudentDetails.prototype.drawTagsInfo = function (el) {
 
 	function saveTagsSelection(tagNames, dialogBox) {
 		var running = 0;
-		self.definitions.tags.forEach(function(tag) {
+		self.definitions.tags.forEach(function (tag) {
 			var tagName = tag.name;
 			var index = self.student.tags.indexOf(tagName);
 			var selected = tagNames.indexOf(tagName) !== -1;
@@ -472,6 +481,7 @@ StudentDetails.prototype.drawTagsInfo = function (el) {
 			}
 
 		});
+
 		function finish() {
 			running--;
 			if (running === 0) {
