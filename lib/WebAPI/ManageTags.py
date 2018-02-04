@@ -103,7 +103,7 @@ def edit_tag(data):
     if isinstance(data.get('active'), bool):
         tag.active = data.get('active')
 
-    if tag.db_update(['name', 'order']):
+    if tag.db_update(['order', 'active']):
         return respond({'status': 'ok', 'tag': tag.get_dict()}, 200)
     else:
         return respond({'error': 'edit_failed'}, 200)
