@@ -42,6 +42,7 @@ function StudentDetails(parentDOM) {
 
 	StudentDetails.prototype.init.call(this);
 }
+
 /**
  * Gets called once this StudentDetails is initialized
  */
@@ -98,6 +99,9 @@ StudentDetails.prototype.drawValue = function (field, el) {
 	} else if (field == 'markedlists') {
 		self.drawMarkedListInfo(el);
 
+	} else if (field == 'tags') {
+		self.drawTagsInfo(el);
+
 	} else if (field == 'risk_graph') {
 		var ig = new InfoGraph(el);
 		ig.form = 'distribution';
@@ -134,7 +138,7 @@ StudentDetails.prototype.drawValue = function (field, el) {
 
 	} else if (field == 'tooltip') {
 		var contentSelector = el.attr('data-tooltip-content');
-		var contentElement = contentSelector?$(contentSelector):el.find('div');
+		var contentElement = contentSelector ? $(contentSelector) : el.find('div');
 		var hoverelement = el.find('a').first();
 		hoverelement.attr('title', '');
 		hoverelement.tooltip({
@@ -218,15 +222,15 @@ StudentDetails.prototype.drawValue = function (field, el) {
 		else {
 			el.text('0');
 		}
-	} else if(field == 'identification_link') {
-		el.click(function(e){
+	} else if (field == 'identification_link') {
+		el.click(function (e) {
 			e.preventDefault();
 			$('#identification_data').show();
 			$(this).hide();
 		});
 
 	} else if (field.match(/^display\.(.+)/)) {
-		if(self.isHiddenField(RegExp.$1)) {
+		if (self.isHiddenField(RegExp.$1)) {
 			el.hide();
 		}
 
@@ -244,11 +248,10 @@ StudentDetails.prototype.drawValue = function (field, el) {
 	}
 
 
-	if (field == 'hzb_grade') {
+	if (field === 'hzb_grade') {
 
 		var hzb_value = getByPath(field, self.student);
-		console.log(hzb_value);
-		if (hzb_value == 990) {
+		if (hzb_value === 990) {
 			el.append(" (Es liegt keine HZB Note vor.)");
 		}
 	}
@@ -324,6 +327,7 @@ StudentDetails.prototype.drawRisks = function () {
 
 StudentDetails.prototype.drawSemesterDataTable = function (el) {
 	var self = this;
+
 	function addCol(tr, value, format, cmpInfo) {
 		var td = tr.appendChild(document.createElement('td'));
 		td.appendChild(getFormattedHTML(value, format));
@@ -335,7 +339,7 @@ StudentDetails.prototype.drawSemesterDataTable = function (el) {
 			} else if (typeof(value) == 'number' && value > cmpInfo.cmpValue) {
 				td.className = 'darr ' + (cmpInfo.lowerBetter ? 'upred' : 'upgreen');
 			}
-			td.title = 'Ø '+ getNumericValueOutput(cmpInfo.cmpValue, format);
+			td.title = 'Ø ' + getNumericValueOutput(cmpInfo.cmpValue, format);
 			$(td).tooltip();
 		}
 
@@ -343,12 +347,11 @@ StudentDetails.prototype.drawSemesterDataTable = function (el) {
 	}
 
 
-
 	for (var sem_nr = 1; this.student['semester_data']['sem_' + sem_nr]; sem_nr++) {
 		var sem = this.student['semester_data']['sem_' + sem_nr];
 		var courseInfo = this.course_semester['semester_data']['sem_' + sem_nr];
 
-		var average_success = courseInfo['exams']['successful']/courseInfo['students']['count'];
+		var average_success = courseInfo['exams']['successful'] / courseInfo['students']['count'];
 		var average_failed = courseInfo['exams']['failed'] / courseInfo['students']['count'];
 		var average_delayed = courseInfo['exams']['delayed'] / courseInfo['students']['count'];
 
@@ -357,12 +360,12 @@ StudentDetails.prototype.drawSemesterDataTable = function (el) {
 		addCol(tr, sem['semester_id'], 'semester');
 		addCol(tr, sem['bonus'], 'int', {cmpValue: courseInfo['bonus_data']['mean']});
 		addCol(tr, sem['bonus_total'], 'int', {cmpValue: courseInfo['bonus_total_data']['mean']});
-		addCol(tr, sem['grade'], 'grade', {cmpValue: courseInfo['grade_data']['mean'], lowerBetter:true});
+		addCol(tr, sem['grade'], 'grade', {cmpValue: courseInfo['grade_data']['mean'], lowerBetter: true});
 		addCol(tr, sem['count'], 'int', {cmpValue: courseInfo['exams']['mean']});
 		addCol(tr, sem['successful'], 'int', {cmpValue: average_success});
 		addCol(tr, sem['failed'], 'int', {cmpValue: average_failed, lowerBetter: true});
 
-		if(!self.definitions || !self.definitions.hide_resigned)
+		if (!self.definitions || !self.definitions.hide_resigned)
 			addCol(tr, sem['delayed'], 'int', {cmpValue: average_delayed, lowerBetter: true});
 
 		el.append(tr);
@@ -380,10 +383,10 @@ StudentDetails.prototype.drawMarkedListInfo = function (el) {
 
 	el.empty();
 
-	var addbtn = $(document.createElement('a'))
+	$(document.createElement('a'))
 		.addClass('modbtn')
 		.attr('href', '')
-		.text('Vormerkungen bearbeiten')
+		.text('Bearbeiten')
 		.click(function (e) {
 			e.preventDefault();
 			self.drawMarkedListDialog(el);
@@ -403,6 +406,115 @@ StudentDetails.prototype.drawMarkedListInfo = function (el) {
 
 	}
 
+
+};
+
+StudentDetails.prototype.drawTagsInfo = function (el) {
+	var self = this;
+	if (!self.student) return;
+
+	el.empty();
+
+	$(document.createElement('a'))
+		.addClass('modbtn')
+		.attr('href', '')
+		.text('Bearbeiten')
+		.click(function (e) {
+			e.preventDefault();
+			var dialog = selectTagsDialog(self.definitions.tags, self.student.tags, function(tags) {
+				saveTagsSelection(tags, dialog);
+			});
+		})
+		.appendTo(el);
+
+	self.definitions.tags.forEach(function (tag) {
+		if (self.student.tags.indexOf(tag.name) !== -1) {
+			el.append(drawTag(tag));
+		}
+	});
+
+
+	function drawTag(tag) {
+		var tagO = createDom('span', 'singletag');
+		tagO.appendChild(document.createTextNode(tag.name));
+		return tagO;
+	}
+
+	function saveTagsSelection(tagNames, dialogBox) {
+		var running = 0;
+		self.definitions.tags.forEach(function(tag) {
+			var tagName = tag.name;
+			var index = self.student.tags.indexOf(tagName);
+			var selected = tagNames.indexOf(tagName) !== -1;
+			if (selected && index === -1) {
+				running++;
+				tagAction('assign_tag', {
+					id: tagName,
+					student_id: self.studentId
+				}, $('<div></div>').appendTo(dialogBox), function (result) {
+					if (result && result.status === 'ok') {
+						self.student.tags.push(tagName);
+						finish();
+					}
+				});
+			} else if (!selected && index !== -1) {
+				running++;
+				tagAction('unlink_tag', {
+					id: tagName,
+					student_id: self.studentId
+				}, $('<div></div>').appendTo(dialogBox), function (result) {
+					if (result && result.status === 'ok') {
+						index = self.student.tags.indexOf(tagName);
+						self.student.tags.splice(index, 1);
+						finish();
+					}
+				});
+			}
+
+		});
+		function finish() {
+			running--;
+			if (running === 0) {
+				dialogBox.dialog("close");
+				self.drawTagsInfo(el);
+			}
+		}
+	}
+
+	function tagAction(action, data, parent, callb) {
+		var url = '/api/ManageTags';
+
+		if (data) {
+			data.action = action;
+		} else {
+			data = {action: action};
+		}
+
+
+		parent.addClass('loading');
+
+		$.ajax({
+			url: url,
+			type: 'POST',
+			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(data)
+		}).success(function (data) {
+			parent.removeClass('loading');
+
+			if (data && data.error) {
+				parent.text('Error: ' + data.error);
+			}
+
+			if (callb) {
+				callb(data);
+			}
+
+		}).fail(function () {
+			parent.removeClass('loading');
+			parent.text('Laden der Daten ist fehlgeschlagen.');
+		});
+
+	}
 
 };
 
@@ -651,10 +763,10 @@ StudentDetails.prototype.initDefinitions = function (definitions) {
 	self.definitions = definitions;
 
 	var lightsSetting = self.definitions.lights[''];
-	if(self.definitions.lights[self.student.stg_original]) {
+	if (self.definitions.lights[self.student.stg_original]) {
 		lightsSetting = self.definitions.lights[self.student.stg_original];
 	}
-	if(self.definitions.lights[self.student.stg]) {
+	if (self.definitions.lights[self.student.stg]) {
 		lightsSetting = self.definitions.lights[self.student.stg];
 	}
 
@@ -694,7 +806,7 @@ StudentDetails.prototype.load = function () {
 		params.push('definitions=true');
 	}
 
-	if(isTempActive()) params.push('temp=true');
+	if (isTempActive()) params.push('temp=true');
 
 	if (params.length) url += '?';
 	url += params.join('&');
@@ -708,7 +820,7 @@ StudentDetails.prototype.load = function () {
 
 		self.data = data;
 
-		if(data.course_semester) {
+		if (data.course_semester) {
 			self.course_semester = data.course_semester;
 		}
 		if (data.student) {
@@ -763,7 +875,7 @@ StudentDetails.prototype.loadPaths = function () {
 		params.push(name + '=' + encodeURIComponent(filterQueries[name]));
 	}
 
-	if(isTempActive()) params.push('temp=true');
+	if (isTempActive()) params.push('temp=true');
 
 	if (params.length) url += '?';
 	url += params.join('&');

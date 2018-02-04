@@ -425,6 +425,12 @@ function StudentList(parentDOM) {
 			noDownload: true,
 			sortBy: null,
 			presets: ['mlist']
+		},
+		'tags': {
+			id: 'tags',
+			label: 'Tags',
+			title: 'Tags',
+			formatting: 'tags'
 		}
 
 	};
@@ -778,6 +784,17 @@ StudentList.prototype.drawCellValue = function (student, col, td) {
 			td.text('-');
 		}
 
+	} else if(col.id === 'tags') {
+		if(student.tags && self.definitions.tags) {
+			self.definitions.tags.forEach(function(tag) {
+				if(student.tags.indexOf(tag.name) !== -1) {
+					var tagO = createDom('span', 'singletag');
+					tagO.appendChild(document.createTextNode(tag.name));
+					td.append(tagO);
+				}
+			});
+		}
+
 	} else if (col.id == 'finishstatus') {
 		if (student.finished) {
 			if (student.success) {
@@ -818,6 +835,8 @@ StudentList.prototype.initDefinitions = function (definitions) {
 	self.definitions = definitions;
 	var query;
 	var usedQueries = [];
+
+	self.filter.tagsDefinition = self.definitions.tags;
 
 	if (!self.definitions['hide_student_fields']) {
 		self.definitions['hide_student_fields'] = [];
@@ -922,6 +941,8 @@ StudentList.prototype.initDefinitions = function (definitions) {
 			'green': 'Grün'
 		}, null);
 	}
+
+	self.filter.addAttributeFilter('tags', 'Tags', 'Student', 'tags', '');
 
 	self.filter.sortFilters();
 
