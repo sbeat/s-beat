@@ -177,10 +177,12 @@ def handle():
 
     query_types = {
         'admitted': 'bool',
+        'student': 'bool',
         'age': 'int',
         'appl_date': 'datetime',
         'birth_date': 'datetime',
         'degree_type': 'str',
+        'student_ident': 'str',
         'email': 'str',
         'eu': 'bool',
         'forename': 'str',

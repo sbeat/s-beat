@@ -34,6 +34,9 @@ function StudentDetails(parentDOM) {
 		}
 	};
 
+	defineFD(this.fieldData, 'appl_date', 'Bewerbungdatum', '', 'date');
+	defineFD(this.fieldData, 'adm_date', 'Zulassungsdatum', '', 'date');
+
 	this.data = null; // Last loaded data
 	this.pathData = null; // Last loaded path data
 	this.markedData = null;
@@ -160,6 +163,19 @@ StudentDetails.prototype.drawValue = function (field, el) {
 	} else if (field == 'hzb_imm_time') {
 		value = getByPath(field, self.student);
 		el.text(getMonthsText(value) + " nach HZB");
+
+	} else if (field == 'display_applicant') {
+		if (!self.student.applicant_ident) {
+			el.hide();
+		}
+
+	} else if (field == 'applicant_ident') {
+		if (self.student.applicant_ident) {
+			$(document.createElement('a'))
+				.attr('href', 'applicant_detail.html?id=' + encodeURIComponent(self.student.applicant_ident))
+				.text(self.student.applicant_ident)
+				.appendTo(el);
+		}
 
 	} else if (field == 'risk.median_scaled' && !self.definitions.risk_value_allowed) {
 		el.text('***');

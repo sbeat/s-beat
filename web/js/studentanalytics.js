@@ -608,7 +608,7 @@ StudentAnalytics.prototype.getEntries = function () {
 			if (col.type === 'group') {
 				var grpValue = d._id[col.cdId];
 				var cd = self.columnData[col.cdId];
-				var cmpInfo = getCompareValueInfo(col.grpValue, cd.formatting);
+				var cmpInfo = getCompareValueInfo(col.grpValue, cd.formatting, true);
 				if (cmpInfo.operator === 'equal' && grpValue === cmpInfo.value
 					|| cmpInfo.operator === 'lte' && grpValue <= cmpInfo.value
 					|| cmpInfo.operator === 'gte' && grpValue >= cmpInfo.value
@@ -708,7 +708,6 @@ StudentAnalytics.prototype.setEntryDisplay = function (ident, open) {
 
 	this.tableDOM.find('tr[id]').each(function () {
 		if (this.id === keyStr) {
-			console.log('setEntryDisplay', keyStr, this);
 			if (open) {
 				this.style.display = '';
 			} else {

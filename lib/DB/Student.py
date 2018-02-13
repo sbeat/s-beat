@@ -62,6 +62,9 @@ class Student(DBDocument):
         'zip': 'identification_data',
         'citship': 'identification_data',
         'eu': 'identification_data',
+        'applicant_ident': 'applicant_data',
+        'appl_date': 'applicant_data',
+        'adm_date': 'applicant_data',
     }
 
     cached_min_max = None
@@ -85,6 +88,11 @@ class Student(DBDocument):
         self.aborted = False  # Whether the study has been aborted
         self.status = None  # Status 1=Finished, 2=Aborted, 3=Successful, 4=Studying
         self.tags = []
+
+        # applicant data
+        self.applicant_ident = None  # ident of the applicant
+        self.appl_date = None  # application date
+        self.adm_date = None  # admission date
 
         # Identity
         self.matrikelno = None
@@ -923,6 +931,8 @@ def create_student_from_entry(data, settings):
         return None
 
     student.hzb_grade = get_int(data['hzbnote'])
+    if student.hzb_grade == 990:
+        student.hzb_grade = None
     if 'hzbart' in data:
         student.hzb_type = get_hzbgrp(data['hzbart'])
     if 'hzbgrp' in data:

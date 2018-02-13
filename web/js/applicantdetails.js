@@ -8,6 +8,7 @@ function ApplicantDetails(parentDOM) {
 
 	this.fieldData = {};
 	defineFD(this.fieldData, 'admitted', 'Zugelassen', '', 'bool');
+	defineFD(this.fieldData, 'student', 'Ist student', '', 'bool');
 	defineFD(this.fieldData, 'age', 'Alter', '', 'int');
 	defineFD(this.fieldData, 'appl_date', 'Bewerbungdatum', '', 'date');
 	defineFD(this.fieldData, 'birth_date', 'Geburtsdatum', '', 'date');
@@ -22,6 +23,7 @@ function ApplicantDetails(parentDOM) {
 
 	ApplicantDetails.prototype.init.call(this);
 }
+
 /**
  * Gets called once this ApplicantDetails is initialized
  */
@@ -56,11 +58,24 @@ ApplicantDetails.prototype.drawValue = function (field, el) {
 
 	if (field == 'stg') {
 
-		//Link to courses detail list
+		// Link to courses detail list
 		var a = $(document.createElement('a'));
 		a.attr('href', 'coursedetails.html?stg=' + encodeURIComponent(self.applicant.stg));
 		a.text(self.applicant.stg);
 		el.append(a);
+
+	} else if (field == 'student') {
+
+		if(self.applicant.student_ident) {
+			// Link to student detail page
+			$(document.createElement('a'))
+				.attr('href', 'student_detail.html?id=' + encodeURIComponent(self.applicant.student_ident))
+				.text(self.applicant.student_ident)
+				.appendTo(el);
+		} else {
+			el.text('Kein Datensatz vorhanden');
+		}
+
 
 	} else if (field == 'admissionstatus') {
 		if (self.applicant.admitted) {
@@ -74,15 +89,15 @@ ApplicantDetails.prototype.drawValue = function (field, el) {
 		el.text(getMonthsText(value) + " nach HZB");
 
 
-	} else if(field == 'identification_link') {
-		el.click(function(e){
+	} else if (field == 'identification_link') {
+		el.click(function (e) {
 			e.preventDefault();
 			$('#identification_data').show();
 			$(this).hide();
 		});
 
 	} else if (field.match(/^display\.(.+)/)) {
-		if(self.isHiddenField(RegExp.$1)) {
+		if (self.isHiddenField(RegExp.$1)) {
 			el.hide();
 		}
 
@@ -122,7 +137,7 @@ ApplicantDetails.prototype.load = function () {
 	var params = [];
 	params.push('ident=' + encodeURIComponent(this.applicantId));
 
-	if(isTempActive()) params.push('temp=true');
+	if (isTempActive()) params.push('temp=true');
 
 	if (params.length) url += '?';
 	url += params.join('&');

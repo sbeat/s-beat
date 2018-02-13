@@ -73,6 +73,12 @@ function ApplicantList(parentDOM) {
 			title: 'Ist der Bewerber zugelassen worden',
 			formatting: 'yesno'
 		},
+		'student': {
+			id: 'student',
+			label: 'Ist Student',
+			title: 'Ist der Bewerber als Student im System',
+			formatting: 'yesno'
+		},
 		'age': {id: 'age', label: 'Alter b. Bewerb.', title: 'Alter bei Bewerbung', formatting: 'int'},
 		'birth_date': {id: 'birth_date', label: 'Geburtstag', title: 'Geburtstag', formatting: 'date'},
 		'hzb_grade': {

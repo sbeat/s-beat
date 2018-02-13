@@ -35,6 +35,7 @@ ApplicantAnalytics.prototype.init = function () {
 	this.defineColumn('gender', 'Geschlecht', 'Anzahl Bewerber mit dem Geschlecht', 'str', true);
 	this.defineColumn('country', 'Land', 'Anzahl Bewerber aus dem Land', 'str', true);
 	this.defineColumn('admitted', 'Zulassung', 'Anzahl Bewerber aus mit dem Zulassungsstatus', 'yesno', true);
+	this.defineColumn('student', 'Ist Student', 'Anzahl Studenten', 'yesno', true);
 	this.defineColumn('hzb_type', 'HZB Gruppe', 'Anzahl Bewerber mit der HZB Gruppe', 'str', true);
 	this.defineColumn('hzb_grade', 'HZB Note', null, 'grade', true, ['min', 'max', 'avg']);
 	this.defineColumn('start_semester', 'Start Semester', null, 'semester', true);

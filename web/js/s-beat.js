@@ -416,8 +416,9 @@ function getConditionText(condition, formatting) {
  percent     number betwen 0.0 and 1.0 to be formatted as num*100%
  * @param value
  * @param formatting
+ * @param [raw] whether to use raw values (no strings for booleans)
  */
-function getCompareValueInfo(value, formatting) {
+function getCompareValueInfo(value, formatting, raw) {
 	var ret = {
 		type: null, // numeric,boolean,string
 		formatting: formatting,
@@ -464,14 +465,14 @@ function getCompareValueInfo(value, formatting) {
 
 	} else if (formatting == 'yesno') {
 		ret.type = 'boolean';
-		if (value == 'true') {
+		if (value === 'true' || value === true) {
 			ret.operator = 'equal';
-			ret.value = 'true';
+			ret.value = raw ? true : 'true';
 			ret.valueOutput = 'Ja';
 			ret.text = ret.valueOutput;
 		} else {
 			ret.operator = 'equal';
-			ret.value = 'false';
+			ret.value = raw ? false : 'false';
 			ret.valueOutput = 'Nein';
 			ret.text = ret.valueOutput;
 		}
@@ -1717,7 +1718,7 @@ function selectTagsDialog(tagDefinitions, selectedTags, callb) {
 
 function downloadFile(contents, type, fileName) {
 	const data = new Blob(contents, {type: type});
-	if(navigator.msSaveBlob) {
+	if (navigator.msSaveBlob) {
 		navigator.msSaveBlob(data, fileName);
 	} else {
 		var url = URL.createObjectURL(data);

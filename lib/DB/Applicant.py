@@ -29,6 +29,7 @@ from ImportTools import get_date_from_csv, get_int, get_unicode, get_boolean, cl
 from ProcessTracking import ProcessTracking
 from Settings import Settings
 from Course import Course
+from Student import Student
 from CourseSemesterInfo import CourseSemesterInfo
 
 encoding = 'windows-1252'
@@ -43,6 +44,7 @@ class Applicant(DBDocument):
     def __init__(self, **kwargs):
 
         self.ident = None  # Ident number
+        self.ident_original = None  # ident based on student settings
         self.gender = ''  # Gender of applicant: M,W
         self.birth_date = None  # Date of birth
         self.hzb_grade = 0  # entrance qualification grade
@@ -53,6 +55,8 @@ class Applicant(DBDocument):
         self.appl_date = None  # application date
         self.adm_date = None  # admission date
         self.degree_type = None  # type of degree: Diplom,Bachelor,Master
+        self.student_ident = None  # Ident for the student data if available
+        self.student = False  # whether the applicant has student data
 
         # Identity
         self.forename = None
@@ -108,6 +112,8 @@ class Applicant(DBDocument):
 
         settings = Settings.load_dict([
             'import_applicants',
+            'student_ident_string',
+            'unique_student_id',
             'import_encoding'
         ])
         encoding = settings['import_encoding']
@@ -123,6 +129,22 @@ class Applicant(DBDocument):
 
             applicant = create_applicant_from_entry(entry, settings)
             if applicant is not None:
+
+                if settings['student_ident_string']:
+                    applicant.ident_original = get_unicode(entry['identnr'], encoding)
+                else:
+                    applicant.ident_original = get_int(entry['identnr'])
+
+                student_ident = Student.generate_ident(applicant, settings['unique_student_id'])
+                student = Student.find_one({'_id': student_ident}, projection={'_id': 1})
+                if student is not None:
+                    applicant.student_ident = student_ident
+                    applicant.student = True
+                    student.applicant_ident = applicant.ident
+                    student.adm_date = applicant.adm_date
+                    student.appl_date = applicant.appl_date
+                    student.db_update(['applicant_ident', 'adm_date', 'appl_date'])
+
                 result = applicant.db_save()
                 logger.info('applicant %d %s', num, (result.upserted_id if result else None))
 
@@ -294,6 +316,8 @@ def create_applicant_from_entry(data, settings):
         applicant.start_semester = CalcTools.get_appl_start_semester_from_date(applicant.appl_date)
 
     applicant.hzb_grade = get_int(data['hzbnote'])
+    if applicant.hzb_grade == 990:
+        applicant.hzb_grade = None
     if 'hzbart' in data:
         applicant.hzb_type = ImportTools.map_by_definiton('hzbart', int(data['hzbart']), True, u'Unbekannt')
     if 'hzbgrp' in data:
