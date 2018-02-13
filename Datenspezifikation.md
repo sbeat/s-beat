@@ -420,7 +420,7 @@ Geburtsdatum (Datumsfeld)
 
 #### `HZBNOTE`
 
-Hochschulzugangsberechtigungsnote (Hinweis: eine Note von 9.9 bedeutet hier, dass keine solche vorliegt.)
+Hochschulzugangsberechtigungsnote (Hinweis: eine Note von 9.9 oder eine leere Zelle bedeutet hier, dass keine Note vorliegt.)
 
 
 #### `HZBDATUM`

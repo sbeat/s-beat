@@ -107,7 +107,31 @@ function ApplicantList(parentDOM) {
 			title: 'Monate zwischen HZB und Immatrikulation',
 			formatting: 'int'
 		},
-		'gender': {id: 'gender', label: 'Geschl.', title: 'Geschlecht', formatting: 'gender'}
+		'gender': {id: 'gender', label: 'Geschl.', title: 'Geschlecht', formatting: 'gender'},
+		'country': {
+			id: 'country',
+			label: 'Land',
+			title: 'Land des Bewerbers',
+			formatting: 'str'
+		},
+		'zip': {
+			id: 'zip',
+			label: 'PLZ',
+			title: 'Postleitzahl des Bewerbers',
+			formatting: 'str'
+		},
+		'stang': {
+			id: 'stang',
+			label: 'Staatsangehörigkeit',
+			title: 'Staatsangehörigkeit des Bewerbers',
+			formatting: 'str'
+		},
+		'eu': {
+			id: 'eu',
+			label: 'EU Bürger',
+			title: 'Ist der Bewerber EU Bürger',
+			formatting: 'yesno'
+		}
 
 	};
 	this.columns = this.settings.default.columns;
