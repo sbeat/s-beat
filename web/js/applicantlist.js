@@ -64,7 +64,7 @@ function ApplicantList(parentDOM) {
 			id: 'admissionstatus',
 			label: 'Status',
 			title: 'Status der Zulassung',
-			formatting: 'yesno',
+			formatting: 'str',
 			sortBy: 'admitted'
 		},
 		'admitted': {
@@ -315,9 +315,9 @@ ApplicantList.prototype.draw = function () {
 		// this.pagination.addLink('Berechnungen', function () {
 		// 	self.openCalculationsDialog();
 		// });
-		// this.pagination.addLink('Herunterladen', function () {
-		// 	self.openDownloadDialog();
-		// });
+		this.pagination.addLink('Herunterladen', function () {
+			self.openDownloadDialog();
+		});
 	}
 
 	if (this.displayFilters) this.filterDOM.show();

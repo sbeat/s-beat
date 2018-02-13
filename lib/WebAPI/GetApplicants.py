@@ -110,7 +110,7 @@ def get_csv_col(applicant, col, settings):
         if applicant['admitted']:
             return 'Zugelassen'
         else:
-            return 'Offen'
+            return '(Noch) nicht zugelassen'
 
     else:
         value = col.run(applicant)
@@ -158,10 +158,7 @@ def respond_csv(cursor, ret):
         yield csvdelimiter.join([col.name.encode('windows-1252') for col in columns]) + '\r\n'
 
         for applicant in cursor:
-            data = applicant.get_dict(user_role)
-            strident = str(data['ident'])
-            if 'mlist' in ret and strident in ret['mlist']['comments']:
-                data['comment'] = ret['mlist']['comments'][strident]['text']
+            data = applicant.get_dict()
 
             yield get_csv_row(data, columns, csvdelimiter, settings) + '\r\n'
 
