@@ -666,7 +666,7 @@ ApplicantList.prototype.openDetailDialog = function (applicant) {
 ApplicantList.prototype.openDownloadDialog = function () {
 	var self = this;
 	var dialogBox = $(document.createElement('div'));
-	dialogBox.attr('title', 'Download als CSV');
+	dialogBox.attr('title', 'Herunterladen als CSV');
 
 
 	function drawRow(col) {

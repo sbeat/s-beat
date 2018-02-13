@@ -331,7 +331,7 @@ StudentAnalytics.prototype.draw = function () {
 		this.addLink('Alle Gruppen einklappen', function () {
 			self.openCloseAll(false);
 		}, this.tableLinks);
-		this.addLink('Download', function () {
+		this.addLink('Herunterladen', function () {
 			self.download();
 		}, this.tableLinks);
 
