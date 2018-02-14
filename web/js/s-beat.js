@@ -1511,6 +1511,7 @@ function drawTableHead(tr, tooltipPrefix) {
 		if (!cd) continue;
 		var th = $(document.createElement('th'));
 		th[0].colId = cd.id;
+		th[0].col = col;
 
 		var thbox = $(document.createElement('div'));
 		th.append(thbox);
@@ -1531,7 +1532,7 @@ function drawTableHead(tr, tooltipPrefix) {
 			thlabel.tooltip();
 		}
 
-		var sortField = cd.sortBy ? cd.sortBy : cd.id;
+		var sortField = cd.sortBy ? cd.sortBy : col && col.id ? col.id : cd.id;
 		var sort1 = null;
 		var sort2 = null;
 		if (this.pagination) {
@@ -1544,10 +1545,10 @@ function drawTableHead(tr, tooltipPrefix) {
 		if (this.sort2) {
 			sort2 = this.sort2;
 		}
-		if (sort1 == sortField + ',1') th.addClass('asc');
-		if (sort1 == sortField + ',-1') th.addClass('desc');
-		if (sort2 == sortField + ',1') th.addClass('asc2');
-		if (sort2 == sortField + ',-1') th.addClass('desc2');
+		if (sort1 === sortField + ',1') th.addClass('asc');
+		if (sort1 === sortField + ',-1') th.addClass('desc');
+		if (sort2 === sortField + ',1') th.addClass('asc2');
+		if (sort2 === sortField + ',-1') th.addClass('desc2');
 
 
 		tr.append(th);

@@ -17,7 +17,7 @@ function StudentAnalytics(parentDOM, noInit) {
 	this.settings = {
 		'default': {
 			limit: 0,
-			sort1: null,
+			sort1: 'group,1',
 			sort2: null,
 			filters: [],
 			columns: [],
@@ -70,11 +70,14 @@ function StudentAnalytics(parentDOM, noInit) {
 
 	this.mode = 'table'; // table, graph
 
+	this.graphLevel = Infinity;
+
 	this.definitions = null;
 
 	this.linkBox = $(document.createElement('div'));
 
 	this.tableDOM = $(document.createElement('table'));
+	this.tbodyDOM = null;
 
 	this.graphDOM = $(document.createElement('div'));
 	this.graph = null;
@@ -90,9 +93,6 @@ function StudentAnalytics(parentDOM, noInit) {
 
 	this.entries = null;
 
-	this.showGroupSummary = true;
-	this.openLevels = 0;
-
 	this.allowedTableFormats = ['grade', 'percent', 'float', 'int'];
 
 	this.filterDOM = $(document.createElement('div'));
@@ -105,6 +105,7 @@ function StudentAnalytics(parentDOM, noInit) {
 	this.settingsFields = ['graphMode', 'rows'];
 
 	this.tableLinks = $(document.createElement('div')).addClass('table_links');
+	this.diagramLinks = $(document.createElement('div')).addClass('table_links');
 
 	this.loadPresetSettings = loadPresetSettings;
 	this.loadSettings = loadSettings;
@@ -176,7 +177,7 @@ StudentAnalytics.prototype.addLink = function (label, click, to) {
 	setBtn.text(label);
 	setBtn.click(function (e) {
 		e.preventDefault();
-		click();
+		click.call(setBtn);
 	});
 	to.append(setBtn);
 	return setBtn;
@@ -229,15 +230,11 @@ StudentAnalytics.prototype.init = function () {
 	this.pagination.sort1 = this.settings.default.sort1;
 	this.pagination.sort2 = this.settings.default.sort2;
 
-
-	for (var colId in this.columnData) {
-		var col = this.columnData[colId];
-		var sf = col.id;
-		if (col.sortBy) {
-			sf = col.sortBy;
-		}
-		this.pagination.sortOptions[sf + ',1'] = col.label + ' aufsteigend';
-		this.pagination.sortOptions[sf + ',-1'] = col.label + ' absteigend';
+	for (var i = 0; i < this.columns.length; i++) {
+		var col = this.columns[i];
+		var label = this.getColumnLabel(col).textContent;
+		this.pagination.sortOptions[col.id + ',1'] = label + ' aufsteigend';
+		this.pagination.sortOptions[col.id + ',-1'] = label + ' absteigend';
 	}
 
 	self.loadSettings();
@@ -246,7 +243,6 @@ StudentAnalytics.prototype.init = function () {
 
 	self.pagination.changed = function () {
 		self.sortChanged();
-		self.load();
 	};
 	self.pagination.onReset = function () {
 		self.loadPresetSettings(self.settingId);
@@ -273,9 +269,8 @@ StudentAnalytics.prototype.init = function () {
 };
 
 StudentAnalytics.prototype.sortChanged = function () {
-	if (this.clientSort) {
-		this.sortTable();
-	}
+	this.draw();
+	this.saveSettings();
 };
 
 /**
@@ -296,6 +291,8 @@ StudentAnalytics.prototype.draw = function () {
 		this.parentDOM.append(this.linkBox);
 
 		this.parentDOM.append(this.tableLinks);
+		this.parentDOM.append(this.diagramLinks);
+		this.diagramLinks.hide();
 
 		this.tableDOM.addClass('indentList tbl sortable');
 		this.parentDOM.append(this.tableDOM);
@@ -335,6 +332,22 @@ StudentAnalytics.prototype.draw = function () {
 			self.download();
 		}, this.tableLinks);
 
+		this.addLink('Gruppen Ebene erhöhen', function () {
+			if (self.graphLevel === Infinity) {
+				self.graphLevel = 1;
+			} else {
+				self.graphLevel++;
+				if (self.graphLevel > self.rows.length) {
+					self.graphLevel = 1;
+				}
+			}
+			self.draw();
+		}, this.diagramLinks);
+		this.addLink('Alle Gruppen anzeigen', function () {
+			self.graphLevel = Infinity;
+			self.draw();
+		}, this.diagramLinks);
+
 		this.drawn = true;
 	}
 
@@ -352,6 +365,7 @@ StudentAnalytics.prototype.draw = function () {
 		this.graphDOM.hide();
 		this.tableDOM.show();
 		this.tableLinks.show();
+		this.diagramLinks.hide();
 		if (!this.data) {
 			this.tableDOM.text('Keine Daten verfügbar');
 			return;
@@ -362,6 +376,7 @@ StudentAnalytics.prototype.draw = function () {
 		this.graphDOM.show();
 		this.tableDOM.hide();
 		this.tableLinks.hide();
+		this.diagramLinks.show();
 		if (!this.data) {
 			this.graphDOM.text('Keine Daten verfügbar');
 			return;
@@ -379,8 +394,7 @@ StudentAnalytics.prototype.drawGraph = function () {
 	this.graph.firstLegend = true;
 	this.graph.barMode = this.graphMode;
 
-	this.entries = this.getEntries();
-	console.log('entries', this.entries);
+	this.entries = getEntries([]);
 
 	for (var i = 0; i < this.entries.length; i++) {
 		var entry = this.entries[i];
@@ -389,7 +403,6 @@ StudentAnalytics.prototype.drawGraph = function () {
 
 		for (var j = 0; j < this.columns.length; j++) {
 			var col = this.columns[j];
-			var cd = this.columnData[col.cdId];
 			if (col.type === 'group') {
 				var value = entry[col.id];
 				var label = this.getColumnLabel(col);
@@ -399,6 +412,23 @@ StudentAnalytics.prototype.drawGraph = function () {
 	}
 
 	this.graph.draw();
+
+	function getEntries(path, allEntries) {
+		if (!allEntries) allEntries = [];
+		var entries = self.getEntriesTreeLevel(path);
+		for (var i = 0; i < entries.length; i++) {
+			var entry = entries[i];
+			if (entry.ident.length < self.rows.length && entry.ident.length < self.graphLevel) {
+				if (self.graphLevel === Infinity) {
+					allEntries.push(entry);
+				}
+				getEntries(entry.ident, allEntries);
+			} else {
+				allEntries.push(entry);
+			}
+		}
+		return allEntries;
+	}
 
 };
 StudentAnalytics.prototype.getBarLabel = function (entry) {
@@ -444,8 +474,9 @@ StudentAnalytics.prototype.download = function () {
 	});
 	rows.push(header.join(cellDivider) + lineDivider);
 
-	self.entries.forEach(function (entry) {
-		if(Object.keys(entry.ident).length < self.rows.length) return;
+	var entries = getEntries();
+
+	entries.forEach(function (entry) {
 		var row = [];
 		self.columns.forEach(function (col) {
 			if (col.cdId === 'group') {
@@ -459,11 +490,25 @@ StudentAnalytics.prototype.download = function () {
 
 	downloadFile(rows, 'text/csv;charset=UTF-8', 'sbeat_analytics.csv');
 
+	function getEntries(path, allEntries) {
+		if (!allEntries) allEntries = [];
+		var entries = self.getEntriesTreeLevel(path);
+		for (var i = 0; i < entries.length; i++) {
+			var entry = entries[i];
+			if (entry.ident.length < self.rows.length) {
+				getEntries(entry.ident, allEntries);
+			} else {
+				allEntries.push(entry);
+			}
+		}
+		return allEntries;
+	}
+
 	function formatNumber(value) {
-		if(!isNaN(value)) {
+		if (!isNaN(value)) {
 			return String(value).replace('.', ',');
 		}
-		if(value === '-') {
+		if (value === '-') {
 			return '0';
 		}
 		return value;
@@ -517,7 +562,7 @@ StudentAnalytics.prototype.drawTable = function () {
 
 	thead.find('th').click(function () {
 		var col = self.columnData[this.colId];
-		var sortField = col.sortBy ? col.sortBy : col.id;
+		var sortField = col.sortBy ? col.sortBy : this.col.id;
 
 		if (self.pagination.sort1 === sortField + ',1') {
 			self.pagination.sort1 = sortField + ',-1';
@@ -535,166 +580,93 @@ StudentAnalytics.prototype.drawTable = function () {
 	});
 
 
-	var tbody = $(document.createElement('tbody'));
+	var tbody = this.tbodyDOM = document.createElement('tbody');
 	this.tableDOM.append(tbody);
 
-	this.entries = this.getEntries();
-	console.log('entries', this.entries);
-
-	for (var i = 0; i < this.entries.length; i++) {
-		var entry = this.entries[i];
-
-		tbody.append(this.drawEntry(entry));
-	}
+	this.drawEntries([], tbody);
 
 	adjustTableHeaders(this.tableDOM);
 };
-StudentAnalytics.prototype.getEntries = function () {
+
+StudentAnalytics.prototype.sortEntries = function (entries) {
+	var self = this;
+	var sort1 = getSortInfo(self.pagination.sort1);
+	var sort2 = getSortInfo(self.pagination.sort2);
+
+	entries.sort(sortEntries);
+
+	function sortEntries(a, b) {
+		if (sort1.field) {
+			var valA = a[sort1.field];
+			var valB = b[sort1.field];
+			if (valA === null) valA = -Infinity;
+			if (valB === null) valB = -Infinity;
+			if (valA > valB || valB === -Infinity && valA !== -Infinity) return sort1.direction;
+			if (valA < valB || valA === -Infinity && valB !== -Infinity) return sort1.direction * -1;
+		}
+
+		if (sort2.field) {
+			valA = a[sort2.field];
+			valB = b[sort2.field];
+			if (valA === null) valA = -Infinity;
+			if (valB === null) valB = -Infinity;
+			if (valA > valB || valB === -Infinity && valA !== -Infinity) return sort2.direction;
+			if (valA < valB || valA === -Infinity && valB !== -Infinity) return sort2.direction * -1;
+		}
+
+		return 0;
+	}
+
+	function getSortInfo(sortStr) {
+		var info = {field: null, direction: 1};
+		if (!sortStr) {
+			return info;
+		}
+		var parts = sortStr.split(',', 2);
+		if (parts[0]) info.field = parts[0];
+		if (parts[1] === '-1') info.direction = -1;
+		return info;
+	}
+};
+
+StudentAnalytics.prototype.getEntriesTreeLevel = function (path) {
 	var self = this;
 	if (!self.data) {
 		return [];
 	}
-	var entries = {};
-	for (var i = 0; i < self.data.group_results.length; i++) {
-		var d = self.data.group_results[i];
-		var key = getEntryKey(d);
-		ensureEntries(key, d);
+	if (!path) {
+		path = [];
+	} else {
+		path = path.slice();
 	}
 
-	var entriesArray = Object.keys(entries).map(function (keyStr) {
-		var entry = entries[keyStr];
-
-		for (var i = 0; i < self.columns.length; i++) {
-			var col = self.columns[i];
-			entry[col.id] = getValue(col, entry.results);
+	var results = self.data.group_results;
+	var entries = {};
+	for (var i = 0; i < results.length; i++) {
+		var d = results[i];
+		var entryPath = getEntryPath(d);
+		if (!isInPath(entryPath)) continue;
+		var entryIdPath = entryPath.slice(0, path.length + 1);
+		var entryId = entryPath[path.length];
+		var entry = entries[entryId];
+		if (!entry) {
+			entries[entryId] = entry = createEntry(entryIdPath);
 		}
+		addValueToEntry(entry, d);
+	}
 
-		return entry;
+	var entriesArray = Object.keys(entries).map(function (entryId) {
+		return entries[entryId];
 	});
-	entriesArray.sort(sortFunc);
+
+	finishValuesOfEntries(entriesArray);
+
+	self.sortEntries(entriesArray);
+
 	return entriesArray;
 
-	function sortFunc(a, b) {
-		for (var i = 0; i < self.rows.length; i++) {
-			var valA = a.ident[i];
-			var valB = b.ident[i];
-			if (valA === undefined) valA = -Infinity;
-			if (valB === undefined) valB = -Infinity;
-			if (valA > valB || valB === -Infinity && valA !== -Infinity) return 1;
-			if (valA < valB || valA === -Infinity && valB !== -Infinity) return -1;
-		}
-		return 0;
-	}
 
-	function getValue(col, results) {
-		var value = null, count = 0;
-		for (var i = 0; i < results.length; i++) {
-			var d = results[i];
-			if (col.type === 'direct' && d[col.cdId] !== undefined) {
-				value = (value || 0) + d[col.cdId];
-			}
-			if (col.type === 'calc' && d[col.id] !== undefined) {
-				if (col.calcOp === 'avg' || col.calcOp === 'sum') {
-					value = (value || 0) + d[col.id];
-					count++;
-				}
-				if (col.calcOp === 'min' && (value === null || d[col.id] < value)) {
-					value = d[col.id];
-				}
-				if (col.calcOp === 'max' && (value === null || d[col.id] > value)) {
-					value = d[col.id];
-				}
-			}
-			if (col.type === 'group') {
-				var grpValue = d._id[col.cdId];
-				var cd = self.columnData[col.cdId];
-				var cmpInfo = getCompareValueInfo(col.grpValue, cd.formatting, true);
-				if (cmpInfo.operator === 'equal' && grpValue === cmpInfo.value
-					|| cmpInfo.operator === 'lte' && grpValue <= cmpInfo.value
-					|| cmpInfo.operator === 'gte' && grpValue >= cmpInfo.value
-					|| cmpInfo.operator === 'between'
-					&& grpValue >= cmpInfo.minValue
-					&& grpValue <= cmpInfo.maxValue) {
-					value = (value || 0) + d.count;
-				}
-			}
-		}
-		if (col.type === 'calc' && col.calcOp === 'avg' && count) {
-			value = value / count;
-		}
-		return value;
-	}
-
-	function setColumns(o) {
-		for (var i = 0; i < self.columns.length; i++) {
-			var cd = self.columns[i];
-			o[cd.id] = null;
-		}
-	}
-
-	function getChildEntries(ident) {
-		var childEntries = [];
-		for (var i = 0; i < entriesArray.length; i++) {
-			var entry = entriesArray[i];
-			var matched = 0;
-			for (var j = 0; j < ident.length && j < entry.ident.length; j++) {
-				var idPart = ident[j];
-				if (idPart === entry.ident[j]) {
-					matched++;
-				}
-			}
-			if (matched === ident.length && entry.ident.length === ident.length + 1) {
-				childEntries.push(entry);
-			}
-		}
-		return childEntries;
-	}
-
-	function toggleOpen() {
-		var childEntries = getChildEntries(this.ident);
-		console.log('toggle open', childEntries);
-		for (var i = 0; i < childEntries.length; i++) {
-			var entry = childEntries[i];
-			if (this.open && entry.open) {
-				entry.toggleOpen();
-			}
-			self.setEntryDisplay(entry.ident, !this.open);
-		}
-		this.open = !this.open;
-
-	}
-
-	function ensureEntries(key, d) {
-		var lastKey = null;
-		for (var i = 0; i < key.length; i++) {
-			var entryKey = key.slice(0, key.length - i);
-			var keyStr = ensureEntry(entryKey);
-			entries[keyStr].results.push(d);
-			if (i > 0) {
-				entries[entryKey].open = self.openLevels >= entryKey.length;
-				entries[entryKey].toggleOpen = toggleOpen;
-			}
-			lastKey = keyStr;
-			if (!self.showGroupSummary) {
-				break;
-			}
-		}
-	}
-
-	function ensureEntry(key) {
-		var keyStr = key.join(',');
-		if (!entries[keyStr]) {
-			entries[keyStr] = {
-				ident: key,
-				count: 0,
-				results: []
-			};
-			setColumns(entries[keyStr]);
-		}
-		return keyStr;
-	}
-
-	function getEntryKey(d) {
+	function getEntryPath(d) {
 		var values = [];
 		for (var i = 0; i < self.rows.length; i++) {
 			var row = self.rows[i];
@@ -702,61 +674,172 @@ StudentAnalytics.prototype.getEntries = function () {
 		}
 		return values;
 	}
-};
-StudentAnalytics.prototype.setEntryDisplay = function (ident, open) {
-	var keyStr = ident.join(',');
 
-	this.tableDOM.find('tr[id]').each(function () {
-		if (this.id === keyStr) {
-			if (open) {
-				this.style.display = '';
-			} else {
-				this.style.display = 'none';
+	function isInPath(entryPath) {
+		for (var i = 0; i < path.length && i < entryPath.length; i++) {
+			if (entryPath[i] !== path[i]) return false;
+		}
+		return true;
+	}
+
+	function createEntry(entryIdPath) {
+		var entry = {
+			ident: entryIdPath,
+			group: null,
+			count: 0,
+			open: entryIdPath.length === self.rows.length ? undefined : false
+		};
+		for (var i = 0; i < self.columns.length; i++) {
+			var col = self.columns[i];
+			entry[col.id] = null;
+		}
+		entry.group = entryIdPath.join(',');
+		return entry;
+	}
+
+	function addValueToEntry(entry, d) {
+		for (var i = 0; i < self.columns.length; i++) {
+			addValueToEntryByCol(self.columns[i], entry, d);
+		}
+	}
+
+	function finishValuesOfEntries(entries) {
+		for (var i = 0; i < entries.length; i++) {
+			var entry = entries[i];
+			for (var j = 0; j < self.columns.length; j++) {
+				finishValueOfEntryByCol(self.columns[j], entry);
 			}
 		}
-	});
+	}
 
-};
-StudentAnalytics.prototype.openCloseAll = function (open) {
-	if (!this.entries) return;
-	for (var i = 0; i < this.entries.length; i++) {
-		var entry = this.entries[i];
-		if (entry.open !== undefined && entry.open !== open) {
-			entry.toggleOpenWithView();
+	function addValueToEntryByCol(col, entry, d) {
+		var value = entry[col.id];
+		if (col.type === 'direct' && d[col.cdId] !== undefined) {
+			value = (value || 0) + d[col.cdId];
+		}
+		if (col.type === 'calc' && d[col.id] !== undefined) {
+			if (col.calcOp === 'avg' || col.calcOp === 'sum') {
+				if (d[col.id] !== null) {
+					value = (value || 0) + d[col.id];
+					entry['_avgCount_' + col.id] = (entry['_avgCount_' + col.id] || 0) + 1;
+				}
+			}
+			if (col.calcOp === 'min' && (value === null || d[col.id] < value)) {
+				value = d[col.id];
+			}
+			if (col.calcOp === 'max' && (value === null || d[col.id] > value)) {
+				value = d[col.id];
+			}
+		}
+		if (col.type === 'group') {
+			var grpValue = d._id[col.cdId];
+			var cd = self.columnData[col.cdId];
+			var cmpInfo = getCompareValueInfo(col.grpValue, cd.formatting, true);
+			if (cmpInfo.operator === 'equal' && grpValue === cmpInfo.value
+				|| cmpInfo.operator === 'lte' && grpValue <= cmpInfo.value
+				|| cmpInfo.operator === 'gte' && grpValue >= cmpInfo.value
+				|| cmpInfo.operator === 'between'
+				&& grpValue >= cmpInfo.minValue
+				&& grpValue <= cmpInfo.maxValue) {
+				value = (value || 0) + d.count;
+			}
+		}
+		entry[col.id] = value;
+	}
+
+	function finishValueOfEntryByCol(col, entry) {
+		var value = entry[col.id], count = entry['_avgCount_' + col.id];
+		if (col.type === 'calc' && col.calcOp === 'avg' && count) {
+			entry[col.id] = value / count;
+			delete entry['_avgCount_' + col.id];
 		}
 	}
 
 };
-StudentAnalytics.prototype.findParent = function (ident) {
-	return this.entries.find(function (e) {
-		var matched = 0;
-		if (e.ident.length !== ident.length - 1) return false;
-		for (var i = 0; i < ident.length - 1; i++) {
-			if (ident[i] === e.ident[i]) matched++;
+
+StudentAnalytics.prototype.openCloseAll = function (open) {
+	if (!this.tbodyDOM) return;
+	for (var i = 0; i < this.tbodyDOM.childNodes.length; i++) {
+		var tr = this.tbodyDOM.childNodes[i];
+		if (open && tr.openAll) {
+			tr.openAll();
+		} else if (!open && tr.closeAll) {
+			tr.closeAll();
 		}
-		return matched === ident.length - 1;
-	});
+	}
+
+};
+StudentAnalytics.prototype.drawEntries = function (path, parent, afterEl) {
+	var entriesTree = this.getEntriesTreeLevel(path);
+
+	var fragment = document.createDocumentFragment();
+
+	for (var i = 0; i < entriesTree.length; i++) {
+		var entry = entriesTree[i];
+		fragment.append(this.drawEntry(entry));
+	}
+
+	if (afterEl) {
+		parent.insertBefore(fragment, afterEl.nextSibling);
+	} else {
+		parent.appendChild(fragment);
+	}
+
+	return entriesTree;
+};
+StudentAnalytics.prototype.removeEntries = function (group, parent) {
+	var idStart = group + ',';
+	for (var i = 0; i < parent.childNodes.length; i++) {
+		var node = parent.childNodes[i];
+		if (node.id && node.id.indexOf(idStart) === 0) {
+			parent.removeChild(node);
+			i--;
+		}
+	}
 };
 StudentAnalytics.prototype.drawEntry = function (entry) {
+	var self = this;
 	var tr = document.createElement('tr');
-	tr.id = entry.ident.join(',');
+	tr.id = entry.group;
 
-	if (entry.ident.length > 1) {
-		var parentEntry = this.findParent(entry.ident);
-		if (parentEntry && !parentEntry.open) {
-			tr.style.display = 'none';
+	if (entry.open !== undefined) {
+		entry.toggleOpen = function () {
+			entry.open = !entry.open;
+			if (entry.open) {
+				self.drawEntries(entry.ident, tr.parentNode, tr);
+			} else {
+				self.removeEntries(entry.group, tr.parentNode);
+			}
+		};
+		tr.openAll = function () {
+			if (!entry.open) {
+				entry.open = true;
+				var entries = self.drawEntries(entry.ident, tr.parentNode, tr);
+				for (var i = 0; i < entries.length; i++) {
+					var subEntry = entries[i];
+					if (subEntry.toggleOpen) {
+						subEntry.toggleOpen();
+					}
+				}
+			}
+		};
+		tr.closeAll = function () {
+			if (entry.open) {
+				entry.toggleOpen();
+			}
 		}
 	}
 
-	for (var i = 0; i < this.columns.length; i++) {
-		var cd = this.columns[i];
+	for (var i = 0; i < self.columns.length; i++) {
+		var cd = self.columns[i];
 		var td = document.createElement('td');
-		this.drawCellValue(entry, cd, td);
+		self.drawCellValue(entry, cd, td);
 		tr.appendChild(td);
 	}
 
 	return tr;
 };
+
 StudentAnalytics.prototype.drawCellValue = function (entry, col, td) {
 	var cd = this.columnData[col.cdId];
 	if (!cd) {
@@ -804,43 +887,13 @@ StudentAnalytics.prototype.drawCellValue = function (entry, col, td) {
 		var value = entry[col.id];
 		var formatting = cd.formatting;
 		if (this.allowedTableFormats.indexOf(formatting) === -1 || col.type === 'group') formatting = 'int';
+		td.formattedAs = value + ' ' + formatting;
 		td.appendChild(getFormattedHTML(value, formatting));
 	}
 
 };
-StudentAnalytics.prototype.sortTable = function () {
-	var self = this;
-	var sorts = [], parts;
-	if (self.pagination.sort1) {
-		parts = self.pagination.sort1.split(',', 2);
-		sorts.push({field: parts[0], direction: parseInt(parts[1])});
-	}
-	if (self.pagination.sort2) {
-		parts = self.pagination.sort2.split(',', 2);
-		sorts.push({field: parts[0], direction: parseInt(parts[1])});
-	}
-	if (!sorts.length) {
-		return;
-	}
-
-	this.list.sort(sortFunction);
-
-	this.draw();
-
-	function sortFunction(a, b) {
-		for (var i = 0; i < sorts.length; i++) {
-			var s = sorts[i];
-			var valueA = getByPath(s.field, a);
-			var valueB = getByPath(s.field, b);
-			if (valueA > valueB) return s.direction;
-			if (valueA < valueB) return s.direction * -1;
-		}
-		return 0;
-	}
-
-};
 StudentAnalytics.prototype.onHeaderClick = function () {
-	this.load();
+
 };
 StudentAnalytics.prototype.initColumns = function () {
 	var self = this;

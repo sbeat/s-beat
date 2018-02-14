@@ -64,19 +64,20 @@ ApplicantAnalytics.prototype.init = function () {
 	this.pagination.sort2 = this.settings.default.sort2;
 
 
+	var col;
 	for (var colId in this.columnData) {
-		var col = this.columnData[colId];
+		col = this.columnData[colId];
 
 		if(noFilter.indexOf(col.id) === -1) {
 			this.addFilterForData(col);
 		}
+	}
 
-		var sf = col.id;
-		if (col.sortBy) {
-			sf = col.sortBy;
-		}
-		this.pagination.sortOptions[sf + ',1'] = col.label + ' aufsteigend';
-		this.pagination.sortOptions[sf + ',-1'] = col.label + ' absteigend';
+	for (var i = 0; i < this.columns.length; i++) {
+		col = this.columns[i];
+		var label = this.getColumnLabel(col).textContent;
+		this.pagination.sortOptions[col.id + ',1'] = label + ' aufsteigend';
+		this.pagination.sortOptions[col.id + ',-1'] = label + ' absteigend';
 	}
 
 	this.addFilterForData({
