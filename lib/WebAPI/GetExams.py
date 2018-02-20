@@ -40,6 +40,7 @@ def handle():
         'exam_id': 'int',
         'semester': 'int',
         'bonus': 'int',
+        'recognized': 'bool',
         'degree_type': 'str',
         'name': 'str',
         'stg': 'str',
