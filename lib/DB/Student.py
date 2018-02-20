@@ -100,7 +100,7 @@ class Student(DBDocument):
         self.surname = None
         self.short = None
         self.email = None
-        self.land = None  # country of residence
+        self.country = None  # country of residence
         self.zip = None  # zip code
         self.citship = None  # citizenship
         self.eu = None  # EU citizen (yes/no)
