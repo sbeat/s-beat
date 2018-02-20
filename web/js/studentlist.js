@@ -431,6 +431,30 @@ function StudentList(parentDOM) {
 			label: 'Tags',
 			title: 'Tags',
 			formatting: 'tags'
+		},
+		'country': {
+			id: 'country',
+			label: 'Land',
+			title: 'Land des Studierenden',
+			formatting: 'str'
+		},
+		'zip': {
+			id: 'zip',
+			label: 'PLZ',
+			title: 'Postleitzahl des Studierenden',
+			formatting: 'str'
+		},
+		'stang': {
+			id: 'stang',
+			label: 'Staatsangehörigkeit',
+			title: 'Staatsangehörigkeit des Studierenden',
+			formatting: 'str'
+		},
+		'eu': {
+			id: 'eu',
+			label: 'EU Bürger',
+			title: 'Ist der Bewerber EU Bürger',
+			formatting: 'yesno'
 		}
 
 	};
