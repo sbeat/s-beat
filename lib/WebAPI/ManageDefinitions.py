@@ -89,7 +89,8 @@ def get_all_definitions():
         data['queries'][item.md5_id()] = item.get_dict(True)
 
     for item in DB.PathElement.find({}):
-        data['path_elements'][item.md5_id()] = item.get_dict(True)
+        if item.query is not None:
+            data['path_elements'][item.md5_id()] = item.get_dict(True)
 
     return respond(data, 200)
 
@@ -98,7 +99,8 @@ def get_definition_stats():
     data = {'path_element_stats': {}}
     path_elements = {}
     for item in DB.PathElement.find({}):
-        path_elements[item.md5_id()] = item
+        if item.query is not None:
+            path_elements[item.md5_id()] = item
 
     for pe_id, pe in path_elements.iteritems():
         pe_list = [pe]
