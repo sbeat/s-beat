@@ -434,7 +434,7 @@ function StudentList(parentDOM) {
 		},
 		'country': {
 			id: 'country',
-			label: 'Land',
+			label: 'Herkunftsland',
 			title: 'Land des Studierenden',
 			formatting: 'str'
 		},
@@ -444,8 +444,8 @@ function StudentList(parentDOM) {
 			title: 'Postleitzahl des Studierenden',
 			formatting: 'str'
 		},
-		'stang': {
-			id: 'stang',
+		'citship': {
+			id: 'citship',
 			label: 'Staatsangehörigkeit',
 			title: 'Staatsangehörigkeit des Studierenden',
 			formatting: 'str'

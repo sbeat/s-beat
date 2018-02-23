@@ -110,7 +110,7 @@ function ApplicantList(parentDOM) {
 		'gender': {id: 'gender', label: 'Geschl.', title: 'Geschlecht', formatting: 'gender'},
 		'country': {
 			id: 'country',
-			label: 'Land',
+			label: 'Herkunftsland',
 			title: 'Land des Bewerbers',
 			formatting: 'str'
 		},
@@ -120,8 +120,8 @@ function ApplicantList(parentDOM) {
 			title: 'Postleitzahl des Bewerbers',
 			formatting: 'str'
 		},
-		'stang': {
-			id: 'stang',
+		'citship': {
+			id: 'citship',
 			label: 'Staatsangehörigkeit',
 			title: 'Staatsangehörigkeit des Bewerbers',
 			formatting: 'str'
