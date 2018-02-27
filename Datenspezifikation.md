@@ -32,6 +32,8 @@ Die Daten von Studenten liegen in anonymisierter Form vor. Jedem Student ist ein
 
 ### Spalten
 
+Neben den folgenden Spalten, können die aus den Studentenidentifikationsdaten ebenfalls verwendet werden.
+
 #### `IDENTNR`
 
 Identifikationsnummer eines Studenten
