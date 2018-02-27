@@ -35,7 +35,7 @@ ApplicantAnalytics.prototype.init = function () {
 	this.defineColumn('gender', 'Geschlecht', 'Anzahl Bewerber mit dem Geschlecht', 'str', true);
 	this.defineColumn('country', 'Land', 'Anzahl Bewerber aus dem Land', 'str', true);
 	this.defineColumn('zip', 'PLZ', 'Anzahl Bewerber mit der Postleitzahl', 'str', true);
-	this.defineColumn('stang', 'Staatsangehörigkeit', 'Anzahl Bewerber mit der Staatsangehörigkeit', 'str', true);
+	this.defineColumn('citship', 'Staatsangehörigkeit', 'Anzahl Bewerber mit der Staatsangehörigkeit', 'str', true);
 	this.defineColumn('eu', 'EU Bürger', 'Anzahl Bewerber mit dem EU-Bürgerstatus', 'yesno', true);
 	this.defineColumn('admitted', 'Zulassung', 'Anzahl Bewerber aus mit dem Zulassungsstatus', 'yesno', true);
 	this.defineColumn('student', 'Ist Student', 'Anzahl Studenten', 'yesno', true);
