@@ -718,10 +718,15 @@ StudentAnalytics.prototype.getEntriesTreeLevel = function (path) {
 			value = (value || 0) + d[col.cdId];
 		}
 		if (col.type === 'calc' && d[col.id] !== undefined) {
-			if (col.calcOp === 'avg' || col.calcOp === 'sum') {
+			if (col.calcOp === 'sum') {
 				if (d[col.id] !== null) {
 					value = (value || 0) + d[col.id];
-					entry['_avgCount_' + col.id] = (entry['_avgCount_' + col.id] || 0) + 1;
+				}
+			}
+			if (col.calcOp === 'avg' || col.calcOp === 'sum') {
+				if (d[col.id] !== null) {
+					value = (value || 0) + d[col.id] * d.count;
+					entry['_avgCount_' + col.id] = (entry['_avgCount_' + col.id] || 0) + d.count;
 				}
 			}
 			if (col.calcOp === 'min' && (value === null || d[col.id] < value)) {
