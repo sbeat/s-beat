@@ -239,8 +239,13 @@ class Applicant(DBDocument):
             if calculations is not None:
                 for calc_def in calculations:
                     entry = dict()
-                    entry['$' + calc_def['op']] = '$' + calc_def['field']
-                    group_stage[calc_def['op'] + '-' + sanitize_field(calc_def['field'])] = entry
+                    op = calc_def['op']
+                    entry['$' + op] = '$' + calc_def['field']
+                    group_stage[op + '-' + sanitize_field(calc_def['field'])] = entry
+                    if op == 'avg':
+                        entry = dict()
+                        entry['$sum'] = {'$cond': [calc_def['field'], 1, 0]}
+                        group_stage['count-' + sanitize_field(calc_def['field'])] = entry
 
             pipeline.append({'$group': group_stage})
 

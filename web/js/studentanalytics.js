@@ -583,6 +583,8 @@ StudentAnalytics.prototype.drawTable = function () {
 	var tbody = this.tbodyDOM = document.createElement('tbody');
 	this.tableDOM.append(tbody);
 
+	console.log('columns', this.columns);
+
 	this.drawEntries([], tbody);
 
 	adjustTableHeaders(this.tableDOM);
@@ -723,10 +725,11 @@ StudentAnalytics.prototype.getEntriesTreeLevel = function (path) {
 					value = (value || 0) + d[col.id];
 				}
 			}
-			if (col.calcOp === 'avg' || col.calcOp === 'sum') {
-				if (d[col.id] !== null) {
-					value = (value || 0) + d[col.id] * d.count;
-					entry['_avgCount_' + col.id] = (entry['_avgCount_' + col.id] || 0) + d.count;
+			if (col.calcOp === 'avg') {
+				var count = d['count.'+col.cdId];
+				if (d[col.id] !== null && count) {
+					value = (value || 0) + d[col.id] * count;
+					entry['_avgCount_' + col.id] = (entry['_avgCount_' + col.id] || 0) + count;
 				}
 			}
 			if (col.calcOp === 'min' && (value === null || d[col.id] < value)) {
