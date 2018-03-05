@@ -112,6 +112,18 @@ function CoursesList(parentDOM) {
 			title: 'Durchschnittliche Note der Hochschulzugangsberechtigung',
 			formatting: 'grade'
 		},
+		'hzb_grade_data.min': {
+			id: 'hzb_grade_data.min',
+			label: 'Min. HZB Note',
+			title: 'Minimale Note der Hochschulzugangsberechtigung',
+			formatting: 'grade'
+		},
+		'hzb_grade_data.max': {
+			id: 'hzb_grade_data.max',
+			label: 'Max. HZB Note',
+			title: 'Maximale Note der Hochschulzugangsberechtigung',
+			formatting: 'grade'
+		},
 		'exam_perc_resigned': {
 			id: 'exam_perc_resigned',
 			label: 'Rücktritte in %',
@@ -125,11 +137,53 @@ function CoursesList(parentDOM) {
 			formatting: 'int'
 		},
 		'applicants.count': {id: 'applicants.count', label: 'Bewerber', title: 'Anzahl Bewerber', formatting: 'int'},
+		'applicants.admitted': {
+			id: 'applicants.admitted',
+			label: 'Zugelassene Bewerber',
+			title: 'Anzahl zugelassene Bewerber',
+			formatting: 'int'
+		},
 		'applicants.count_per_student': {
 			id: 'applicants.count_per_student',
 			label: 'Bewerber pro Platz',
 			title: 'Bewerber pro Platz',
 			formatting: 'float'
+		},
+		'applicants.denied_quote': {
+			id: 'applicants.denied_quote',
+			label: 'Ablehnungsquote',
+			title: 'Nicht zugelassen / Anzahl Bewerber',
+			formatting: 'percent'
+		},
+		'applicants.refusal_quote': {
+			id: 'applicants.refusal_quote',
+			label: 'Absagequote',
+			title: '(Zugelassene Bewerber - Anzahl Studenten) / Zugelassene Bewerber',
+			formatting: 'percent'
+		},
+		'applicants.accept_quote': {
+			id: 'applicants.accept_quote',
+			label: 'Annahmequote',
+			title: 'Anzahl Studenten / Zugelassene Bewerber',
+			formatting: 'percent'
+		},
+		'applicants.hzb_grade_data.mean': {
+			id: 'applicants.hzb_grade_data.mean',
+			label: 'Ø HZB Note Bewerber',
+			title: 'Durchschnittliche Note der Hochschulzugangsberechtigung von Bewerbern',
+			formatting: 'grade'
+		},
+		'applicants.hzb_grade_data.min': {
+			id: 'applicants.hzb_grade_data.mean',
+			label: 'Min. HZB Note Bewerber',
+			title: 'Minimale Note der Hochschulzugangsberechtigung von Bewerbern',
+			formatting: 'grade'
+		},
+		'applicants.hzb_grade_data.max': {
+			id: 'applicants.hzb_grade_data.max',
+			label: 'Max. HZB Note Bewerber',
+			title: 'Maximale Note der Hochschulzugangsberechtigung von Bewerbern',
+			formatting: 'grade'
 		}
 	};
 	this.columns = this.settings.default.columns.slice();
