@@ -244,7 +244,7 @@ class Applicant(DBDocument):
                     group_stage[op + '-' + sanitize_field(calc_def['field'])] = entry
                     if op == 'avg':
                         entry = dict()
-                        entry['$sum'] = {'$cond': [calc_def['field'], 1, 0]}
+                        entry['$sum'] = {'$cond': ['$' + calc_def['field'], 1, 0]}
                         group_stage['count-' + sanitize_field(calc_def['field'])] = entry
 
             pipeline.append({'$group': group_stage})
