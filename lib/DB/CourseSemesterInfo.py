@@ -135,6 +135,7 @@ class CourseSemesterInfo(DBDocument):
             'male': 0,
             'female': 0,
             'count_per_student': None,  # (students + applicants) / students
+            'admit_quote': None,  # admitted / total applicants
             'denied_quote': None,  # not admitted / total applicants
             'refusal_quote': None,  # admitted / (admitted + students)
             'accept_quote': None,  # students / admitted
@@ -179,7 +180,9 @@ class CourseSemesterInfo(DBDocument):
         if self.applicants['count'] > 0:
             if self.students['count'] > 0:
                 self.applicants['count_per_student'] = float(self.applicants['count']) / self.students['count']
-            self.applicants['denied_quote'] = float(self.applicants['admitted']) / self.applicants['count']
+            self.applicants['denied_quote'] = float(self.applicants['count'] - self.applicants['admitted']) / \
+                                              self.applicants['count']
+            self.applicants['admit_quote'] = float(self.applicants['admitted']) / self.applicants['count']
 
         if self.applicants['admitted'] > 0:
             self.applicants['accept_quote'] = float(self.students['count']) / self.applicants['admitted']
@@ -294,7 +297,6 @@ class CourseSemesterInfo(DBDocument):
             d.applicants['admitted'] += 1
 
         Course.update_hzb_age_stat_by_entity(d.applicants, applicant)
-
 
     @classmethod
     def update_totals_dict_by_semester_data(cls, d):

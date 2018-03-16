@@ -167,6 +167,12 @@ function CoursesList(parentDOM) {
 			title: 'Anzahl Studenten / Zugelassene Bewerber',
 			formatting: 'percent'
 		},
+		'applicants.admit_quote': {
+			id: 'applicants.admit_quote',
+			label: 'Zulassungsquote',
+			title: 'Zugelassene Bewerber / Anzahl Bewerber',
+			formatting: 'percent'
+		},
 		'applicants.hzb_grade_data.mean': {
 			id: 'applicants.hzb_grade_data.mean',
 			label: 'Ø HZB Note Bewerber',

@@ -97,6 +97,7 @@ class Course(DBDocument):
             'female': 0,
             'count_per_student': None,  # (students + applicants) / students
             'denied_quote': None,  # not admitted / total applicants
+            'admit_quote': None,  # admitted / total applicants
             'refusal_quote': None,  # admitted / (admitted + students)
             'accept_quote': None,  # students / admitted
             'hzb_grade_data': {
@@ -229,7 +230,9 @@ class Course(DBDocument):
         if self.applicants['count'] > 0:
             if self.count_students > 0:
                 self.applicants['count_per_student'] = float(self.applicants['count']) / self.count_students
-            self.applicants['denied_quote'] = float(self.applicants['admitted']) / self.applicants['count']
+            self.applicants['denied_quote'] = float(self.applicants['count'] - self.applicants['admitted']) / \
+                                              self.applicants['count']
+            self.applicants['admit_quote'] = float(self.applicants['admitted']) / self.applicants['count']
 
         if self.applicants['admitted'] > 0:
             self.applicants['accept_quote'] = float(self.count_students) / self.applicants['admitted']
