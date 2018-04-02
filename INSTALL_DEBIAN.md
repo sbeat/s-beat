@@ -13,9 +13,7 @@ The document contains the instructions for a basic installation of S-BEAT on DEB
 ## Install Python modules
 
 	pip install --upgrade pip
-	pip install pymongo
-	pip install Flask
-	pip install markdown
+	pip install -r requirements.txt
 
 
 ## Install MongoDB

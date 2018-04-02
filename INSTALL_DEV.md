@@ -9,9 +9,7 @@ This guide describes the setup on a Windows system.
 4. Install python dependencies:
 
 		pip install --upgrade pip
-		pip install pymongo
-		pip install Flask
-		pip install markdown
+		pip install -r requirements.txt
 
 
 ## Get S-BEAT
