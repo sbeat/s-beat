@@ -462,6 +462,8 @@ function StudentList(parentDOM) {
 	this.mandatoryColumns = ['ident'];
 
 	this.tableDOM = $(document.createElement('table'));
+	this.allCheck = null;
+	this.checkMenuDom = $(document.createElement('div'));
 
 	this.data = null; // Last loaded data
 	this.markedData = null;
@@ -578,6 +580,10 @@ StudentList.prototype.draw = function () {
 		this.tableDOM.addClass('studentList tbl sortable');
 		this.parentDOM.append(this.tableDOM);
 
+		this.parentDOM.append(this.checkMenuDom);
+		this.checkMenuDom.hide();
+		this.drawCheckMenu();
+
 		this.pagination2DOM.addClass('pagination');
 		this.parentDOM.append(this.pagination2DOM);
 
@@ -594,6 +600,9 @@ StudentList.prototype.draw = function () {
 		});
 		this.pagination.addLink('Herunterladen', function () {
 			self.openDownloadDialog();
+		});
+		this.allCheck = createCheckbox(function (state) {
+			self.checkAll(state);
 		});
 	}
 
@@ -632,6 +641,10 @@ StudentList.prototype.draw = function () {
 	var tr = $(document.createElement('tr'));
 	thead.append(tr);
 
+	var th = document.createElement('th');
+	th.appendChild(this.allCheck);
+	tr.append(th);
+
 	drawTableHead.call(this, tr, 'tooltip_student_');
 
 
@@ -658,7 +671,7 @@ StudentList.prototype.draw = function () {
 	var tbody = $(document.createElement('tbody'));
 	this.tableDOM.append(tbody);
 
-	for (i = 0; i < this.data.list.length; i++) {
+	for (var i = 0; i < this.data.list.length; i++) {
 		var student = this.data.list[i];
 		tbody.append(this.drawStudent(student));
 	}
@@ -666,6 +679,119 @@ StudentList.prototype.draw = function () {
 	adjustTableHeaders(this.tableDOM);
 };
 
+StudentList.prototype.drawCheckMenu = function () {
+	var self = this;
+	this.checkMenuDom.append('Auswahl: ');
+
+	$('<a href=""></a>')
+		.text('Tags hinzufügen')
+		.click(function (e) {
+			e.preventDefault();
+			var avilableTags = self.definitions.tags.filter(function (tag) {
+				return tag.active;
+			});
+			var dialog = selectTagsDialog(avilableTags, [], function (tags) {
+				saveTagsSelection('add', tags, dialog);
+			});
+		})
+		.appendTo(this.checkMenuDom);
+	this.checkMenuDom.append(' ');
+
+	$('<a href=""></a>')
+		.text('Tags entfernen')
+		.click(function (e) {
+			e.preventDefault();
+			var usedTags = [];
+			self.getAllCheckedIds().forEach(function (studentId) {
+				var student = getByField(self.data.list, 'ident', studentId);
+				if (student && student.tags) {
+					usedTags = usedTags.concat(student.tags);
+				}
+			});
+			var avilableTags = self.definitions.tags.filter(function (tag) {
+				return tag.active && usedTags.indexOf(tag.name) !== -1;
+			});
+
+			var dialog = selectTagsDialog(avilableTags, [], function (tags) {
+				saveTagsSelection('remove', tags, dialog);
+			});
+		})
+		.appendTo(this.checkMenuDom);
+	this.checkMenuDom.append(' ');
+
+	// $('<a href=""></a>')
+	// 	.text('Herunterladen')
+	// 	.click(function (e) {
+	// 		e.preventDefault();
+	// 	})
+	// 	.appendTo(this.checkMenuDom);
+
+	function saveTagsSelection(mode, tagNames, dialogBox) {
+		var studentIds = self.getAllCheckedIds();
+		var index = 0;
+
+		function handleStudent() {
+			if (index < studentIds.length) {
+				var id = studentIds[index++];
+				saveTagsSelectionForStudent(id, mode, tagNames, dialogBox, handleStudent);
+			} else {
+				dialogBox.dialog("close");
+				self.load();
+			}
+
+		}
+
+		handleStudent();
+
+	}
+
+	function saveTagsSelectionForStudent(studentId, mode, tagNames, dialogBox, callb) {
+		var student = getByField(self.data.list, 'ident', studentId);
+		var running = 0;
+		self.definitions.tags.forEach(function (tag) {
+			var tagName = tag.name;
+			var index = student.tags.indexOf(tagName);
+			var selected = tagNames.indexOf(tagName) !== -1;
+			if (selected && index === -1 && mode === 'add') {
+				running++;
+				tagAction('assign_tag', {
+					id: tagName,
+					student_id: studentId
+				}, $('<div></div>').appendTo(dialogBox), function (result) {
+					if (result && result.status === 'ok') {
+						student.tags.push(tagName);
+						finish();
+					}
+				});
+			} else if (selected && index !== -1 && mode === 'remove') {
+				running++;
+				tagAction('unlink_tag', {
+					id: tagName,
+					student_id: studentId
+				}, $('<div></div>').appendTo(dialogBox), function (result) {
+					if (result && result.status === 'ok') {
+						index = student.tags.indexOf(tagName);
+						student.tags.splice(index, 1);
+						finish();
+					}
+				});
+			}
+
+		});
+
+		if (!running) {
+			callb();
+		}
+
+		function finish() {
+			running--;
+			if (running === 0) {
+				callb();
+			}
+		}
+	}
+
+};
 
 StudentList.prototype.drawMListValue = function (field, el) {
 	var self = this;
@@ -713,17 +839,73 @@ StudentList.prototype.drawMListValue = function (field, el) {
 
 };
 
+StudentList.prototype.getAllCheckedIds = function () {
+	var allBoxes = this.tableDOM.find('tbody').find('input[type=checkbox]');
+	var ids = [];
+	allBoxes.each(function () {
+		if (this.checked) {
+			ids.push(this.value);
+		}
+	});
+	return ids;
+};
+
+StudentList.prototype.checkAll = function (state) {
+	var allBoxes = this.tableDOM.find('tbody').find('input[type=checkbox]');
+	if (state === undefined) {
+		var allChecked = true;
+		var anyChecked = false;
+		allBoxes.each(function () {
+			if (!this.checked) {
+				allChecked = false;
+			} else {
+				anyChecked = true;
+			}
+		});
+		if (allChecked && !this.allCheck.checked) {
+			this.allCheck.checked = true;
+		} else if (!allChecked && this.allCheck.checked) {
+			this.allCheck.checked = false;
+		}
+		if (anyChecked) {
+			this.checkMenuDom.show();
+		} else {
+			this.checkMenuDom.hide();
+		}
+	} else {
+		allBoxes.each(function () {
+			if (this.checked !== state) {
+				this.checked = state;
+			}
+			if (this.checked) {
+				this.checkMenuDom.show();
+			} else {
+				this.checkMenuDom.hide();
+			}
+		});
+	}
+
+};
 
 StudentList.prototype.drawStudent = function (student) {
+	var self = this;
 
 	var tr = $(document.createElement('tr'));
 	tr.addClass('student');
+
+	var td = document.createElement('td');
+	var box = createCheckbox(function () {
+		self.checkAll();
+	});
+	box.value = student.ident;
+	td.appendChild(box);
+	tr.append(td);
 
 	var i;
 	for (i = 0; i < this.columns.length; i++) {
 		var col = this.columnData[this.columns[i]];
 		if (!col) continue;
-		var td = $(document.createElement('td'));
+		td = $(document.createElement('td'));
 		tr.append(td);
 		this.drawCellValue(student, col, td);
 	}
@@ -992,6 +1174,15 @@ StudentList.prototype.setCustomFilters = function (ids) {
 	this.load();
 
 };
+StudentList.prototype.checkStudents = function (studentIds) {
+	var allBoxes = this.tableDOM.find('tbody').find('input[type=checkbox]');
+	allBoxes.each(function () {
+		if (studentIds.indexOf(this.value) !== -1) {
+			this.checked = true;
+		}
+	});
+};
+
 StudentList.prototype.load = function () {
 	var self = this;
 	var url = '/api/GetStudents';
@@ -1025,6 +1216,8 @@ StudentList.prototype.load = function () {
 
 	var query = parseQuery(location.href);
 
+	var studentIds = this.getAllCheckedIds();
+
 	$.ajax({
 		url: url
 	}).success(function (data) {
@@ -1048,6 +1241,8 @@ StudentList.prototype.load = function () {
 		//self.loadMarkedInfo();
 
 		self.draw();
+
+		self.checkStudents(studentIds);
 
 	}).fail(function (jqXHR) {
 		self.tableDOM.removeClass('loading');

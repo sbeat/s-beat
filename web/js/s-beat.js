@@ -350,6 +350,16 @@ function getByPath(path, o) {
 	return undefined;
 }
 
+function getByField(o, field, value) {
+	for (var i = 0; i < o.length; i++) {
+		var el = o[i];
+		if(el[field] == value) {
+			return el;
+		}
+	}
+	return undefined;
+}
+
 
 function getNumericValueOutput(value, formatting) {
 	if (formatting == 'str') return value;
@@ -1211,6 +1221,41 @@ function openSettingsDialog() {
 
 }
 
+function tagAction(action, data, parent, callb) {
+	var url = '/api/ManageTags';
+
+	if (data) {
+		data.action = action;
+	} else {
+		data = {action: action};
+	}
+
+
+	parent.addClass('loading');
+
+	$.ajax({
+		url: url,
+		type: 'POST',
+		contentType: 'application/json; charset=utf-8',
+		data: JSON.stringify(data)
+	}).success(function (data) {
+		parent.removeClass('loading');
+
+		if (data && data.error) {
+			parent.text('Error: ' + data.error);
+		}
+
+		if (callb) {
+			callb(data);
+		}
+
+	}).fail(function () {
+		parent.removeClass('loading');
+		parent.text('Laden der Daten ist fehlgeschlagen.');
+	});
+
+}
+
 function openLoadSettingsDialog() {
 	var self = this;
 
@@ -1717,8 +1762,17 @@ function selectTagsDialog(tagDefinitions, selectedTags, callb) {
 	return dialogBox;
 }
 
+function createCheckbox(onChange) {
+	var box = document.createElement('input');
+	box.type = 'checkbox';
+	box.addEventListener('change', function() {
+		onChange(box.checked);
+	}, false);
+	return box;
+}
+
 function downloadFile(contents, type, fileName) {
-	const data = new Blob(contents, {type: type});
+	var data = new Blob(contents, {type: type});
 	if (navigator.msSaveBlob) {
 		navigator.msSaveBlob(data, fileName);
 	} else {

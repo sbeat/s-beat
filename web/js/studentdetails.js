@@ -507,41 +507,6 @@ StudentDetails.prototype.drawTagsInfo = function (el) {
 		}
 	}
 
-	function tagAction(action, data, parent, callb) {
-		var url = '/api/ManageTags';
-
-		if (data) {
-			data.action = action;
-		} else {
-			data = {action: action};
-		}
-
-
-		parent.addClass('loading');
-
-		$.ajax({
-			url: url,
-			type: 'POST',
-			contentType: 'application/json; charset=utf-8',
-			data: JSON.stringify(data)
-		}).success(function (data) {
-			parent.removeClass('loading');
-
-			if (data && data.error) {
-				parent.text('Error: ' + data.error);
-			}
-
-			if (callb) {
-				callb(data);
-			}
-
-		}).fail(function () {
-			parent.removeClass('loading');
-			parent.text('Laden der Daten ist fehlgeschlagen.');
-		});
-
-	}
-
 };
 
 
