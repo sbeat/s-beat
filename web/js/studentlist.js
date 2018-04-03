@@ -719,12 +719,13 @@ StudentList.prototype.drawCheckMenu = function () {
 		.appendTo(this.checkMenuDom);
 	this.checkMenuDom.append(' ');
 
-	// $('<a href=""></a>')
-	// 	.text('Herunterladen')
-	// 	.click(function (e) {
-	// 		e.preventDefault();
-	// 	})
-	// 	.appendTo(this.checkMenuDom);
+	$('<a href=""></a>')
+		.text('Herunterladen')
+		.click(function (e) {
+			e.preventDefault();
+			self.openDownloadDialog(self.getAllCheckedIds());
+		})
+		.appendTo(this.checkMenuDom);
 
 	function saveTagsSelection(mode, tagNames, dialogBox) {
 		var studentIds = self.getAllCheckedIds();
@@ -1181,6 +1182,7 @@ StudentList.prototype.checkStudents = function (studentIds) {
 			this.checked = true;
 		}
 	});
+	this.checkAll();
 };
 
 StudentList.prototype.load = function () {
@@ -1542,7 +1544,7 @@ StudentList.prototype.openMarkedListSettingsDialog = function () {
 
 };
 
-StudentList.prototype.openDownloadDialog = function () {
+StudentList.prototype.openDownloadDialog = function (studentIds) {
 	var self = this;
 	var dialogBox = $(document.createElement('div'));
 	dialogBox.attr('title', 'Herunterladen als CSV');
@@ -1561,8 +1563,8 @@ StudentList.prototype.openDownloadDialog = function () {
 		checkO.className = 'name';
 		checkO.type = 'checkbox';
 
-		checkO.checked = self.columns.indexOf(col.id) != -1;
-		if (self.mandatoryColumns.indexOf(col.id) != -1) {
+		checkO.checked = self.columns.indexOf(col.id) !== -1;
+		if (self.mandatoryColumns.indexOf(col.id) !== -1) {
 			checkO.disabled = true;
 		}
 
@@ -1596,7 +1598,7 @@ StudentList.prototype.openDownloadDialog = function () {
 	});
 	for (var j = 0; j < columnsSorted.length; j++) {
 		var colId = columnsSorted[j];
-		if (self.columns.indexOf(colId) == -1) {
+		if (self.columns.indexOf(colId) === -1) {
 			ul.append(drawRow(self.columnData[colId]));
 		}
 	}
@@ -1620,16 +1622,14 @@ StudentList.prototype.openDownloadDialog = function () {
 					params.push(name + '=' + encodeURIComponent(filterQueries[name]));
 				}
 
-				params.push('start=' + self.pagination.start);
-				params.push('limit=' + self.pagination.limit);
 				params.push('sort1=' + self.pagination.sort1);
 				if (self.pagination.sort2)
 					params.push('sort2=' + self.pagination.sort2);
-				if (!self.definitions) {
-					params.push('definitions=true');
-				}
 				if (self.mlistId) {
 					params.push('mlist=' + self.mlistId);
+				}
+				if(studentIds) {
+					params.push('idents=' + encodeURIComponent(studentIds.join(',')));
 				}
 
 				params.push('output=csv');

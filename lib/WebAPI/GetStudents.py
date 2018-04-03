@@ -106,6 +106,8 @@ def get_formatted_value(value, formatting):
         return 'ja' if value else 'Nein'
     if formatting == 'float':
         return str(round(value, 1)).replace('.', ',')
+    if formatting == 'tags':
+        return ','.join(value)
 
     if type(value) not in (unicode, str, float, int):
         return ''
@@ -134,11 +136,10 @@ def get_csv_col(student, col, settings):
         else:
             return u'grün'
 
-    else:
-        value = col.run(student)
-        if value is None:
-            return ''
-        return get_formatted_value(value, col.formatting)
+    value = col.run(student)
+    if value is None:
+        return ''
+    return get_formatted_value(value, col.formatting)
 
 
 def get_csv_row(student, columns, delimiter, settings):
@@ -339,6 +340,17 @@ def handle():
             except ValueError:
                 return respond({'error': 'invalid_filter', 'name': name}, 400)
 
+        if name == 'idents':
+            try:
+                if settings['student_ident_string']:
+                    value = request.args.get(name).split(',')
+                    db_query['_id'] = {'$in': value}
+                else:
+                    db_query['_id'] = DB.get_db_query_by_type(request.args.get(name), 'in_intlist')
+                continue
+
+            except ValueError:
+                return respond({'error': 'invalid_filter', 'name': name}, 400)
 
         if name not in DataDefinitions.get_queries():
             continue
