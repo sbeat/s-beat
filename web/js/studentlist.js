@@ -673,6 +673,9 @@ StudentList.prototype.draw = function () {
 
 	if (self.sortable) {
 		thead.find('th').click(function (e) {
+			if (!this.colId) {
+				return;
+			}
 			var col = self.columnData[this.colId];
 			var sortField = col.sortBy ? col.sortBy : col.id;
 
@@ -714,8 +717,13 @@ StudentList.prototype.drawCheckMenu = function () {
 				return tag.active;
 			});
 			var dialog = selectTagsDialog(avilableTags, [], function (tags) {
-				saveTagsSelection('add', tags, dialog);
+				if (tags.length) {
+					saveTagsSelection('add', tags, dialog);
+				} else {
+					dialog.dialog("close");
+				}
 			});
+			dialog.dialog('option', 'title', 'Tags hinzufügen');
 		})
 		.appendTo(this.checkMenuDom);
 	this.checkMenuDom.append(' ');
@@ -736,8 +744,13 @@ StudentList.prototype.drawCheckMenu = function () {
 			});
 
 			var dialog = selectTagsDialog(avilableTags, [], function (tags) {
-				saveTagsSelection('remove', tags, dialog);
+				if (tags.length) {
+					saveTagsSelection('remove', tags, dialog);
+				} else {
+					dialog.dialog("close");
+				}
 			});
+			dialog.dialog('option', 'title', 'Tags entfernen');
 		})
 		.appendTo(this.checkMenuDom);
 	this.checkMenuDom.append(' ');
@@ -875,6 +888,7 @@ StudentList.prototype.getAllCheckedIds = function () {
 };
 
 StudentList.prototype.checkAll = function (state) {
+	var self = this;
 	var allBoxes = this.tableDOM.find('tbody').find('input[type=checkbox]');
 	if (state === undefined) {
 		var allChecked = true;
@@ -902,9 +916,9 @@ StudentList.prototype.checkAll = function (state) {
 				this.checked = state;
 			}
 			if (this.checked) {
-				this.checkMenuDom.show();
+				self.checkMenuDom.show();
 			} else {
-				this.checkMenuDom.hide();
+				self.checkMenuDom.hide();
 			}
 		});
 	}
@@ -1660,7 +1674,7 @@ StudentList.prototype.openDownloadDialog = function (studentIds) {
 				if (self.mlistId) {
 					params.push('mlist=' + self.mlistId);
 				}
-				if(studentIds) {
+				if (studentIds) {
 					params.push('idents=' + encodeURIComponent(studentIds.join(',')));
 				}
 
