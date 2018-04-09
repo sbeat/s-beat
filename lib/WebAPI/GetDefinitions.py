@@ -51,6 +51,8 @@ def get_definitions():
         if not UserTools.has_right(role, user_role):
             data['restricted'].append(field)
 
+    data['list_identification_data'] = UserTools.has_right('list_identification_data', user_role)
+
     allowed_stgs = UserTools.get_allowed_stgs(g.user)
 
     for pe in DataDefinitions.get_elements():

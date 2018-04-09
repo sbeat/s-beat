@@ -453,10 +453,33 @@ function StudentList(parentDOM) {
 		'eu': {
 			id: 'eu',
 			label: 'EU Bürger',
-			title: 'Ist der Bewerber EU Bürger',
+			title: 'Ist der Studierende EU Bürger',
 			formatting: 'yesno'
+		},
+		'matrikelno': {
+			id: 'matrikelno',
+			label: 'Matrikel-Nr.',
+			title: 'Matrikel-Nr.',
+			formatting: 'str'
+		},
+		'email': {
+			id: 'email',
+			label: 'E-Mail',
+			title: 'E-Mail Adresse',
+			formatting: 'str'
+		},
+		'forename': {
+			id: 'forename',
+			label: 'Vorname',
+			title: 'Vorname',
+			formatting: 'str'
+		},
+		'surname': {
+			id: 'surname',
+			label: 'Nachname',
+			title: 'Nachname',
+			formatting: 'str'
 		}
-
 	};
 	this.columns = this.settings.default.columns;
 	this.mandatoryColumns = ['ident'];
@@ -1090,6 +1113,15 @@ StudentList.prototype.initDefinitions = function (definitions) {
 			'semester_data.sem_4.delayed',
 			'semester_data.sem_2.delayed',
 			'semester_data.sem_1.delayed'
+		);
+	}
+
+	if (!self.definitions['list_identification_data']) {
+		self.definitions['hide_student_fields'].push(
+			'matrikelno',
+			'email',
+			'surname',
+			'forename'
 		);
 	}
 

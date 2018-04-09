@@ -239,6 +239,8 @@ def handle():
 
     ret['hide_applicant_fields'] = settings['hide_applicant_fields']
 
+    ret['list_identification_data'] = UserTools.has_right('list_identification_data', user_role)
+
     db_query = dict()
     db_queries = []  # for restrictions
     db_sort = []

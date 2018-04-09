@@ -131,6 +131,24 @@ function ApplicantList(parentDOM) {
 			label: 'EU Bürger',
 			title: 'Ist der Bewerber EU Bürger',
 			formatting: 'yesno'
+		},
+		'email': {
+			id: 'email',
+			label: 'E-Mail',
+			title: 'E-Mail Adresse',
+			formatting: 'str'
+		},
+		'forename': {
+			id: 'forename',
+			label: 'Vorname',
+			title: 'Vorname',
+			formatting: 'str'
+		},
+		'surname': {
+			id: 'surname',
+			label: 'Nachname',
+			title: 'Nachname',
+			formatting: 'str'
 		}
 
 	};
@@ -249,7 +267,7 @@ ApplicantList.prototype.addFilterForData = function (cd) {
 	}
 
 	function getValuesFromStats(filter) {
-		const values = {};
+		var values = {};
 		if (self.valueStats[filter.id]) {
 			self.valueStats[filter.id].forEach(function (gs) {
 				values[gs.value] = getCompareValueInfo(gs.value, gs.formatting).text + ' (' + gs.count + ')';
@@ -520,6 +538,17 @@ ApplicantList.prototype.load = function () {
 		self.data = data;
 
 		self.tableDOM.removeClass('loading');
+
+		if (!data['list_identification_data']) {
+			if(!data['hide_applicant_fields']) {
+				data['hide_applicant_fields'] = [];
+			}
+			data['hide_applicant_fields'].push(
+				'email',
+				'surname',
+				'forename'
+			);
+		}
 
 		if(data['hide_applicant_fields']) {
 			data['hide_applicant_fields'].forEach(function (field) {
