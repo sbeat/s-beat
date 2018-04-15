@@ -1626,6 +1626,14 @@ StudentList.prototype.openDownloadDialog = function (studentIds) {
 		return boxO;
 	}
 
+	var optionsBox = $('<div/>').appendTo(dialogBox);
+	$('<span/>').text('Dateikodierung: ').appendTo(optionsBox);
+
+	var encodingSelect = $(document.createElement('select')).appendTo(optionsBox);
+	$(document.createElement('option')).val('utf-8').text('utf-8').appendTo(encodingSelect);
+	$(document.createElement('option')).val('windows-1252').text('windows-1252').appendTo(encodingSelect);
+	encodingSelect.val('utf-8');
+
 	var ul = $(document.createElement('ul'));
 	ul.addClass('columnlist');
 	var i, col;
@@ -1679,6 +1687,7 @@ StudentList.prototype.openDownloadDialog = function (studentIds) {
 				}
 
 				params.push('output=csv');
+				params.push('encoding=' + encodingSelect.val());
 
 				if (params.length) url += '?';
 				url += params.join('&');

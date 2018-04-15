@@ -142,11 +142,11 @@ def get_csv_col(student, col, settings):
     return get_formatted_value(value, col.formatting)
 
 
-def get_csv_row(student, columns, delimiter, settings):
+def get_csv_row(student, columns, delimiter, settings, encoding):
     values = []
 
     for col in columns:
-        values.append(get_csv_col(student, col, settings).encode('windows-1252'))
+        values.append(get_csv_col(student, col, settings).encode(encoding))
 
     return delimiter.join(values)
 
@@ -161,6 +161,8 @@ def respond_csv(cursor, ret):
             csvcolumns = json.loads(csvcolumns)
         except ValueError:
             return respond({'error': 'unparseable_csvcolumns'}, 400)
+
+    encoding = request.args.get('encoding', default='utf-8', type=str)
 
     if type(csvcolumns) != list:
         return respond({'error': 'invalid_csvcolumns'}, 400)
@@ -178,7 +180,7 @@ def respond_csv(cursor, ret):
     ])
 
     def generate():
-        yield csvdelimiter.join([col.name.encode('windows-1252') for col in columns]) + '\r\n'
+        yield csvdelimiter.join([col.name.encode(encoding) for col in columns]) + '\r\n'
 
         for student in cursor:
             data = student.get_dict(user_role, hide_finished_ident_data=settings['hide_finished_ident_data'])
@@ -186,11 +188,11 @@ def respond_csv(cursor, ret):
             if 'mlist' in ret and strident in ret['mlist']['comments']:
                 data['comment'] = ret['mlist']['comments'][strident]['text']
 
-            yield get_csv_row(data, columns, csvdelimiter, settings) + '\r\n'
+            yield get_csv_row(data, columns, csvdelimiter, settings, encoding) + '\r\n'
 
     return Response(generate(), mimetype='text/csv', headers=[
         ('Content-Description', 'File Transfer'),
-        ('Content-Type', 'application/csv'),
+        ('Content-Type', 'application/csv; charset=' + encoding),
         ('Content-Disposition', 'attachment; filename=students.csv')
     ])
 
