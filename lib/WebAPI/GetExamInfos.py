@@ -103,6 +103,7 @@ def handle():
 
 
     db_query = dict()
+    db_queries = []  # for restrictions
     db_sort = []
     if len(sort1) == 2 and sort1[0] in sortable:
         db_sort.append((gff(sort1[0]), int(sort1[1])))
@@ -128,7 +129,11 @@ def handle():
 
     allowed_stgs = UserTools.get_allowed_stgs(g.user)
     if allowed_stgs:
-        db_query['stg'] = {'$in': allowed_stgs}
+        db_queries.append({'stg': {'$in': allowed_stgs}})
+
+    if len(db_queries) > 0:
+        db_queries.append(db_query)
+        db_query = {'$and': db_queries}
 
     cursor = DB.ExamInfo.find(db_query, limit=limit, skip=start, sort=db_sort)
 
