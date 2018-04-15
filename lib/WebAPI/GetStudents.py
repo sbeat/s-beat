@@ -112,7 +112,7 @@ def get_formatted_value(value, formatting):
     if type(value) not in (unicode, str, float, int):
         return ''
 
-    return str(value)
+    return unicode(value)
 
 
 def get_csv_col(student, col, settings):

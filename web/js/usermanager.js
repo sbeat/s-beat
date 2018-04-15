@@ -18,6 +18,7 @@ function UserManager(parentDOM) {
 		'admin_access': 'Kann den Bereich "Administration" verwenden',
 		'personal_data': 'Kann persönliche Daten der Studenten sehen',
 		'identification_data': 'Kann identifizierende Daten der Studenten sehen',
+		'list_identification_data': 'Kann identifizierende Daten der Studenten in Listen sehen',
 		'applicant_data': 'Kann Bewerberdaten sehen'/*,
 		'courses_access': 'Kann den Bereich "Studiengänge" verwenden',
 		'students_access': 'Kann den Bereich "Studenten" verwenden',
