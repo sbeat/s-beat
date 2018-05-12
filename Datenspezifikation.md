@@ -61,7 +61,8 @@ Befristet immatrikuliert (bei dem Wert 01, wird der Eintrag nicht importiert)
 
 #### `PNR`
 
-=8000, wenn Abschluss erhalten, sonst leer
+=8000, wenn Abschluss erhalten, sonst leer.
+Kann mit der Einstellung 'PNR der Thesis' allgemein oder pro STG konfiguriert werden. Wenn der Wert mit der konfigurierten Nummer übereinstimmt, wird ein erfolgreicher Abschluss angenommen.
 
 
 #### `PDATUM`
@@ -81,15 +82,18 @@ Geburtsdatum (Datumsfeld)
 
 #### `HZBNOTE`
 
-Hochschulzugangsberechtigungsnote (Hinweis: ist an dieser Stelle eine Note von 9.9 eingetragen bedeutet dass, dass keine solche vorliegt.)
+Hochschulzugangsberechtigungsnote (Hinweis: ist das Feld leer oder eine Note von 9.9 eingetragen bedeutet das, dass keine solche vorliegt.)
 
 
 #### `HZBDATUM`
 
 Hochschulzugangsberechtigungsdatum (Datumsfeld)
 
+#### `HZBGRP`
 
-#### `HZBART` <small>(veraltet)</small>
+Die Hochzugangsberechtigungsgruppe, welche statt der HZBART verwendet werden kann. (Optional, wenn HZBART gegeben ist)
+
+#### `HZBART` <small>(veraltet, bitte `HZBGRP` nutzen)</small>
 
 Nummer der Hochschulzugangsberechtigungsart. (Optional, wenn HZBGRP gegeben ist)
 Die Nummer wird über die [mappings.json](data/mappings.default.json) eine der folgenden Hochschulzugangsberechtigungsgruppen zugeordnet: 
@@ -102,9 +106,7 @@ Die Nummer wird über die [mappings.json](data/mappings.default.json) eine der f
 * Kolleg = Fachhochschulreife Kolleg
 
 
-#### `HZBGRP`
 
-Die Hochzugangsberechtigungsgruppe, welche statt der HZBART verwendet werden kann. (Optional, wenn HZBART gegeben ist)
 
 
 
@@ -139,7 +141,7 @@ Art des Abschlusses auf den diese Leistung angerechnet wird (Optional, wenn ABSC
 * Bachelor
 
 
-#### `ABSCHL` <small>(veraltet)</small>
+#### `ABSCHL` <small>(veraltet, bitte `ABSCHLART` verwenden)</small>
 
 Nummer der Abschlussart (Optional, wenn ABSCHLART gegeben ist): 
 
@@ -207,6 +209,7 @@ Vermerk:
 * U = Unentschuldigter Rücktritt 
 * RT = Rücktritt (SB-Funktionen)
 
+Bei status=AN und vermerk=G, wird der Rücktritt als genehmigt gezählt. Bei status=AN und vermerk=U, wird der Rücktritt als unentschuldigt gezählt.  Bei status=AN und vermerk=RT, wird nur ein Rücktritt ohne Wertung gezählt.
 
 #### `PVERSUCH`
 
@@ -350,7 +353,16 @@ Die Studiengangsgruppe. (Optionales Feld)
 Wenn die Gruppe nicht angegeben ist, wird eine eigene Gruppe für STG erstellt.
 
 
-#### `ABSCHL` <small>(veraltet)</small>
+#### `ABSCHLART`
+
+Bezeichnung der Abschlussart (Optional, wenn ABSCHL gegeben ist):
+* Diplom
+* Master
+* Zusatzausbildung
+* Bachelor
+
+
+#### `ABSCHL` <small>(veraltet, bitte `ABSCHLART` nutzen)</small>
 
 Nummer der Abschlussart (Optional, wenn ABSCHLART gegeben ist):
 * 51=Diplom
@@ -359,15 +371,6 @@ Nummer der Abschlussart (Optional, wenn ABSCHLART gegeben ist):
 * 84=Bachelor
 
 Die Nummer wird über die [mappings.json](data/mappings.default.json) zugeordnet.
-
-
-#### `ABSCHLART`
-
-Bezeichnung der Abschlussart (Optional, wenn ABSCHL gegeben ist):
-* Diplom
-* Master
-* Zusatzausbildung
-* Bachelor
 
 
 #### `LTXT`
@@ -392,7 +395,7 @@ Anzahl der Semester der Regelstudienzeit
 
 ### Hinweise
 
-Studiengänge, welche nicht eine der eingestellten Abschlussarten haben, werden beim Import ignoriert.
+Studiengänge, welche nicht eine der eingestellten Abschlussarten (Erlaubte Abschlussarten bei Studiengängen) haben, werden beim Import ignoriert.
 
 
 ## Bewerberdaten CSV Datei

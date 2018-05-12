@@ -67,7 +67,7 @@ function SettingsManager(parentDOM) {
 		},
 		"final_exam_numbers_ba": {
 			type: 'list',
-			name: 'PNR der Bachelor Thesis',
+			name: 'PNR der Thesis',
 			desc: 'Mit dieser Nummer wird die Abschlussprüfung in den importierten Studentendaten erkannt.',
 			group: 'Import',
 			perStg: true
