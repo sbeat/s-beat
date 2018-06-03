@@ -1166,14 +1166,14 @@ class StudentExamCalculator:
             'resigned': 0,  # count of resigned exams
             'delayed': 0,  # delayed exams
             'delayed_u': 0,  # unauthorized delayed exams
-            'bonus': 0,  # bonus of successful exams
+            'bonus': 0.0,  # bonus of successful exams
             'count_KL': 0,  # count of exams of form KL
-            'bonus_total': 0,  # total bonus in study
+            'bonus_total': 0.0,  # total bonus in study
             'grade_sum': 0,  # sum of all weighted grades
-            'grade_bonus': 0,  # sum of bonus from exams with grade
+            'grade_bonus': 0.0,  # sum of bonus from exams with grade
             'grade': None,  # grade of only BE exams
             'grade_nb_sum': 0,  # sum of all weighted grades with NB and EN exams
-            'grade_nb_bonus': 0,  # sum of bonus from exams with NB and EN exams with grade
+            'grade_nb_bonus': 0.0,  # sum of bonus from exams with NB and EN exams with grade
             'grade_nb': None  # grade of all exams
         }
 

@@ -25,7 +25,7 @@ import ImportTools
 from Db import DBDocument
 from ProcessTracking import ProcessTracking
 from Settings import Settings
-from ImportTools import get_date_from_csv, get_int, get_unicode, get_boolean
+from ImportTools import get_date_from_csv, get_int, get_unicode, get_boolean, get_float
 
 encoding = 'windows-1252'
 logger = logging.getLogger(__name__)
@@ -42,7 +42,7 @@ class Exam(DBDocument):
         self.exam_info_id = 0  # ID of the exam info
         self.semester = 0  # semester number
         self.name = ''  # name of this exam
-        self.bonus = 0  # number of ECTS
+        self.bonus = 0.0  # number of ECTS
         self.degree_type = ''  # type of degree this exam is for: Diplom,Bachelor,Master
         self.stg_original = None  # Short of the degree course
         self.stg = None  # Short of the degree course
@@ -288,7 +288,7 @@ def create_exam_from_entry(data, settings):
         return None
 
     exam.name = get_unicode(data['pdtxt'])
-    exam.bonus = get_int(data['bonus'])  # number of ECTS
+    exam.bonus = get_float(data['bonus'])  # number of ECTS
 
     if 'abschlart' in data:
         exam.degree_type = get_unicode(data['abschlart'])  # type of degree this exam is for

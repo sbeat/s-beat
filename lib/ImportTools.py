@@ -200,6 +200,15 @@ def get_int(s):
         return None
 
 
+def get_float(s):
+    try:
+        if ',' in s:
+            return float(s.replace(',', '.'))
+        return float(s)
+    except (ValueError, TypeError):
+        return None
+
+
 def get_boolean(s):
     s = s.lower()
     if s in [True, 'true', 'y', 'j']:

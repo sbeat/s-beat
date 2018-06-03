@@ -356,13 +356,13 @@ class CourseSemesterInfo(DBDocument):
                 d['exams'][key] += semester_data[key]
 
         CalcTools.add_to_stat_dict(d['exams'], semester_data['count'])
-        CalcTools.add_to_stat_dict(d['bonus_data'], semester_data['bonus'])
+        CalcTools.add_to_stat_dict(d['bonus_data'], int(semester_data['bonus']))
 
         if 'bonus_total' in semester_data and 'bonus_total_data' in d:
-            CalcTools.add_to_stat_dict(d['bonus_total_data'], semester_data['bonus_total'])
+            CalcTools.add_to_stat_dict(d['bonus_total_data'], int(semester_data['bonus_total']))
 
         if semester_data['grade']:
-            CalcTools.add_to_stat_dict(d['grade_data'], semester_data['grade'] / 10 * 10)
+            CalcTools.add_to_stat_dict(d['grade_data'], int(semester_data['grade']) / 10 * 10)
 
     def update_by_semester_data(self, sem_nr_id, semester_data):
         if sem_nr_id not in self.semester_data:
