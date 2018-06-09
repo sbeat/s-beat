@@ -1186,8 +1186,6 @@ class StudentExamCalculator:
     def get_counts_for_exam(self, exam):
         """
         How does one exam count towards the counters
-        :param exam:
-        :return:
         """
 
         counts = self.create_counters()
@@ -1212,9 +1210,9 @@ class StudentExamCalculator:
             counts['applied'] += 1
         if exam.is_resigned():
             counts['resigned'] += 1
-            if exam.comment == 'G':
-                counts['delayed'] += 1
-        if exam.comment == 'U':
+        if exam.is_delayed():
+            counts['delayed'] += 1
+        if exam.is_delayed_u():
             counts['delayed_u'] += 1
 
         if exam.form == 'KL':

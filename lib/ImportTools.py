@@ -221,9 +221,26 @@ def get_unicode(s, encoding='windows-1252'):
     s = s.decode(encoding)
     return unicode(s.strip())
 
+
 def clean_db_string(s):
     if '.' in s:
         s = s.replace('.', ' ')
     if '$' in s:
         s = s.replace('$', '')
     return s
+
+
+def get_import_expressions():
+    config = RawConfigParser()
+    config.read('config/main.cfg')
+
+    if not config.has_section('import_expressions'):
+        return {}
+
+    import_expressions = {}
+    for name, expr in dict(config.items('import_expressions')).iteritems():
+        import_expressions[name] = eval('lambda e: '+expr)
+
+    return import_expressions
+
+

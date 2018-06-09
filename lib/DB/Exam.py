@@ -30,6 +30,32 @@ from ImportTools import get_date_from_csv, get_int, get_unicode, get_boolean, ge
 encoding = 'windows-1252'
 logger = logging.getLogger(__name__)
 
+import_expressions = ImportTools.get_import_expressions()
+
+if 'exam_is_finished' not in import_expressions:
+    import_expressions['exam_is_finished'] = lambda e: e.status in ('BE', 'NB', 'EN', 'RT')
+
+if 'exam_is_success' not in import_expressions:
+    import_expressions['exam_is_success'] = lambda e: e.status == 'BE'
+
+if 'exam_is_failed' not in import_expressions:
+    import_expressions['exam_is_failed'] = lambda e: e.status in ('NB', 'EN')
+
+if 'exam_is_applied' not in import_expressions:
+    import_expressions['exam_is_applied'] = lambda e: e.status == 'AN' and e.comment not in ('G', 'RT', 'U')
+
+if 'exam_is_resigned' not in import_expressions:
+    import_expressions['exam_is_resigned'] = lambda e: e.status == 'RT' or e.status == 'AN' and e.comment in ('G', 'RT', 'U')
+
+if 'exam_is_delayed' not in import_expressions:
+    import_expressions['exam_is_delayed'] = lambda e: e.status == 'RT' or e.status == 'AN' and e.comment == 'G'
+
+if 'exam_is_delayed_u' not in import_expressions:
+    import_expressions['exam_is_delayed_u'] = lambda e: e.comment == 'U'
+
+if 'exam_is_mandatory' not in import_expressions:
+    import_expressions['exam_is_mandatory'] = lambda e: e.mandatory == 'P'
+
 
 class Exam(DBDocument):
     collection_name = 'exams'
@@ -64,40 +90,37 @@ class Exam(DBDocument):
         """
         If this exam entry is done and is not in status AN
         """
-        if self.status in ('BE', 'NB', 'EN', 'RT'):
-            return True
-        else:
-            return False
+        return import_expressions['exam_is_finished'](self)
 
     def is_success(self):
-        if self.status == 'BE':
-            return True
-        else:
-            return False
+        return import_expressions['exam_is_success'](self)
 
     def is_applied(self):
-        if self.status == 'AN' and self.comment not in ('G', 'RT', 'U'):
-            return True
-        else:
-            return False
+        return import_expressions['exam_is_applied'](self)
 
     def is_resigned(self):
-        if self.status == 'RT' or self.status == 'AN' and self.comment in ('G', 'RT', 'U'):
-            return True
-        else:
-            return False
+        """
+        the exam was reported to can't be attended
+        """
+        return import_expressions['exam_is_resigned'](self)
+
+    def is_delayed(self):
+        """
+        the exam could not be attended with permission
+        """
+        return import_expressions['exam_is_delayed'](self)
+
+    def is_delayed_u(self):
+        """
+        the exam could not be attended but without permission
+        """
+        return import_expressions['exam_is_delayed_u'](self)
 
     def is_failed(self):
-        if self.status in ('NB', 'EN'):
-            return True
-        else:
-            return False
+        return import_expressions['exam_is_failed'](self)
 
     def is_mandatory(self):
-        if self.mandatory == 'P':
-            return True
-        else:
-            return False
+        return import_expressions['exam_is_mandatory'](self)
 
     def update_existing(self):
         # curr = Exam.find_one({'_id': exam.ident})
