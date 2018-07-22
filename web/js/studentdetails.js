@@ -390,7 +390,7 @@ StudentDetails.prototype.drawSemesterDataTable = function (el) {
 		addCol(tr, sem['successful'], 'int', {cmpValue: average_success});
 		addCol(tr, sem['failed'], 'int', {cmpValue: average_failed, lowerBetter: true});
 
-		if (!self.definitions || !self.definitions.hide_resigned)
+		if (!self.isHiddenField('cnt_delayed_exams'))
 			addCol(tr, sem['delayed'], 'int', {cmpValue: average_delayed, lowerBetter: true});
 
 		el.append(tr);
