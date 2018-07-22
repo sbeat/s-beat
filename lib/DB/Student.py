@@ -21,6 +21,7 @@ import array
 import base64
 import hashlib
 import logging
+import numbers
 import time
 
 from pymongo import errors
@@ -1188,8 +1189,11 @@ class StudentExamCalculator:
     @staticmethod
     def add_to_counters(target_counters, from_counters):
         for c in from_counters:
-            if target_counters[c] is not None and from_counters[c] is not None:
-                target_counters[c] += from_counters[c]
+            if from_counters[c] is None or not isinstance(from_counters[c], numbers.Number):
+                continue
+            if c not in target_counters:
+                target_counters[c] = 0
+            target_counters[c] += from_counters[c]
 
     def get_counts_for_exam(self, exam):
         """
@@ -1203,9 +1207,11 @@ class StudentExamCalculator:
 
         if exam.is_failed():
             counts['failed'] += 1
+            counts['failed_exam_type_' + exam.type] = 1
 
         if exam.is_success():
             counts['successful'] += 1
+            counts['successful_exam_type_' + exam.type] = 1
 
             if exam.bonus is not None:
                 counts['bonus'] += exam.bonus
@@ -1229,6 +1235,9 @@ class StudentExamCalculator:
         if exam.bonus is not None and exam.grade is not None:
             counts['grade_nb_sum'] += exam.grade * exam.bonus
             counts['grade_nb_bonus'] += exam.bonus
+
+        counts['exam_type_' + exam.type] = 1
+        counts['exam_status_type_' + exam.status + '_' + exam.type] = 1
 
         return counts
 
