@@ -143,9 +143,15 @@ def edit_query(data):
     if len(errors) > 0:
         return respond({'error': 'invalid_data', 'errors': errors}, 200)
 
+    if query_id != query.md5_id():
+        if not query.db_insert():
+            return respond({'error': 'edit_failed_insert'}, 200)
+        DB.PathElement.update_query_id(query_id, query.md5_id())
+
+        if not DB.Query.get_collection().delete_one({'_id': query_id}):
+            return respond({'error': 'edit_failed_delete'}, 200)
+
     if query.db_update():
-        if query_id != query.md5_id():
-            DB.PathElement.update_query_id(query_id, query.md5_id())
         return respond({'status': 'ok', 'query': query.get_dict()}, 200)
     else:
         return respond({'error': 'edit_failed'}, 200)
