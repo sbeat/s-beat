@@ -261,6 +261,9 @@ def handle():
 
     user_role = g.user_role
 
+    if not UserTools.has_right('students_data', user_role):
+        return respond({'error': 'no_rights'}, 403)
+
     ret = {
         'start': start,
         'limit': limit,

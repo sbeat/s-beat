@@ -144,6 +144,7 @@
 
 	</article>
 
+	{% if g.has_right('student_analytics') %}
 	<article>
 		<h2 data-toggle="student_analytics" class="toggle">Detaillierte Analyse</h2>
 
@@ -152,6 +153,7 @@
 		</div>
 
 	</article>
+	{% endif %}
 
 </div>
 {% endblock %}

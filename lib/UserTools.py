@@ -20,21 +20,51 @@ along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 import time
 
 user_rights = [
-    # 'courses_access',
-    # 'students_access',
-    # 'exams_access',
     'admin_access',
     'personal_data',
     'identification_data',
     'list_identification_data',
-    'applicant_data'
+    'applicant_data',
+    'course_data',  # can access course data
+    'students_data',  # can access data of single students
+    'student_analytics',  # can use student analytics
+    'exams_data',  # can see exam infos
+    'applicant_analytics',  # can use analytics for applicants
 ]
 
 # the following user roles can be overwritten by the main.cfg
 user_roles = {
-    'admin': ['admin_access', 'personal_data', 'identification_data', 'list_identification_data', 'applicant_data'],
-    'berater': ['personal_data', 'identificationd_data'],
-    'dozent': ['personal_data', 'identificationd_data'],
+    'admin': [
+        'admin_access',
+        'personal_data',
+        'identification_data',
+        'list_identification_data',
+        'applicant_data',
+        'course_data',
+        'students_data',  # can access data of single students
+        'student_analytics',  # can use student analytics
+        'exams_data',  # can see exam infos
+        'applicant_analytics',  # can use analytics for applicants
+    ],
+    'berater': [
+        'personal_data',
+        'identificationd_data',
+        'applicant_data',
+        'course_data',  # can access course data
+        'students_data',  # can access data of single students
+        'student_analytics',  # can use student analytics
+        'exams_data',  # can see exam infos
+        'applicant_analytics',  # can use analytics for applicants
+    ],
+    'dozent': [
+        'personal_data', 'identificationd_data',
+        'applicant_data',
+        'course_data',  # can access course data
+        'students_data',  # can access data of single students
+        'student_analytics',  # can use student analytics
+        'exams_data',  # can see exam infos
+        'applicant_analytics',  # can use analytics for applicants
+    ],
     'guest': []
 }
 
@@ -129,6 +159,3 @@ def save_user(username, role, stg_list):
         all_users = {}
 
     return True
-
-
-

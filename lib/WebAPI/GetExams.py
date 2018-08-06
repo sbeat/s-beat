@@ -64,6 +64,9 @@ def handle():
     with_metadata = request.args.get('metadata', default='false')
     with_info = request.args.get('load_info', default='false')
 
+    if not UserTools.has_right('students_data', g.user_role):
+        return respond({'error': 'no_rights'}, 403)
+
     if not 1 <= limit <= 1000:
         return respond({'error': 'invalid_limit'}, 400)
 

@@ -8,30 +8,30 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 {% set website_class = website_class|default('noside') %}
 {% set display_top_nav = true %}
 {% set navigation = [
-	('index.html', 'start', 'Startseite', ()),
-	('courses.html', 'courses', 'Studiengänge', ()),
-	('students.html', 'students', 'Studenten',(
-		('students.html', 'students', 'Studentenübersicht'),
-		('students.html?preset=risk', 'risk', 'Risikofälle'),
-		('paths.html', 'paths', 'Risikokriterien'),
-		('markedlists.html', 'marked', 'Vormerkungen'),
-		('studentanalytics.html', 'analytics', 'Analyse')
+	('index.html', 'start', 'Startseite', None, ()),
+	('courses.html', 'courses', 'Studiengänge', 'course_data', ()),
+	('students.html', 'students', 'Studenten', 'students_data',(
+		('students.html', 'students', 'Studentenübersicht', None),
+		('students.html?preset=risk', 'risk', 'Risikofälle', None),
+		('paths.html', 'paths', 'Risikokriterien', None),
+		('markedlists.html', 'marked', 'Vormerkungen', None),
+		('studentanalytics.html', 'analytics', 'Analyse', 'student_analytics')
 
 	)),
-	('exams.html', 'exams', 'Prüfungsleistungen', ()),
-	('applicants.html', 'applicants', 'Bewerber', (
-		('applicants.html', 'applicants', 'Bewerberübersicht'),
-		('applicantanalytics.html', 'analytics', 'Analyse'),
+	('exams.html', 'exams', 'Prüfungsleistungen', 'exams_data', ()),
+	('applicants.html', 'applicants', 'Bewerber', 'applicant_data', (
+		('applicants.html', 'applicants', 'Bewerberübersicht', None),
+		('applicantanalytics.html', 'analytics', 'Analyse', 'applicant_analytics'),
 	)),
-	('import.html', 'admin', 'Administration', (
-		('import.html', 'import', 'Datenimport'),
-		('update.html', 'update', 'Update'),
-		('users.html', 'users', 'Benutzer'),
-		('settings.html', 'settings', 'Einstellungen'),
-		('definitions.html', 'definitions', 'Definitionen'),
-		('tags.html', 'tags', 'Tags'),
+	('import.html', 'admin', 'Administration', 'admin_access', (
+		('import.html', 'import', 'Datenimport', None),
+		('update.html', 'update', 'Update', None),
+		('users.html', 'users', 'Benutzer', None),
+		('settings.html', 'settings', 'Einstellungen', None),
+		('definitions.html', 'definitions', 'Definitionen', None),
+		('tags.html', 'tags', 'Tags', None),
 	)),
-	('docs_extended.html?page=01_introduction', 'docs', 'Dokumentation', ()),
+	('docs_extended.html?page=01_introduction', 'docs', 'Dokumentation', None, ()),
 ] %}
 <!DOCTYPE html>
 <html lang="de">
@@ -83,10 +83,12 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 	<aside id="side">
 		<nav class="side_nav" data-scrollVisible>
 			{% block side_nav %}
-			{% for href, id, label, sub_navi in navigation %}
+			{% for href, id, label, required_right, sub_navi in navigation %}
 			{% if id == active_page %}
-			{% for href, id, label in sub_navi %}
+			{% for href, id, label, required_right in sub_navi %}
+			{% if required_right==None or g.has_right(required_right) %}
 			<a href="{{ href|e }}"{% if id == active_subpage %} class="active"{% endif %}>{{ label|e }}</a>
+			{% endif %}
 			{% endfor %}
 			{% endif %}
 			{% endfor %}

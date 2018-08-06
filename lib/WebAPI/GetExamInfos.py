@@ -76,6 +76,9 @@ def handle():
     current_semester = str(current_semester)
     last_semester = str(last_semester)
 
+    if not UserTools.has_right('exams_data', g.user_role):
+        return respond({'error': 'no_rights'}, 403)
+
     def gff(field):
         field = field.replace('CURRENT', current_semester)
         field = field.replace('LAST', last_semester)

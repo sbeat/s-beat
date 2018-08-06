@@ -70,6 +70,7 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 
 	</article>
 
+	{% if g.has_right('student_analytics') %}
 	<article>
 		<h2 data-toggle="student_analytics" class="toggle">Detaillierte Analyse</h2>
 
@@ -78,6 +79,7 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 		</div>
 
 	</article>
+	{% endif %}
 
 </div>
 {% endblock %}

@@ -49,6 +49,9 @@ def handle():
     sort1 = request.args.get('sort1', default='_id,1').split(',')
     sort2 = request.args.get('sort2', default='stg').split(',')
 
+    if not UserTools.has_right('course_data', g.user_role):
+        return respond({'error': 'no_rights'}, 403)
+
     if not 1 <= limit <= 1000:
         return respond({'error': 'invalid_limit'}, 400)
 
