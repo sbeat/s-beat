@@ -9,6 +9,15 @@ Run the following command to integrate new settings:
     python sbeat.py initial_settings
 
 
+In the `main.cfg` `user_roles` section add the new premissions accordingly:
+
+	course_data  # can access course data
+    students_data  # can access data of single students
+    student_analytics  # can use student analytics
+    exams_data  # can see exam infos
+    applicant_analytics  # can use analytics for applicants
+
+
 ## Upgrade 1.4 to 1.5
 
 Run the following command to integrate new settings:

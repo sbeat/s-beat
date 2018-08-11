@@ -261,9 +261,6 @@ def handle():
 
     user_role = g.user_role
 
-    if not UserTools.has_right('students_data', user_role):
-        return respond({'error': 'no_rights'}, 403)
-
     ret = {
         'start': start,
         'limit': limit,
@@ -385,6 +382,9 @@ def handle():
         db_query = {'$and': db_queries}
 
     if groups is not None:
+        if not UserTools.has_right('students_data', user_role) and not UserTools.has_right('student_analytics', user_role):
+            return respond({'error': 'no_rights'}, 403)
+
         allowed_groups = []
 
         if not isinstance(groups, unicode):
@@ -409,6 +409,9 @@ def handle():
         ret['group_results'] = DB.Student.calc_groups(allowed_groups, db_query, allowed_calculations)
 
     elif single_groups is not None:
+        if not UserTools.has_right('students_data', user_role) and not UserTools.has_right('student_analytics', user_role):
+            return respond({'error': 'no_rights'}, 403)
+
         allowed_groups = []
 
         if not isinstance(single_groups, unicode):
@@ -433,9 +436,15 @@ def handle():
         ret['group_results'] = DB.Student.calc_single_groups(allowed_groups, db_query, allowed_calculations)
 
     elif do_calc == 'sums':
+        if not UserTools.has_right('students_data', user_role) and not UserTools.has_right('student_analytics', user_role):
+            return respond({'error': 'no_rights'}, 403)
+
         ret['sums'] = DB.Student.calc_sums(db_query)
 
     elif do_calc == 'avgs':
+        if not UserTools.has_right('students_data', user_role) and not UserTools.has_right('student_analytics', user_role):
+            return respond({'error': 'no_rights'}, 403)
+
         ret['avgs'] = None
         risk_values_allowed_key = 'risk_value_' + user_role
         settings = DB.Settings.load_dict([risk_values_allowed_key])
@@ -452,10 +461,16 @@ def handle():
                     ret['avgs'][key] = value
 
     elif is_csv:
+        if not UserTools.has_right('students_data', user_role):
+            return respond({'error': 'no_rights'}, 403)
+
         cursor = DB.Student.find(db_query, sort=db_sort)
         return respond_csv(cursor, ret)
 
     else:
+        if not UserTools.has_right('students_data', user_role):
+            return respond({'error': 'no_rights'}, 403)
+
         if not 1 <= limit <= 1000:
             return respond({'error': 'invalid_limit'}, 400)
 

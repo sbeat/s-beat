@@ -124,6 +124,7 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 		</table>
 	</article>
 
+	{% if g.has_right('students_data') %}
 	<article>
 		<h2 data-toggle="examlist_details" class="toggle">Notenspiegel</h2>
 
@@ -132,5 +133,6 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 		</div>
 		{% include 'inc/tooltips_exam.html' %}
 	</article>
+	{% endif %}
 </div>
 {% endblock %}

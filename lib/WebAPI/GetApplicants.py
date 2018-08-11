@@ -219,9 +219,6 @@ def handle():
 
     user_role = g.user_role
 
-    if not UserTools.has_right('applicant_data', user_role):
-        return respond({'error': 'invalid_access'}, 403)
-
     ret = {
         'start': start,
         'limit': limit,
@@ -271,6 +268,10 @@ def handle():
         db_query = {'$and': db_queries}
 
     if groups is not None:
+        if not UserTools.has_right('applicant_data', user_role) \
+                and not UserTools.has_right('applicant_analytics', user_role):
+            return respond({'error': 'no_rights'}, 403)
+
         allowed_groups = []
 
         if not isinstance(groups, unicode):
@@ -293,6 +294,10 @@ def handle():
         ret['group_results'] = DB.Applicant.calc_groups(allowed_groups, db_query, allowed_calculations)
 
     elif single_groups is not None:
+        if not UserTools.has_right('applicant_data', user_role) \
+                and not UserTools.has_right('applicant_analytics', user_role):
+            return respond({'error': 'no_rights'}, 403)
+
         allowed_groups = []
 
         if not isinstance(single_groups, unicode):
@@ -315,9 +320,17 @@ def handle():
         ret['group_results'] = DB.Applicant.calc_single_groups(allowed_groups, db_query, allowed_calculations)
 
     elif do_calc == 'sums':
+        if not UserTools.has_right('applicant_data', user_role) \
+                and not UserTools.has_right('applicant_analytics', user_role):
+            return respond({'error': 'no_rights'}, 403)
+
         ret['sums'] = DB.Applicant.calc_sums(db_query)
 
     elif do_calc == 'avgs':
+        if not UserTools.has_right('applicant_data', user_role) \
+                and not UserTools.has_right('applicant_analytics', user_role):
+            return respond({'error': 'no_rights'}, 403)
+
         ret['avgs'] = None
         avgs = DB.Applicant.calc_avgs(db_query)
         if avgs:
@@ -326,10 +339,16 @@ def handle():
                 ret['avgs'][key] = value
 
     elif is_csv:
+        if not UserTools.has_right('applicant_data', user_role):
+            return respond({'error': 'no_rights'}, 403)
+
         cursor = DB.Applicant.find(db_query, sort=db_sort)
         return respond_csv(cursor, ret)
 
     else:
+        if not UserTools.has_right('applicant_data', user_role):
+            return respond({'error': 'no_rights'}, 403)
+
         if not 1 <= limit <= 1000:
             return respond({'error': 'invalid_limit'}, 400)
 
