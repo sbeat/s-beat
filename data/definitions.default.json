@@ -262,6 +262,16 @@
                 "order": 0
             }
         },
+        "232614459968216": {
+            "query_id": "28722832388109",
+            "condition": {
+                "negate": false,
+                "compare_value": 30,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
         "164230372323082": {
             "query_id": "239731493788010",
             "condition": {
@@ -269,16 +279,6 @@
                 "compare_value": 2,
                 "name": null,
                 "comparator": "greater",
-                "order": 0
-            }
-        },
-        "97965078322510": {
-            "query_id": "28722832388109",
-            "condition": {
-                "negate": false,
-                "compare_value": 60,
-                "name": null,
-                "comparator": "lower",
                 "order": 0
             }
         },
@@ -780,16 +780,6 @@
                 "compare_value": 9,
                 "name": "sem_9",
                 "comparator": "greater_equal",
-                "order": 0
-            }
-        },
-        "232614459968216": {
-            "query_id": "28722832388109",
-            "condition": {
-                "negate": false,
-                "compare_value": 30,
-                "name": null,
-                "comparator": "lower",
                 "order": 0
             }
         },
@@ -1392,6 +1382,16 @@
                 "order": 0
             }
         },
+        "97965078322510": {
+            "query_id": "28722832388109",
+            "condition": {
+                "negate": false,
+                "compare_value": 60,
+                "name": null,
+                "comparator": "lower",
+                "order": 0
+            }
+        },
         "87567761051688": {
             "query_id": "147082045167704",
             "condition": {
@@ -1811,6 +1811,18 @@
             "q": "semester_data.sem_3.grade",
             "_id": 133405623548888
         },
+        "258549048704008": {
+            "category": "Student.Studium",
+            "auto_generate": false,
+            "name": "End Semester",
+            "success": false,
+            "query_type": "dict",
+            "ignore": true,
+            "depends": null,
+            "formatting": "semester",
+            "q": "end_semester",
+            "_id": 258549048704008
+        },
         "89420356822986": {
             "category": "Student.Studium.Prüfungsleistungen",
             "auto_generate": false,
@@ -2194,6 +2206,18 @@
             "formatting": "grade",
             "q": "semester_data.sem_1.grade",
             "_id": 158181538402706
+        },
+        "257807449611768": {
+            "category": "Student",
+            "auto_generate": true,
+            "name": "Herkunftsland",
+            "success": false,
+            "query_type": "dict",
+            "ignore": true,
+            "depends": null,
+            "formatting": "str",
+            "q": "country",
+            "_id": 257807449611768
         },
         "239731493788010": {
             "category": "Student.Studium.Prüfungsleistungen.Nicht bestanden",

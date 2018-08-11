@@ -54,6 +54,16 @@ Immatrikulationsdatum (Datumsfeld)
 Exmatrikulationsdatum (Datumsfeld)
 
 
+#### `SEM_START`
+
+Optional: Startsemester in Form <Jahr><1=SoSe oder 2=WiSe>. Wenn diese Spalte nicht gegeben ist, wird das Startsemester aus `IMMDAT` berechnet.
+
+Beispiel: SoSe 2017: `20171`, WiSe 17/18: `20172`
+
+#### `SEM_END`
+
+Optional: Endsemester in Form <Jahr><1=SoSe oder 2=WiSe>. Wenn diese Spalte nicht gegeben ist, wird das Endsemester aus `EXMDAT` berechnet.
+
 #### `SPERRART1`
 
 Befristet immatrikuliert (bei dem Wert 01, wird der Eintrag nicht importiert)

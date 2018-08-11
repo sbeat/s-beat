@@ -118,7 +118,8 @@ function StudentList(parentDOM) {
 		'stg': {id: 'stg', label: 'STG', title: 'Studiengangsgruppe', formatting: 'stg'},
 		'stg_original': {id: 'stg_original', label: 'Studiengang', title: 'Studiengang', formatting: 'stg'},
 		'degree_type': {id: 'degree_type', label: 'Abschluss', title: 'Abschluss', formatting: 'str'},
-		'start_semester': {id: 'start_semester', label: 'Start', title: 'Start semester', formatting: 'semester'},
+		'start_semester': {id: 'start_semester', label: 'Start', title: 'Start Semester', formatting: 'semester'},
+		'end_semester': {id: 'end_semester', label: 'Ende', title: 'End Semester', formatting: 'semester'},
 		'finishstatus': {
 			id: 'finishstatus',
 			label: 'Status',

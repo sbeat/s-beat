@@ -108,6 +108,7 @@ class Student(DBDocument):
 
         # 1st step calculated values
         self.start_semester = None  # calculated start semester number
+        self.end_semester = None  # calculated end semester number
         self.age = None  # Age of student
         self.hzb_imm_time = None  # count of months between entrance qualification and enrollment
         self.semesters = None  # Count of semesters between imm and exm
@@ -942,6 +943,11 @@ def create_student_from_entry(data, settings):
         logger.error(
             "Student has no start semester ID: " + repr(student.ident))
         return None
+
+    if 'sem_end' in data and len(data.sem_start) == 5:
+        student.end_semester = get_int(data['sem_end'])
+    elif student.exm_date is not None:
+        student.end_semester = CalcTools.get_semester_from_date(student.exm_date)
 
     student.hzb_grade = get_int(data['hzbnote'])
     if student.hzb_grade == 990:

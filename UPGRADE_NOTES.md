@@ -17,6 +17,14 @@ In the `main.cfg` `user_roles` section add the new premissions accordingly:
     exams_data  # can see exam infos
     applicant_analytics  # can use analytics for applicants
 
+Add new Definition under Administration -> Definitionen:
+                         
+     Student » Studium
+         Name: Abschluss
+         Query: end_semester
+         Formatierung: Semester
+         Ignorieren: Ja
+
 
 ## Upgrade 1.4 to 1.5
 

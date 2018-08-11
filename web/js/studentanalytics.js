@@ -204,6 +204,7 @@ StudentAnalytics.prototype.init = function () {
 	// this.defineColumn('cnt_delayed_exams', 'Rücktritte', null, 'int', false, ['min', 'max', 'avg']);
 	// this.defineColumn('study_time_real', 'Semester mit Leistungen', null, 'int', true, ['min', 'max', 'avg']);
 	this.defineColumn('start_semester', 'Start Semester', null, 'semester', true, undefined, 'Student.Studium');
+	this.defineColumn('end_semester', 'End Semester', null, 'semester', true, undefined, 'Student.Studium');
 
 	// this.defineColumn('final_grade', 'Abschlussnote', null, 'grade', true, ['min', 'max', 'avg']);
 	// this.defineColumn('grade_basic_studies', 'Note Grundstudium', null, 'grade', true, ['min', 'max', 'avg']);
