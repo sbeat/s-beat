@@ -45,6 +45,10 @@ def handle():
         db_query['user'] = g.username
         db_query['_id'] = 'list_' + setting_id
 
+    elif setting_type == 'shared':
+        db_query['type'] = 'shared'
+        db_query['_id'] = 'shared_' + setting_id
+
     elif not UserTools.has_right('admin_access', g.user_role):
         return respond({'error': 'no_rights'}, 403)
 
@@ -84,6 +88,18 @@ def handle():
             s.id = 'list_' + setting_id.replace('<new>', randid)
         else:
             s.id = 'list_' + setting_id
+        s.user = g.username
+
+    elif s is None and setting_type == 'shared':
+        s = DB.Settings()
+        s.type = setting_type
+        if '<new>' in setting_id:
+            do_insert = True
+            randid = ''.join(
+                random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for x in range(10))
+            s.id = 'shared_' + setting_id.replace('<new>', randid)
+        else:
+            s.id = 'shared_' + setting_id
         s.user = g.username
 
     s.data = data

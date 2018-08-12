@@ -47,6 +47,12 @@ def handle():
         else:
             db_query['user'] = g.username
 
+    elif setting_type == 'shared':
+        db_query['type'] = 'shared'
+
+        if setting_id:
+            db_query['_id'] = 'shared_' + setting_id
+
     elif not UserTools.has_right('admin_access', g.user_role):
         return respond({'error': 'no_rights'}, 403)
 
@@ -56,6 +62,8 @@ def handle():
             ret['settings'][s.id.replace(g.username + '_', '', 1)] = s.data
         elif setting_type == 'list':
             ret['settings'][s.id.replace('list_', '', 1)] = s.data
+        elif setting_type == 'shared':
+            ret['settings'][s.id.replace('shared_', '', 1)] = s.data
         else:
             ret['settings'][s.id] = s.data
 

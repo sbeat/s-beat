@@ -19,7 +19,7 @@
 	<article>
 		<h1>Analyse der Bewerber</h1>
 
-		<div data-load="ApplicantAnalytics"></div>
+		<div data-load="ApplicantAnalytics" data-ssid="{{request.args.get('ssid','')|e}}"></div>
 		{% include 'inc/tooltips_studentlist.html' %}
 	</article>
 </div>

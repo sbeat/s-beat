@@ -143,6 +143,23 @@ ApplicantAnalytics.prototype.init = function () {
 		self.load();
 	}
 
+	var serverSettingId = self.parentDOM.attr('data-ssid');
+	if (serverSettingId) {
+		getServerSetting('shared', serverSettingId, function (value) {
+			if (value) {
+				self.loadSettings(value);
+			} else {
+				self.loadSettings();
+			}
+			self.draw();
+			self.load();
+		});
+	} else {
+		self.loadSettings();
+		self.draw();
+		self.load();
+	}
+
 };
 
 ApplicantAnalytics.prototype.load = function () {

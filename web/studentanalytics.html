@@ -18,7 +18,7 @@
 	<article>
 		<h1>Analyse der Studierenden</h1>
 
-		<div data-load="StudentAnalytics"></div>
+		<div data-load="StudentAnalytics" data-ssid="{{request.args.get('ssid','')|e}}"></div>
 		{% include 'inc/tooltips_studentlist.html' %}
 	</article>
 </div>

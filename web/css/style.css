@@ -1289,6 +1289,14 @@ h2.toggle:hover {
 	cursor: default;
 }
 
+.ui-menu-header,
+.ui-menu-header.ui-state-focus {
+	background: transparent;
+	font-weight: bold;
+	cursor: default;
+	font-size: 0.8em;
+}
+
 @media print {
 	#side {
 		display: none;

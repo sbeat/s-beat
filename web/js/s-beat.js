@@ -1084,7 +1084,7 @@ function openSettingsDialog() {
 
 		var settingIdSelect = null, settingName = null;
 
-		getSortedListSettings(self.settingsPrefix, function (list) {
+		getSortedListSettings('list', self.settingsPrefix, function (list) {
 			var selection = [];
 			selection.push({label: 'Nicht speichern', value: ''});
 			selection.push({label: 'Neue Einstellung', value: 'new'});
@@ -1308,7 +1308,7 @@ function openLoadSettingsDialog() {
 		return box;
 	}
 
-	getSortedListSettings(self.settingsPrefix, function (list) {
+	getSortedListSettings('list', self.settingsPrefix, function (list) {
 
 		if (list && list.length) {
 			for (var i = 0; i < list.length; i++) {
@@ -1316,7 +1316,7 @@ function openLoadSettingsDialog() {
 				entriesBox.append(drawSetting(setting));
 			}
 		} else {
-			$('<p>').text('Es sind keine gespeiherten Einstellungen vorhanden.').appendTo(entriesBox);
+			$('<p>').text('Es sind keine gespeicherten Einstellungen vorhanden.').appendTo(entriesBox);
 		}
 
 
@@ -1399,14 +1399,14 @@ function loadSettings(settings) {
 
 }
 
-function saveSettings(serverSettingId, name, callb) {
+function saveSettings(serverSettingId, name, callb, type) {
 	var self = this;
 	var settings = loadStorage(this.settingsPrefix + this.settingId, {});
 	settings.rev = this.settingsRev;
 	if (this.filter) {
 		settings.filters = this.filter.filters;
 	}
-	if (typeof(this.pagination) != 'undefined') {
+	if (typeof(this.pagination) !== 'undefined') {
 		settings.limit = this.pagination.limit;
 		settings.sort1 = this.pagination.sort1;
 		settings.sort2 = this.pagination.sort2;
@@ -1429,7 +1429,7 @@ function saveSettings(serverSettingId, name, callb) {
 
 	if (!serverSettingId) return;
 
-	setServerSetting('list', serverSettingId, settings, callb);
+	setServerSetting(type?type:'list', serverSettingId, settings, callb);
 
 }
 
@@ -1522,8 +1522,8 @@ function setServerSetting(type, id, value, callb) {
 
 }
 
-function getSortedListSettings(prefix, callb) {
-	loadServerSettings('list', function (settings) {
+function getSortedListSettings(type, prefix, callb) {
+	loadServerSettings(type, function (settings) {
 		if (!settings) {
 			callb(null);
 			return;

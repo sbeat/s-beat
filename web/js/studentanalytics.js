@@ -98,6 +98,8 @@ function StudentAnalytics(parentDOM, noInit) {
 	this.filterDOM = $(document.createElement('div'));
 	this.filter = new FilterList(this.filterDOM);
 
+	this.listSettings = new ListSettings(this, 'shared');
+
 	this.filter.multiFilters = {
 		exam_count: ['exam_count', 'exam_count_success', 'exam_count_applied']
 	};
@@ -267,6 +269,23 @@ StudentAnalytics.prototype.init = function () {
 		self.load();
 	}
 
+	var serverSettingId = self.parentDOM.attr('data-ssid');
+	if (serverSettingId) {
+		getServerSetting('shared', serverSettingId, function (value) {
+			if (value) {
+				self.loadSettings(value);
+			} else {
+				self.loadSettings();
+			}
+			self.draw();
+			self.load();
+		});
+	} else {
+		self.loadSettings();
+		self.draw();
+		self.load();
+	}
+
 };
 
 StudentAnalytics.prototype.sortChanged = function () {
@@ -301,9 +320,11 @@ StudentAnalytics.prototype.draw = function () {
 		this.graphDOM.css('min-height', '400px');
 		this.parentDOM.append(this.graphDOM);
 
-		this.addLink('Einstellungen', function () {
-			self.openSettingsDialog();
+		this.listSettings.linkDOM = this.addLink('Einstellungen', function () {
+			// self.openSettingsDialog();
+			self.listSettings.openMenu();
 		});
+
 		this.addLink('Gruppenauswahl', function () {
 			self.openGroupDialog();
 		});
@@ -727,7 +748,7 @@ StudentAnalytics.prototype.getEntriesTreeLevel = function (path) {
 				}
 			}
 			if (col.calcOp === 'avg') {
-				var count = d['count.'+col.cdId];
+				var count = d['count.' + col.cdId];
 				if (d[col.id] !== null && count) {
 					value = (value || 0) + d[col.id] * count;
 					entry['_avgCount_' + col.id] = (entry['_avgCount_' + col.id] || 0) + count;
