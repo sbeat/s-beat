@@ -314,6 +314,13 @@ article h3 {
 	cursor: pointer;
 }
 
+.deleteBtn {
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	background: url(../img/icons/cross_new.png);
+}
+
 .filters .pe {
 	border: 1px solid #CCCCCC;
 	float: left;
@@ -377,6 +384,14 @@ article h3 {
 	display: block;
 	text-decoration: none;
 }
+
+.filterMenu li.ui-menu-item a.deleteBtn {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+}
+
+
 
 /*
 Table style

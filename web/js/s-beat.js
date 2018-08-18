@@ -1522,6 +1522,31 @@ function setServerSetting(type, id, value, callb) {
 
 }
 
+function deleteServerSetting(type, id, callb) {
+	var data = {
+		id: id,
+		delete: true,
+		type: type
+	};
+
+	var url = '/api/SaveSettings';
+	$.ajax({
+		url: url,
+		type: 'POST',
+		contentType: 'application/json; charset=utf-8',
+		data: JSON.stringify(data)
+	}).success(function (data) {
+		if (data && data.status == 'ok') {
+			loadedServerSettings[type] = null;
+		}
+		if (typeof(callb) == 'function') callb(data);
+
+	}).fail(function () {
+		if (typeof(callb) == 'function') callb(null);
+	});
+
+}
+
 function getSortedListSettings(type, prefix, callb) {
 	loadServerSettings(type, function (settings) {
 		if (!settings) {
@@ -1813,8 +1838,12 @@ $(function onReady() {
 		} else {
 			target.attr('data-asyncload', '1');
 		}
+		target[0].toggle = toggle;
 		element.click(function (e) {
 			e.preventDefault();
+			toggle();
+		});
+		function toggle() {
 			if (target.is(':visible')) {
 				element.removeClass('visible');
 				target.hide();
@@ -1823,7 +1852,7 @@ $(function onReady() {
 				target.show();
 				target.trigger('show');
 			}
-		});
+		}
 
 	});
 

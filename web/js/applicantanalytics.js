@@ -113,10 +113,6 @@ ApplicantAnalytics.prototype.init = function () {
 
 	this.filter.sortFilters();
 
-	self.loadSettings();
-
-	self.draw();
-
 	self.pagination.changed = function () {
 		self.sortChanged();
 		self.load();
@@ -133,32 +129,7 @@ ApplicantAnalytics.prototype.init = function () {
 	};
 
 
-	var asyncParent = this.parentDOM.parents('[data-asyncload=1]');
-	if (asyncParent.size()) {
-		asyncParent.one('show', function () {
-			self.load();
-		});
-
-	} else {
-		self.load();
-	}
-
-	var serverSettingId = self.parentDOM.attr('data-ssid');
-	if (serverSettingId) {
-		getServerSetting('shared', serverSettingId, function (value) {
-			if (value) {
-				self.loadSettings(value);
-			} else {
-				self.loadSettings();
-			}
-			self.draw();
-			self.load();
-		});
-	} else {
-		self.loadSettings();
-		self.draw();
-		self.load();
-	}
+	self.initialLoad();
 
 };
 

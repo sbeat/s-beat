@@ -149,7 +149,7 @@
 		<h2 data-toggle="student_analytics" class="toggle">Detaillierte Analyse</h2>
 
 		<div style="display: none" id="student_analytics">
-			<div data-load="StudentAnalytics" data-preset="course_sem" data-query="stg={{ request.args.get('stg',0) | urlencode }}&amp;start_semester={{ request.args.get('sem',0) }}"></div>
+			<div data-load="StudentAnalytics" data-preset="course_sem" data-query="stg={{ request.args.get('stg',0) | urlencode }}&amp;start_semester={{ request.args.get('sem',0) }}" data-ssid="{{request.args.get('ssid','')|e}}"></div>
 		</div>
 
 	</article>

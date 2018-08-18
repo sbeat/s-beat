@@ -11,11 +11,6 @@ function ListSettings(parent, type) {
 	this.linkDOM = null;
 	this.settingsType = type;
 
-	this.currentId = null;
-
-	this.available = []; // available settings for selection
-
-
 	ListSettings.prototype.init.call(this);
 }
 
@@ -60,19 +55,13 @@ ListSettings.prototype.openMenu = function () {
 
 	function clickOutside() {
 		menuDOM.remove();
-		console.log('close menu');
 	}
 
 	setTimeout(function () {
 		win.one('click', clickOutside);
 	}, 10);
 
-
-	console.log('open menu');
-
-
 	this.loadSaved(menuDOM);
-
 
 };
 
@@ -201,6 +190,9 @@ ListSettings.prototype.openSaveDialog = function () {
 ListSettings.prototype.loadSaved = function (menuDOM) {
 	var self = this;
 
+	var baseHref = location.href.replace(/ssid=[^&]+/, '');
+	if (baseHref.indexOf('?') === -1) baseHref += '?';
+
 	var loading = $('<li class="loading"></li>')
 		.addClass('ui-menu-header ui-menu-item')
 		.text('Loading')
@@ -216,19 +208,29 @@ ListSettings.prototype.loadSaved = function (menuDOM) {
 				.appendTo(menuDOM);
 		}
 
-		console.log('loaded', data);
-
 		data.forEach(function (entry) {
+			var entryDom = $('<li class="ui-menu-item"></li>').appendTo(menuDOM);
 			$('<a href="javascript:"></a>')
+				.attr('href', baseHref + '&ssid=' + entry.id)
 				.text(entry.name)
 				.click(function (e) {
-					self.parent.loadSettings(entry);
-					self.parent.filter.draw();
-					self.parent.draw();
-					self.parent.load();
-					menuDOM.remove();
+					// self.parent.loadSettings(entry);
+					// self.parent.filter.draw();
+					// self.parent.draw();
+					// self.parent.load();
+					// menuDOM.remove();
 				})
-				.appendTo($('<li class="ui-menu-item"></li>').appendTo(menuDOM));
+				.appendTo(entryDom);
+
+			$('<a href="javascript:"></a>')
+				.addClass('deleteBtn')
+				.click(function (e) {
+					if (confirm('Die Einstellung ' + entry.name + ' löschen?')) {
+						deleteServerSetting('shared', entry.id);
+						entryDom.remove();
+					}
+				})
+				.appendTo(entryDom);
 		});
 
 	});

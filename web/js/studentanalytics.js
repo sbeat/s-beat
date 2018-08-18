@@ -240,10 +240,6 @@ StudentAnalytics.prototype.init = function () {
 		this.pagination.sortOptions[col.id + ',-1'] = label + ' absteigend';
 	}
 
-	self.loadSettings();
-
-	self.draw();
-
 	self.pagination.changed = function () {
 		self.sortChanged();
 	};
@@ -259,33 +255,44 @@ StudentAnalytics.prototype.init = function () {
 	};
 
 
+	self.initialLoad();
+
+};
+
+StudentAnalytics.prototype.initialLoad = function () {
+	var self = this;
+	var serverSettingId = self.parentDOM.attr('data-ssid');
+
 	var asyncParent = this.parentDOM.parents('[data-asyncload=1]');
-	if (asyncParent.size()) {
+	if(asyncParent.size() && serverSettingId) {
+		asyncParent[0].toggle();
+		loadWithSsid();
+	} else if (asyncParent.size()) {
 		asyncParent.one('show', function () {
-			self.load();
+			loadWithSsid();
 		});
 
 	} else {
-		self.load();
+		loadWithSsid();
 	}
 
-	var serverSettingId = self.parentDOM.attr('data-ssid');
-	if (serverSettingId) {
-		getServerSetting('shared', serverSettingId, function (value) {
-			if (value) {
-				self.loadSettings(value);
-			} else {
-				self.loadSettings();
-			}
+	function loadWithSsid() {
+		if (serverSettingId) {
+			getServerSetting('shared', serverSettingId, function (value) {
+				if (value) {
+					self.loadSettings(value);
+				} else {
+					self.loadSettings();
+				}
+				self.draw();
+				self.load();
+			});
+		} else {
+			self.loadSettings();
 			self.draw();
 			self.load();
-		});
-	} else {
-		self.loadSettings();
-		self.draw();
-		self.load();
+		}
 	}
-
 };
 
 StudentAnalytics.prototype.sortChanged = function () {
