@@ -20,7 +20,7 @@ In the `main.cfg` `user_roles` section add the new premissions accordingly:
 Add new Definition under Administration -> Definitionen:
                          
      Student » Studium
-         Name: Abschluss
+         Name: End Semester
          Query: end_semester
          Formatierung: Semester
          Ignorieren: Ja

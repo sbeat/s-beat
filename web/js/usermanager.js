@@ -19,10 +19,12 @@ function UserManager(parentDOM) {
 		'personal_data': 'Kann persönliche Daten der Studenten sehen',
 		'identification_data': 'Kann identifizierende Daten der Studenten sehen',
 		'list_identification_data': 'Kann identifizierende Daten der Studenten in Listen sehen',
-		'applicant_data': 'Kann Bewerberdaten sehen'/*,
-		'courses_access': 'Kann den Bereich "Studiengänge" verwenden',
-		'students_access': 'Kann den Bereich "Studenten" verwenden',
-		'exams_access': 'Kann den Bereich "Prüfungsleistungen" verwenden'*/
+		'course_data': 'Kann den Bereich "Studiengänge" verwenden',
+		'students_data': 'Kann den Bereich "Studierende" verwenden und Daten einzelner Studierender sehen',
+		'student_analytics': 'Kann Analyse der Studierenden verwenden',
+		'exams_data': 'Kann den Bereich "Prüfungsleistungen" verwenden',
+		'applicant_data': 'Kann Bewerberdaten sehen',
+		'applicant_analytics': 'Kann Analyse der Bewerber verwenden'
 	};
 
 	UserManager.prototype.init.call(this);
