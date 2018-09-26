@@ -1556,7 +1556,7 @@ function getSortedListSettings(type, prefix, callb) {
 
 		var list = [];
 		for (var id in settings) {
-			if (id.indexOf(prefix) == 0) {
+			if (id.indexOf(prefix) === 0) {
 				settings[id].id = id;
 				list.push(settings[id]);
 			}

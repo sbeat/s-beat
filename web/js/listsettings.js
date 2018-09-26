@@ -78,7 +78,7 @@ ListSettings.prototype.openSaveDialog = function () {
 
 	var settingIdSelect = null, settingName = null;
 
-	getSortedListSettings('shared', self.parent.settingsPrefix, function (list) {
+	getSortedListSettings(self.settingsType, self.parent.settingsPrefix, function (list) {
 		var selection = [];
 		selection.push({label: 'Nicht speichern', value: ''});
 		selection.push({label: 'Neue Einstellung', value: 'new'});
@@ -199,7 +199,7 @@ ListSettings.prototype.loadSaved = function (menuDOM) {
 		.appendTo(menuDOM);
 
 
-	getSortedListSettings('shared', self.parent.settingsPrefix, function (data) {
+	getSortedListSettings(self.settingsType, self.parent.settingsPrefix, function (data) {
 		loading.remove();
 		if (data.length) {
 			$('<li></li>')
@@ -226,7 +226,7 @@ ListSettings.prototype.loadSaved = function (menuDOM) {
 				.addClass('deleteBtn')
 				.click(function (e) {
 					if (confirm('Die Einstellung ' + entry.name + ' löschen?')) {
-						deleteServerSetting('shared', entry.id);
+						deleteServerSetting(self.settingsType, entry.id);
 						entryDom.remove();
 					}
 				})

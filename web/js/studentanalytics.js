@@ -98,7 +98,7 @@ function StudentAnalytics(parentDOM, noInit) {
 	this.filterDOM = $(document.createElement('div'));
 	this.filter = new FilterList(this.filterDOM);
 
-	this.listSettings = new ListSettings(this, 'shared');
+	this.listSettings = new ListSettings(this, 'list');
 
 	this.filter.multiFilters = {
 		exam_count: ['exam_count', 'exam_count_success', 'exam_count_applied']
@@ -278,7 +278,7 @@ StudentAnalytics.prototype.initialLoad = function () {
 
 	function loadWithSsid() {
 		if (serverSettingId) {
-			getServerSetting('shared', serverSettingId, function (value) {
+			getServerSetting('list', serverSettingId, function (value) {
 				if (value) {
 					self.loadSettings(value);
 				} else {
