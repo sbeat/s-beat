@@ -152,9 +152,14 @@ DefinitionsManager.prototype.drawQuery = function (path, query_id, query) {
 		for (var i = 0; i < query.depends.length; i++) {
 			var pe_id = query.depends[i];
 			var pe = self.data['path_elements'][pe_id];
-			var pe_query = self.data['queries'][pe.query_id];
-			var text = getConditionText(pe.condition, pe_query['formatting']);
-			createDom('span', '', infoO).appendChild(document.createTextNode(pe_query.name + ': ' + text + ' '));
+			if(pe) {
+				var pe_query = self.data['queries'][pe.query_id];
+				var text = getConditionText(pe.condition, pe_query['formatting']);
+				createDom('span', '', infoO).appendChild(document.createTextNode(pe_query.name + ': ' + text + ' '));
+			} else {
+				createDom('span', '', infoO).appendChild(document.createTextNode('Unbekannte Abhängigkeit '));
+			}
+
 		}
 	}
 
