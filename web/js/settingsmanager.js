@@ -104,8 +104,8 @@ function SettingsManager(parentDOM) {
 		},
 		"import_applicants": {
 			type: 'boolean',
-			name: 'Bewerberdaten',
-			desc: 'Sollen Bewerber aus den Studentendaten importiert werden?',
+			name: 'Bewerberdaten-Import',
+			desc: 'Sollen Bewerberdaten importiert werden?',
 			group: 'Import',
 			defaultVal: false
 		},
