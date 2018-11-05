@@ -32,7 +32,7 @@ function StudentAnalytics(parentDOM, noInit) {
 			sort2: null,
 			filters: [],
 			columns: [],
-			rows: ['hzb_type'],
+			rows: ['end_semester'],
 			displayPagination: false,
 			sortable: false,
 			graphMode: 'relative'
@@ -43,7 +43,7 @@ function StudentAnalytics(parentDOM, noInit) {
 			sort2: null,
 			filters: [],
 			columns: [],
-			rows: ['hzb_type'],
+			rows: ['end_semester'],
 			displayPagination: false,
 			sortable: false,
 			graphMode: 'relative'
@@ -208,7 +208,7 @@ StudentAnalytics.prototype.init = function () {
 	this.defineColumn('start_semester', 'Start Semester', null, 'semester', true, undefined, 'Student.Studium');
 	this.defineColumn('end_semester', 'End Semester', null, 'semester', true, undefined, 'Student.Studium');
 
-	// this.defineColumn('final_grade', 'Abschlussnote', null, 'grade', true, ['min', 'max', 'avg']);
+	this.defineColumn('final_grade', 'Abschlussnote', null, 'grade', true, ['min', 'max', 'avg']);
 	// this.defineColumn('grade_basic_studies', 'Note Grundstudium', null, 'grade', true, ['min', 'max', 'avg']);
 	// this.defineColumn('grade_main_studies', 'Note Hauptstudium', null, 'grade', true, ['min', 'max', 'avg']);
 	// this.defineColumn('grade_current', 'Note aktuell', null, 'grade', true, ['min', 'max', 'avg']);
@@ -221,8 +221,13 @@ StudentAnalytics.prototype.init = function () {
 	this.settings.default.columns.push(this.getColumnObject('hzb_grade', undefined, 'avg'));
 	this.settings.default.columns.push(this.getColumnObject('gender', 'W'));
 	this.settings.default.columns.push(this.getColumnObject('gender', 'M'));
-	this.settings.course.columns = this.settings.default.columns;
-	this.settings.course_sem.columns = this.settings.default.columns;
+
+	this.settings.course.columns.push(this.getColumnObject('group'));
+	this.settings.course.columns.push(this.getColumnObject('count'));
+	this.settings.course.columns.push(this.getColumnObject('final_grade', undefined, 'avg'));
+
+	this.settings.course_sem.columns.push(this.getColumnObject('group'));
+	this.settings.course_sem.columns.push(this.getColumnObject('count'));
 
 	this.columns = this.settings.default.columns.slice();
 	this.rows = this.settings.default.rows.slice();
@@ -1013,6 +1018,9 @@ StudentAnalytics.prototype.load = function () {
 				self.removeColumn('start_semester');
 			}
 			StudentList.prototype.initDefinitions.call(self, data.definitions);
+			self.definitions.restricted.forEach(function(field) {
+				self.removeColumn(field);
+			});
 			self.initColumns();
 
 		}
