@@ -92,7 +92,7 @@ def get_definitions():
     data['generate_risk_group_stg'] = settings['generate_risk_group_stg']
     data['generate_risk_group_degree'] = settings['generate_risk_group_degree']
     data['main_risk_group'] = settings['main_risk_group']
-    data['risk_value_allowed'] = settings[risk_values_allowed_key]
+    data['risk_value_allowed'] = settings.get(risk_values_allowed_key, True)
     data['compare_averages'] = settings['compare_averages']
     data['hide_resigned'] = settings['hide_resigned']
     data['hide_median_risk'] = settings['hide_median_risk']

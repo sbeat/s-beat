@@ -452,7 +452,7 @@ def handle():
         if avgs:
             ret['avgs'] = {}
             for key, value in avgs.iteritems():
-                if 'risk' in key and not settings[risk_values_allowed_key]:
+                if 'risk' in key and not settings.get(risk_values_allowed_key, True):
                     continue
                 if key in DB.Student.restricted_fields:
                     if UserTools.has_right(DB.Student.restricted_fields[key], user_role):
