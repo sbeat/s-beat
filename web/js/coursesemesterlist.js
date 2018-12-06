@@ -244,7 +244,7 @@ function CourseSemesterList(parentDOM) {
 			formatting: 'grade'
 		},
 		'applicants.hzb_grade_data.min': {
-			id: 'applicants.hzb_grade_data.mean',
+			id: 'applicants.hzb_grade_data.min',
 			label: 'Min. HZB Note Bewerber',
 			title: 'Minimale Note der Hochschulzugangsberechtigung von Bewerbern',
 			formatting: 'grade'
