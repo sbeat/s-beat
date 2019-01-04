@@ -10,15 +10,17 @@ The document contains the instructions for a basic installation of S-BEAT on DEB
 	apt-get install python2.7 python-pip python-dev
 
 
-## Install Python modules
+## Upgrade PIP
 
 	pip install --upgrade pip
-	pip install -r requirements.txt
-
 
 ## Install MongoDB
 
 You only need to install MognoDB if you don't already have an instance available.
+
+In Debian 9 (Stretch) you need to install the dirmngr package. Otherwise you run into an error.
+
+	apt-get install dirmngr
 
 See [Install MongoDB Community Edition on Debian](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian/)
 
@@ -106,10 +108,18 @@ Add an alias in `~/.bashrc`
 
 ## Download S-BEAT
 
+If not already installed, you need git
+
+	apt-get install git
+	
+Now you can download S-BEAT	
+
 	git clone https://github.com/sbeat/s-beat
 	cd s-beat
 
+## Install Python modules
 
+	pip install -r requirements.txt --user
 
 ## Initial setup
 
