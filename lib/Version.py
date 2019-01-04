@@ -19,7 +19,7 @@ along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 
 import math
 
-__number = 1.5
+__number = 1.6
 
 
 def get_float():
