@@ -1,4 +1,4 @@
-The document contains the instructions for a basic installation of S-BEAT on DEBIAN jessie.
+The document contains the instructions for a basic installation of S-BEAT on DEBIAN stretch.
 
 # Prepare the system for S-BEAT
 ## Install general packets
@@ -25,8 +25,8 @@ In Debian 9 (Stretch) you need to install the dirmngr package. Otherwise you run
 See [Install MongoDB Community Edition on Debian](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian/)
 
 	
-	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
-	echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.2 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+	echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
 	apt-get update
 	apt-get install -y mongodb-org
 
@@ -49,7 +49,8 @@ Only install Apache2 if you don't already have a HTTP Server on the system.
 
 Open the file `/etc/apache2/sites-available/default-ssl.conf`
 
-Add the proxy configuration to redirect all requests to the S-BEAT server on port 8000.
+Scroll down to the closing VirtualHost tag `</VirtualHost>`.
+Add the following configuration right above this tag to redirect all requests to the S-BEAT server on port 8000.
 
 	<Location "/">
             AuthType Basic
