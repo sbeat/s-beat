@@ -1,0 +1,86 @@
+<!--
+Copyright (c) 2016 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+-->
+{% set active_page = active_page|default('start') %}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	{% block head %}
+	<title>{% block title %}S-BEAT (Studentenberatungs- &amp; Analysetool){% endblock %}</title>
+	<meta charset="utf-8">
+	<link rel="icon" href="favicon.ico">
+	<link rel="stylesheet" href="css/sbeat-theme/jquery-ui.min.css">
+	<link rel="stylesheet" href="js/nvd3/nv.d3.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	<script src="js/vendor/es6-shim.min.js"></script>
+	<script src="js/vendor/jquery-2.1.1.min.js"></script>
+	<script src="js/vendor/jquery-ui.min.js"></script>
+	<script src="js/vendor/jquery.fileupload.js"></script>
+	<script src="js/vendor/jquery.ui.datepicker-de.js"></script>
+	<script src="js/nvd3/lib/d3.v3.js"></script>
+	<script src="js/nvd3/nv.d3.min.js"></script>
+	<script src="js/config.js"></script>
+	<script src="js/pagination.js"></script>
+	<script src="js/filterlist.js"></script>
+	<script src="js/infograph.js"></script>
+	<script src="js/detailstable.js"></script>
+	<script src="js/s-beat.js"></script>
+	<script src="js/listsettings.js"></script>
+	<script type="text/javascript">
+		CONFIG.cp_label = "{{ g.get_setting('cp_label') }}";
+	</script>
+	{% endblock %}
+	{% if g.web_config['custom_css'] %}
+	<link rel="stylesheet" href="{{ g.web_config['custom_css'] }}">
+	{% endif %}
+</head>
+<body data-user-name="{{ g.username|e }}">
+<div id="website" class="noside">
+	<section class="header">
+		<div class="logo">
+			<img src="img/sbeat_logo_232x115.png" width="232" height="115"
+				 alt="S-BEAT Studenten Beratungs- &amp; Analysetool">
+		</div>
+		<div class="hslogo">
+			{% include 'inc/hslogo.html' %}
+		</div>
+		<div class="clear"></div>
+	</section>
+	<section id="content">
+		{% block content %}
+		<div class="layout">
+			<article>
+				<h1>Studenten Beratungs- &amp; Analysetool (S-BEAT)</h1>
+				<p id="beschreibung">
+					Das Studenten Beratungs- &amp; Analysetool S-BEAT ist ein Werkzeug, das sich
+					insbesondere an Studiendekane
+					sowie Mitarbeiter des
+					Didaktikzentrums richtet.
+					Es soll Möglichkeiten bieten,
+					kritische Studienverläufe frühzeitig
+					zu erkennen, um die Studenten
+					gezielt beraten zu können und
+					Gegenmaßnahmen zu ergreifen.
+				</p>
+				<p>
+					Es ist hilfreich, sich vor der ersten Benutzung eine Einführung geben zu lassen oder die
+					<a href="docs_extended.html?page=06_use_cases">Anleitung in der Dokumentation</a> zu lesen.
+				</p>
+				<p style="text-align: center">
+					<img src="img/sbeat_logo_700.png" width="700" height="346" alt="sbeat">
+				</p>
+
+
+			</article>
+		</div>
+		{% endblock %}
+	</section>
+	<footer id="footer">
+		{% block footer %}
+		S-BEAT (Studentenberatungs- und Analysetool) Version {{ g.version|e }}. <a href="LICENSE.md" target="license_info">Lizenzinformationen</a>
+		{% endblock %}
+	</footer>
+</div>
+</body>
+</html>

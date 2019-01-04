@@ -218,6 +218,8 @@ def get_boolean(s):
 
 
 def get_unicode(s, encoding='windows-1252'):
+    if s is None:
+        return None
     s = s.decode(encoding)
     return unicode(s.strip())
 
