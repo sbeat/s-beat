@@ -40,6 +40,13 @@ StudentDetailsStudents.prototype.load = function () {
 		}
 		self.draw();
 
+		window.loadedData = data;
+		if(window.dataListeners) {
+			window.dataListeners.forEach(function(listener) {
+				listener(data);
+			});
+		}
+
 		//self.loadPaths()
 
 	}).fail(function () {

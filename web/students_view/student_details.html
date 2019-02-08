@@ -29,8 +29,6 @@
 					<td>Studiengang</td>
 					<td>
 						<span data-student="stg_original"></span>
-
-						(Gruppe: <span data-student="stg"></span>)
 					</td>
 					<td></td>
 				</tr>
@@ -411,7 +409,7 @@
 	<article id="exams">
 		<h2>Notenspiegel (Stand: <span data-student="lastDate"></span>)</h2>
 
-		<div data-load="ExamList" data-id="{{ request.args.get('id',0) }}" data-preset="student"></div>
+		<div data-load="ExamList" data-id="{{ request.args.get('id',0) }}" data-preset="student_view" data-source="data"></div>
 
 
 		{% include 'inc/tooltips_exam.html' %}
@@ -429,7 +427,7 @@
 			<h3>Risikokriterien <a href="docs_extended.html?page=05_02_students#risk_paths" target="_blank" class="infobtn">Beschreibung</a>
 			</h3>
 
-			<div data-load="PathList" data-id="{{ request.args.get('id',0) }}"></div>
+			<div data-load="PathList" data-id="{{ request.args.get('id',0) }}" data-source="data"></div>
 		</div>
 
 	</article>

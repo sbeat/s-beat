@@ -35,6 +35,12 @@ def handle():
     exam_ids = list(set([e['exam_info_id'] for e in ret['exams']]))
     exam_info_cursor = DB.ExamInfo.find({'_id': {'$in': exam_ids}})
     ret['exams_info'] = [s.__dict__ for s in exam_info_cursor]
+
+    course_semester = DB.CourseSemesterInfo.get_by_stg_and_semid(student.stg, student.start_semester)
+    ret['course_semester'] = {'semester_data': course_semester.semester_data}
+
+    ret['paths'] = [s.get_dict(True) for s in student.get_paths()]
+
     ret['definitions'] = get_definitions()
 
     return respond(ret, 200)
@@ -61,12 +67,6 @@ def get_definitions():
         'restricted': []  # list of restricted fields
     }
     user_role = 'guest'
-
-    for field, role in DB.Student.restricted_fields.iteritems():
-        if not UserTools.has_right(role, user_role):
-            data['restricted'].append(field)
-
-    data['list_identification_data'] = UserTools.has_right('list_identification_data', user_role)
 
     allowed_stgs = None
 
@@ -112,10 +112,16 @@ def get_definitions():
     data['hide_resigned'] = settings['hide_resigned']
     data['hide_median_risk'] = settings['hide_median_risk']
     data['hide_student_fields'] = settings['hide_student_fields']
-    data['hide_applicant_fields'] = settings['hide_applicant_fields']
 
-    data['tags'] = []
-    for item in DB.Tag.find({}, sort=[['order', 1]]):
-        data['tags'].append(item.get_dict())
 
     return data
+
+
+def get_student_matching_elements(student_id):
+    student = DB.Student.find_one({'_id': student_id})
+    if student is None:
+        return None
+
+    return [pe.md5_id() for pe in student.get_matching_elements()]
+
+

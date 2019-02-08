@@ -18,19 +18,18 @@ along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
 import sys
 
-import StudentsWebAPI
-
 sys.path.append('lib')
+
+import StudentsWebAPI
 
 from functools import wraps
 from ConfigParser import RawConfigParser
-from flask import Flask, abort, render_template, request, Response, g, send_file
+from flask import Flask, render_template, request, Response, g, send_file
 import logging
 import markdown
 import codecs
 
 import UserTools
-import WebAPI
 import Version
 import DB
 

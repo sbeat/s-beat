@@ -226,6 +226,40 @@ class Student(DBDocument):
         else:
             return number
 
+    def get_paths(self, in_filter_elements=None, db_sort=None):
+        """
+        :param in_filter_elements: list of long() ids
+        :param db_sort:
+        :return:
+        """
+        if db_sort is None:
+            db_sort = [('value', -1)]
+        student_element_ids = [pe.md5_id() for pe in self.get_matching_elements()]
+        db_query = dict()
+        db_query['group'] = {'$in': ['all', self.stg]}
+
+        use_preferred_paths = Settings.load('use_preferred_paths')
+
+        if in_filter_elements is not None:
+            seids = [feid for feid in in_filter_elements if feid in student_element_ids]
+            db_query['filter_elements'] = {'$in': seids}
+
+        results = Path.get_list_by_element_ids(student_element_ids, db_query)
+        if use_preferred_paths:
+            results = Path.get_preferred_paths(results)
+
+        def sort_cmp(x, y):
+            for se in db_sort:
+                if hasattr(x, se[0]) and hasattr(y, se[0]):
+                    if getattr(x, se[0]) < getattr(y, se[0]):
+                        return se[1] * -1
+                    elif getattr(x, se[0]) > getattr(y, se[0]):
+                        return se[1]
+            return 0
+
+        results.sort(cmp=sort_cmp)
+        return results
+
     def get_matching_elements(self):
         import DataDefinitions
 

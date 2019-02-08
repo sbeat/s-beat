@@ -129,42 +129,19 @@ def handle():
             return respond({'error': 'invalid_filter', name: name}, 400)
 
     if student_id is not None:
-        student_element_ids = get_student_matching_elements(student_id)
-        if student_element_ids is None:
-            return respond({'error': 'invalid_student_id'}, 400)
-
         student = DB.Student.find_one({'_id': student_id})
+        if student is None:
+            return respond({'error': 'invalid_student_id'}, 400)
 
         # print 'on all', [DataDefinitions.get_element_by_hash(peId).get_str() for peId in student_element_ids]
         if in_filter_elements is not None:
             in_fids = in_filter_elements.split(',')
-            seids = [long(feid) for feid in in_fids if long(feid) in student_element_ids]
-            db_query['filter_elements'] = {'$in': seids}
+            in_filter_elements = [long(feid) for feid in in_fids]
             # print 'one in', [DataDefinitions.get_element_by_hash(peId).get_str() for peId in seids]
 
-        if 'group' not in db_query:
-            db_query['group'] = {'$in': ['all', student.stg]}
-        # db_query['$where'] = Code(
-        # 'this.filter_elements.every(function(id){return student_elements.indexOf(id.toNumber().toString())!=-1})',
-        # {'student_elements': [str(el_id) for el_id in student_element_ids]}
-        # )
-
-        results = DB.Path.get_list_by_element_ids(student_element_ids, db_query)
-        if use_preferred_paths:
-            results = DB.Path.get_preferred_paths(results)
+        results = student.get_paths(in_filter_elements, db_sort)
 
         result_list = []
-
-        def sort_cmp(x, y):
-            for se in db_sort:
-                if hasattr(x, se[0]) and hasattr(y, se[0]):
-                    if getattr(x, se[0]) < getattr(y, se[0]):
-                        return se[1] * -1
-                    elif getattr(x, se[0]) > getattr(y, se[0]):
-                        return se[1]
-            return 0
-
-        results.sort(cmp=sort_cmp)
 
         element_stats = {}
 
