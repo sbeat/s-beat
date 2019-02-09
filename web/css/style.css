@@ -214,6 +214,9 @@ article h3 {
 	padding-right: 122px;
 	padding-left: 150px;
 }
+.path.nocounters {
+	padding-left: 0;
+}
 
 .path .counters {
 	float: left;

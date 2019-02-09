@@ -7,6 +7,7 @@ function PathList(parentDOM) {
 	this.studentId = parentDOM.attr('data-id');
 	this.sourceType = this.parentDOM.attr('data-source') || 'load';
 	this.settingId = this.studentId ? 'student' : 'default';
+	this.settingId = this.parentDOM.attr('data-preset') || this.settingId;
 	this.settingsPrefix = 'pathlist_';
 	this.settingsRev = 1; // changing this forces a reset of settings for all users
 	this.paginationDOM = $(document.createElement('div'));
@@ -320,6 +321,10 @@ PathList.prototype.drawPath = function (path) {
 
 	var counters = pathBox.appendChild(document.createElement('div'));
 	counters.className = 'counters';
+	if(this.settingId === 'student_view') {
+		counters.style.display = 'none';
+		pathBox.className += ' nocounters';
+	}
 
 	var filterElements = pathBox.appendChild(document.createElement('div'));
 	filterElements.className = 'filter';

@@ -39,7 +39,7 @@ def handle():
     course_semester = DB.CourseSemesterInfo.get_by_stg_and_semid(student.stg, student.start_semester)
     ret['course_semester'] = {'semester_data': course_semester.semester_data}
 
-    ret['paths'] = [s.get_dict(True) for s in student.get_paths()]
+    ret['paths'] = [s.get_dict(True) for s in student.get_paths()][0:10]
 
     ret['definitions'] = get_definitions()
 

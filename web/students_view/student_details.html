@@ -14,7 +14,7 @@
 {% endblock %}
 {% block content %}
 <div class="layout" data-load="StudentDetailsStudents">
-	<h1>Student Details: <span data-student="ident"></span></h1>
+	<h1>Zusammenfassung zu Ihrem Studium</h1>
 
 	<div class="col2_50">
 		<article>
@@ -417,17 +417,11 @@
 	</article>
 
 	<article id="riskpaths">
-		<h2 data-toggle="risk_details" class="toggle">Risikodetails</h2>
+		<h2>Risikodetails</h2>
 
-		<div style="display: none" id="risk_details">
-			<h3>Risikoverteilung <a href="docs_extended.html?page=05_02_students#risk_distribution" target="_blank"
-									class="infobtn">Beschreibung</a></h3>
-			<svg data-student="risk_graph" style="height: 150px"></svg>
+		<div id="risk_details">
 
-			<h3>Risikokriterien <a href="docs_extended.html?page=05_02_students#risk_paths" target="_blank" class="infobtn">Beschreibung</a>
-			</h3>
-
-			<div data-load="PathList" data-id="{{ request.args.get('id',0) }}" data-source="data"></div>
+			<div data-load="PathList" data-id="{{ request.args.get('id',0) }}" data-source="data" data-preset="student_view"></div>
 		</div>
 
 	</article>
