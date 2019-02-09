@@ -3,8 +3,6 @@
 
 function StudentDetailsStudents(parentDOM) {
 	StudentDetails.call(this, parentDOM, true);
-
-	StudentDetails.prototype.init.call(this);
 }
 
 StudentDetailsStudents.prototype = Object.create(StudentDetails.prototype);

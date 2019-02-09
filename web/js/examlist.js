@@ -305,7 +305,10 @@ ExamList.prototype.draw = function () {
 		this.paginationDOM.addClass('pagination');
 		this.parentDOM.append(this.paginationDOM);
 
-		this.tableDOM.addClass('studentList tbl sortable');
+		this.tableDOM.addClass('studentList tbl');
+		if(this.sortable) {
+			this.tableDOM.addClass('sortable');
+		}
 		this.parentDOM.append(this.tableDOM);
 
 		this.pagination2DOM.addClass('pagination');
