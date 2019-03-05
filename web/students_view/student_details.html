@@ -16,6 +16,8 @@
 <div class="layout" data-load="StudentDetailsStudents">
 	<h1>Zusammenfassung zu Ihrem Studium</h1>
 
+	<p class="text" data-student="def.text_top"></p>
+
 	<div class="col2_50">
 		<article>
 			<h2>Allgemein</h2>
@@ -140,6 +142,8 @@
 				</tr>
 			</table>
 
+			<p class="text" data-student="def.text_left"></p>
+
 		</article>
 
 	</div>
@@ -197,11 +201,11 @@
 					<td data-student="grade_current"></td>
 					<td></td>
 				</tr>
-				<tr data-student="display.grade_nb_current">
-					<td>&Oslash; Note aktuell inkl. NB, EN<sup>1</sup></td>
-					<td data-student="grade_nb_current"></td>
-					<td></td>
-				</tr>
+				<!--<tr data-student="display.grade_nb_current">-->
+					<!--<td>&Oslash; Note aktuell inkl. NB, EN<sup>1</sup></td>-->
+					<!--<td data-student="grade_nb_current"></td>-->
+					<!--<td></td>-->
+				<!--</tr>-->
 				<!--<tr>
 					<td>&Oslash; Note gesamt<sup>1</sup></td>
 					<td data-student="grade_total"></td>
@@ -224,8 +228,8 @@
 				</tr>
 			</table>
 
-			<h2>Risiko</h2>
-			<table class="tbl detailTable">
+			<h2 data-student="display_risk_all">Risiko</h2>
+			<table class="tbl detailTable" data-student="display_risk_all">
 
 				<tr data-student="display_risk_median_all">
 					<td>Unskalierter Risikowert</td>
@@ -427,13 +431,11 @@
 	</article>
 
 	<article>
-		* Die Matrikel-Nr., der Vor- und Nachname, die E-Mail, das Geburtsdatum, das Geschlecht und die Daten zur
-		Hochschulzugangsberechtigung sind nur sichtbar, wenn Sie die Berechtigung dafür besitzen.
-		<br>
 		<sup>1</sup> Die gekennzeichneten Durchschnittsnoten (Aktuell, Grund-/Hauptstudium, im Semester) sind jeweils nach
 		<span data-config="cp_label"></span>
 		gewichtet und wurden nach aktuellem Datenstand berechnet. Abhängig vom Datenstand zeigen diese nicht die endgültige
 		Note.
+		<p class="text" data-student="def.text_bottom"></p>
 	</article>
 
 </div>

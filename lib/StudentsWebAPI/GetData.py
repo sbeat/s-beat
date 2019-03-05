@@ -39,7 +39,11 @@ def handle():
     course_semester = DB.CourseSemesterInfo.get_by_stg_and_semid(student.stg, student.start_semester)
     ret['course_semester'] = {'semester_data': course_semester.semester_data}
 
-    ret['paths'] = [s.get_dict(True) for s in student.get_paths()][0:10]
+    settings = DB.Settings.load_dict([
+        'sv_max_risk_paths',
+    ])
+
+    ret['paths'] = [s.get_dict(True, True) for s in student.get_paths()][0:settings['sv_max_risk_paths']]
 
     ret['definitions'] = get_definitions()
 
@@ -49,10 +53,8 @@ def handle():
 def get_queries(settings):
     filters = dict()
 
-    allowed_stgs = None
-
     for name, query in DataDefinitions.get_queries().iteritems():
-        if allowed_stgs is not None and query.q == 'stg' and len(allowed_stgs) == 1:
+        if query.q == 'stg':
             continue
         filters[query.md5_id()] = query.get_dict(replace_vars={
             '{cp_label}': settings['cp_label']
@@ -66,16 +68,11 @@ def get_definitions():
         'path_elements': {},
         'restricted': []  # list of restricted fields
     }
-    user_role = 'guest'
-
-    allowed_stgs = None
 
     for pe in DataDefinitions.get_elements():
-        if allowed_stgs is not None and pe.query.q == 'stg_original' \
-                and DB.Course.get_mapped_short(pe.condition.compare_value) not in allowed_stgs:
+        if pe.query.q == 'stg_original':
             continue
-        if allowed_stgs is not None and pe.query.q == 'stg' \
-                and (pe.condition.compare_value not in allowed_stgs or len(allowed_stgs) == 1):
+        if pe.query.q == 'stg':
             continue
 
         data['path_elements'][pe.md5_id()] = pe.get_dict(query_id=True)
@@ -83,21 +80,19 @@ def get_definitions():
     last_date = DB.MetaData.find_by_id('lastDate')
     data['lastDate'] = last_date.data['date'] if last_date is not None else None
 
-    data['user_roles'] = UserTools.user_roles.keys()
-
-    risk_values_allowed_key = 'risk_value_' + user_role
     settings = DB.Settings.load_dict([
-        risk_values_allowed_key,
         'generate_risk_group_all',
         'generate_risk_group_stg',
         'generate_risk_group_degree',
         'main_risk_group',
-        'compare_averages',
+        'sv_compare_averages',
         'cp_label',
-        'hide_resigned',
         'hide_median_risk',
-        'hide_student_fields',
-        'hide_applicant_fields'
+        'sv_hide_student_fields',
+        'sv_show_risk_value',
+        'sv_text_top',
+        'sv_text_left',
+        'sv_text_bottom'
     ])
 
     data['queries'] = get_queries(settings)
@@ -107,12 +102,12 @@ def get_definitions():
     data['generate_risk_group_stg'] = settings['generate_risk_group_stg']
     data['generate_risk_group_degree'] = settings['generate_risk_group_degree']
     data['main_risk_group'] = settings['main_risk_group']
-    data['risk_value_allowed'] = settings.get(risk_values_allowed_key, True)
-    data['compare_averages'] = settings['compare_averages']
-    data['hide_resigned'] = settings['hide_resigned']
+    data['risk_value_allowed'] = settings['sv_show_risk_value']
+    data['compare_averages'] = settings['sv_compare_averages']
     data['hide_median_risk'] = settings['hide_median_risk']
-    data['hide_student_fields'] = settings['hide_student_fields']
-
+    data['text_top'] = settings['sv_text_top']
+    data['text_left'] = settings['sv_text_left']
+    data['text_bottom'] = settings['sv_text_bottom']
 
     return data
 
@@ -123,5 +118,3 @@ def get_student_matching_elements(student_id):
         return None
 
     return [pe.md5_id() for pe in student.get_matching_elements()]
-
-

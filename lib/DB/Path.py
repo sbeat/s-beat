@@ -322,7 +322,7 @@ class Path(DBDocument):
         c.create_index([('count', 1)])
         c.create_index([('group', 1)])
 
-    def get_dict(self, query_id=False):
+    def get_dict(self, query_id=False, no_counts=False):
         ret = dict()
         ret['_id'] = self.md5_id()
         ret['name'] = self.name
@@ -336,15 +336,16 @@ class Path(DBDocument):
         for el in self.elements:
             ret['elements'].append(el.md5_id())
 
-        ret['matched'] = self.matched
-        ret['count'] = self.count
-        ret['total_count'] = self.total_count
-        ret['weight'] = self.weight
-        ret['weighted_value'] = self.weighted_value
-        ret['scaled_value'] = self.scaled_value
-        ret['value'] = self.value
-        ret['support'] = self.support
-        ret['confidence'] = self.confidence
+        if not no_counts:
+            ret['matched'] = self.matched
+            ret['count'] = self.count
+            ret['total_count'] = self.total_count
+            ret['weight'] = self.weight
+            ret['weighted_value'] = self.weighted_value
+            ret['scaled_value'] = self.scaled_value
+            ret['value'] = self.value
+            ret['support'] = self.support
+            ret['confidence'] = self.confidence
 
         return ret
 

@@ -42,5 +42,12 @@
 	"max_valid_cp": 220,
 	"hide_student_fields": [],
 	"hide_applicant_fields": [],
-	"hide_exam_fields": []
+	"hide_exam_fields": [],
+	"sv_hide_student_fields": [],
+	"sv_hide_exam_fields": [],
+	"sv_compare_averages": true,
+	"sv_max_risk_paths": 10,
+	"sv_text_top": "",
+	"sv_text_left": "",
+	"sv_text_bottom": ""
 }
