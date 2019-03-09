@@ -50,7 +50,9 @@ host = config.get('http_students', 'host')
 debug = True if config.get('http_students', 'debug') == 'true' else False
 document_root = config.get('http_students', 'document_root')
 username_field = config.get('http_students', 'student_username_field')
-base_path = '/students_view'
+base_path = config.get('http_students', 'base_path')
+do_on_not_found = config.get('http_students', 'not_found')
+
 if config.has_section('web'):
     web_config = dict(config.items('web'))
 else:
@@ -59,6 +61,10 @@ else:
 # check which authentication methods should be used
 authentication_header = True
 username_header = False
+if config.has_option('http', 'authentication_header'):
+    authentication_header = config.getboolean('http_students', 'authentication_header')
+if config.has_option('http_students', 'username_header'):
+    username_header = config.getboolean('http', 'username_header')
 
 realm = 'S-BEAT Gesicherter Bereich'
 
@@ -91,9 +97,11 @@ def before_request():
 
 def authenticate():
     """Sends a 401 response that enables basic auth"""
-    return Response(
-        render_template('students_view/unauthorized.html'), 401,
-        {'WWW-Authenticate': 'Basic realm="' + realm + '"'})
+    if do_on_not_found == 'authenticate':
+        return Response(render_template('students_view/unauthorized.html'), 401,
+                        {'WWW-Authenticate': 'Basic realm="' + realm + '"'})
+    else:
+        return Response(render_template('students_view/unauthorized.html'), 401)
 
 
 def requires_auth(f):

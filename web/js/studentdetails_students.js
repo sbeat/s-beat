@@ -9,7 +9,7 @@ StudentDetailsStudents.prototype = Object.create(StudentDetails.prototype);
 
 StudentDetailsStudents.prototype.load = function () {
 	var self = this;
-	var url = '/students_view/api/get_current_students_data';
+	var url = 'api/get_current_students_data';
 
 	var params = [];
 	params.push('course_semester=true');
