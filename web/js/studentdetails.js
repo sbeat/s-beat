@@ -259,6 +259,14 @@ StudentDetails.prototype.drawValue = function (field, el) {
 			el.hide();
 		}
 
+	} else if (field.match(/^def\.(.+)/)) {
+		value = getByPath(RegExp.$1, self.definitions);
+		if(value && value.length) {
+			el.text(value);
+		} else {
+			el.hide();
+		}
+
 	} else {
 		value = getByPath(field, self.student);
 		el.empty();

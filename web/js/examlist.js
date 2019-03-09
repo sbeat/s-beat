@@ -5,6 +5,7 @@ function ExamList(parentDOM) {
 	this.parentDOM = parentDOM;
 
 	this.settingId = this.parentDOM.attr('data-preset') || 'default';
+	this.sourceType = this.parentDOM.attr('data-source') || 'load';
 	this.settingsRev = 1; // changing this forces a reset of settings for all users
 	this.settingsPrefix = 'exams_';
 	this.settings = {
@@ -34,6 +35,15 @@ function ExamList(parentDOM) {
 			displayFilters: true,
 			displayPagination: true,
 			sortable: true
+		},
+		'student_view': {
+			limit: 100,
+			sort1: 'semester,1',
+			filters: [],
+			columns: ['exam_id', 'semester', 'name', 'status', 'recognized', 'mandatory', 'try_nr', 'type', 'bonus', 'grade', 'phase'],
+			displayFilters: false,
+			displayPagination: false,
+			sortable: false
 		},
 //	filter: status == 'AN', semester == aktSemester, comment == None bzw. ''
 //	columns: EDV Nr., Prüfungsleistung Name, Pflicht, Vers., Art, ECTS
@@ -65,6 +75,9 @@ function ExamList(parentDOM) {
 			displayStats: false
 		}
 	};
+
+	this.settingsFields = ['displayFilters', 'displayPagination', 'sortable'];
+
 	this.examInfoId = parentDOM.attr('data-examinfoid');
 	this.studentId = parentDOM.attr('data-id');
 
@@ -292,7 +305,10 @@ ExamList.prototype.draw = function () {
 		this.paginationDOM.addClass('pagination');
 		this.parentDOM.append(this.paginationDOM);
 
-		this.tableDOM.addClass('studentList tbl sortable');
+		this.tableDOM.addClass('studentList tbl');
+		if(this.sortable) {
+			this.tableDOM.addClass('sortable');
+		}
 		this.parentDOM.append(this.tableDOM);
 
 		this.pagination2DOM.addClass('pagination');
@@ -535,6 +551,29 @@ ExamList.prototype.getInfoForExam = function (exam_info_id) {
 
 ExamList.prototype.load = function () {
 	var self = this;
+	if(self.sourceType === 'data') {
+		if(window.loadedData) {
+			dataReceived(window.loadedData);
+		} else {
+			window.dataListeners = window.dataListeners || [];
+			dataListeners.push(dataReceived);
+			self.tableDOM.addClass('loading');
+		}
+		function dataReceived(data) {
+			self.tableDOM.removeClass('loading');
+			self.data = {
+				list: data.exams,
+				info: data.exams_info
+			};
+
+			self.pagination.update(data);
+
+			self.draw();
+		}
+
+		return;
+	}
+
 	var url = '/api/GetExams';
 
 	self.saveSettings();

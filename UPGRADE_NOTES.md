@@ -2,6 +2,13 @@
 
 The following notes tell you what to do when upgrading S-BEAT from an older version.
 
+## Upgrade 1.6 to 1.7
+
+Run the following command to integrate new settings:
+
+    python sbeat.py initial_settings
+
+
 ## Upgrade 1.5 to 1.6
 
 Run the following command to integrate new settings:

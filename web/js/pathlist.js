@@ -5,7 +5,9 @@ function PathList(parentDOM) {
 	this.parentDOM = parentDOM;
 
 	this.studentId = parentDOM.attr('data-id');
+	this.sourceType = this.parentDOM.attr('data-source') || 'load';
 	this.settingId = this.studentId ? 'student' : 'default';
+	this.settingId = this.parentDOM.attr('data-preset') || this.settingId;
 	this.settingsPrefix = 'pathlist_';
 	this.settingsRev = 1; // changing this forces a reset of settings for all users
 	this.paginationDOM = $(document.createElement('div'));
@@ -78,6 +80,7 @@ function PathList(parentDOM) {
 
 	PathList.prototype.init.call(this);
 }
+
 /**
  * Gets called once this PathList is initialized
  */
@@ -121,24 +124,28 @@ PathList.prototype.draw = function () {
 		this.parentDOM.append(this.pathsContainer);
 		this.parentDOM.append(this.elementsContainer);
 
-		this.filterDOM.addClass('filterlist');
-		this.pathsContainer.append(this.filterDOM);
-		this.filter.draw();
+		if (this.sourceType !== 'data') {
+			this.filterDOM.addClass('filterlist');
+			this.pathsContainer.append(this.filterDOM);
+			this.filter.draw();
 
-		this.paginationDOM.addClass('pagination');
-		this.pathsContainer.append(this.paginationDOM);
+			this.paginationDOM.addClass('pagination');
+			this.pathsContainer.append(this.paginationDOM);
+		}
 
 		this.listDOM.addClass('pathList');
 		this.pathsContainer.append(this.listDOM);
 
-		this.pagination2DOM.addClass('pagination');
-		this.pathsContainer.append(this.pagination2DOM);
+		if (this.sourceType !== 'data') {
+			this.pagination2DOM.addClass('pagination');
+			this.pathsContainer.append(this.pagination2DOM);
+		}
 
 		this.pagination.addLink('Einstellungen', function () {
 			self.openSettingsDialog();
 		});
 
-		if(this.settingId == 'student') {
+		if (this.settingId == 'student') {
 			this.pagination.addLink('Pfad Statistik', function () {
 				self.displayMode = 'listelements';
 				self.draw();
@@ -205,7 +212,7 @@ PathList.prototype.drawElementsTable = function (elements) {
 	var sort1_field = self.elementsConfig.sort1.split(',')[0], sort2_field;
 	var sort1_dir = parseInt(self.elementsConfig.sort1.split(',')[1]), sort2_dir;
 
-	if(self.elementsConfig.sort2) {
+	if (self.elementsConfig.sort2) {
 		sort2_field = self.elementsConfig.sort2.split(',')[0];
 		sort2_dir = parseInt(self.elementsConfig.sort2.split(',')[1]);
 	}
@@ -241,7 +248,7 @@ PathList.prototype.drawElementsTable = function (elements) {
 
 	thead.find('th').click(function (e) {
 		var col = self.elementsConfig.columnData[this.colId];
-		if(col.sortBy === null) return;
+		if (col.sortBy === null) return;
 		var sortField = col.sortBy ? col.sortBy : col.id;
 
 		if (self.elementsConfig.sort1 == sortField + ',1') {
@@ -278,9 +285,9 @@ PathList.prototype.drawElementsEntry = function (el) {
 		var td = $(document.createElement('td'));
 		tr.append(td);
 		var value = getByPath(col.id, el);
-		if(col.id=='condition') {
+		if (col.id == 'condition') {
 			var s = getConditionText(el.condition, el.query.formatting);
-			td.text(el.query.name+' '+s);
+			td.text(el.query.name + ' ' + s);
 		} else {
 			td.append(getFormattedHTML(value, col.formatting));
 		}
@@ -314,6 +321,10 @@ PathList.prototype.drawPath = function (path) {
 
 	var counters = pathBox.appendChild(document.createElement('div'));
 	counters.className = 'counters';
+	if(this.settingId === 'student_view') {
+		counters.style.display = 'none';
+		pathBox.className += ' nocounters';
+	}
 
 	var filterElements = pathBox.appendChild(document.createElement('div'));
 	filterElements.className = 'filter';
@@ -405,6 +416,28 @@ PathList.prototype.initMetadata = function (metadata) {
 };
 PathList.prototype.load = function () {
 	var self = this;
+	if (self.sourceType === 'data') {
+		if (window.loadedData) {
+			dataReceived(window.loadedData);
+		} else {
+			window.dataListeners = window.dataListeners || [];
+			dataListeners.push(dataReceived);
+			self.listDOM.addClass('loading');
+		}
+
+		function dataReceived(data) {
+			self.listDOM.removeClass('loading');
+			self.data = {
+				list: data.paths
+			};
+			self.definitions = data.definitions;
+
+			self.draw();
+		}
+
+		return;
+	}
+
 	var url = '/api/GetPaths';
 
 	self.saveSettings();
@@ -427,7 +460,7 @@ PathList.prototype.load = function () {
 	if (!self.definitions) {
 		params.push('definitions=true');
 	}
-	if(isTempActive()) params.push('temp=true');
+	if (isTempActive()) params.push('temp=true');
 
 	if (params.length) url += '?';
 	url += params.join('&');

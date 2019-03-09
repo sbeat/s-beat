@@ -289,6 +289,55 @@ function SettingsManager(parentDOM) {
 			name: 'Prüfungsfelder ausblenden',
 			desc: 'Liste der technischen Felder, welche ausgeblendet werden sollen. Z.B. weil diese Daten nicht verfügbar sind.',
 			group: 'Anzeige'
+		},
+		"sv_show_risk_value": {
+			type: 'boolean',
+			name: 'Risikwert anzeigen',
+			desc: 'Soll der Risikowert angezeigt werden?',
+			defaultVal: false,
+			group: 'Studierendenansicht'
+		},
+		"sv_hide_student_fields": {
+			type: 'list',
+			name: 'Student Felder ausblenden',
+			desc: 'Liste der technischen Felder, welche ausgeblendet werden sollen. Z.B. weil diese Daten nicht verfügbar sind.',
+			group: 'Studierendenansicht'
+		},
+		"sv_hide_exam_fields": {
+			type: 'list',
+			name: 'Prüfungsfelder ausblenden',
+			desc: 'Liste der technischen Felder, welche ausgeblendet werden sollen. Z.B. weil diese Daten nicht verfügbar sind.',
+			group: 'Studierendenansicht'
+		},
+		"sv_compare_averages": {
+			type: 'boolean',
+			name: 'Student mit Durchschnitt vergleichen',
+			desc: 'Auf der Studentendetailseite werden die Semesterwerte und Prüfungsleistungen mit dem Durchschnitt verglichen',
+			group: 'Studierendenansicht'
+		},
+		"sv_max_risk_paths": {
+			type: 'int',
+			name: 'Maximale Anzahl Risikokriterien',
+			desc: 'Maximale Anzahl der Risikokriterien, welche angezeigt werden.',
+			group: 'Studierendenansicht'
+		},
+		"sv_text_top": {
+			type: 'text',
+			name: 'Text oben',
+			desc: 'Text, welcher über den Daten des Studierenden angezeigt wird.',
+			group: 'Studierendenansicht'
+		},
+		"sv_text_left": {
+			type: 'text',
+			name: 'Text links',
+			desc: 'Text, welcher links unter den Personendaten angezeigt wird.',
+			group: 'Studierendenansicht'
+		},
+		"sv_text_bottom": {
+			type: 'text',
+			name: 'Text unten',
+			desc: 'Text, welcher unterhalb aller Daten angezeigt wird.',
+			group: 'Studierendenansicht'
 		}
 	};
 
@@ -454,7 +503,7 @@ SettingsManager.prototype.drawValue = function (name, stg) {
 	if (type == 'lights') {
 		return drawLights();
 	}
-	if (type == 'string') {
+	if (type == 'string' || type == 'text') {
 		return drawString();
 	}
 	if (type == 'boolean') {
@@ -476,6 +525,7 @@ SettingsManager.prototype.drawValue = function (name, stg) {
 
 	function drawString() {
 		var span = $(document.createElement('span'));
+		span.addClass('text');
 		if (defaultVal !== undefined)
 			span.text(value + " (" + defaultVal + ")");
 		else
@@ -530,6 +580,9 @@ SettingsManager.prototype.drawValueInput = function (name, stg) {
 	if (type == 'string') {
 		return drawString();
 	}
+	if (type == 'text') {
+		return drawString(true);
+	}
 	if (type == 'lights') {
 		if (!value) {
 			value = [0, 0, 0];
@@ -556,13 +609,13 @@ SettingsManager.prototype.drawValueInput = function (name, stg) {
 		return box;
 	}
 
-	function drawString() {
+	function drawString(textarea) {
 		var box = $(document.createElement('div'));
 		var input;
 		if (info && info.selectItems) {
 			input = $(drawSelect(info.selectItems, value)).appendTo(box);
 		} else {
-			input = $(document.createElement('input')).appendTo(box);
+			input = $(document.createElement(textarea ? 'textarea' : 'input')).appendTo(box);
 			input.val(value);
 		}
 

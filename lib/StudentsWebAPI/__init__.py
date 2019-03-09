@@ -1,5 +1,5 @@
 """
-Copyright (c) 2016 S-BEAT GbR and others
+Copyright (c) 2019 S-BEAT GbR and others
 
 This file is part of S-BEAT.
 
@@ -17,27 +17,4 @@ You should have received a copy of the GNU General Public License
 along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import GetStudents
-import GetDefinitions
-import GetPaths
-import GetExams
-import GetCourses
-import GetProcess
-import GetFiles
-import SaveFiles
-import UploadFile
-import GetUsers
-import SaveUser
-import RunProcess
-import GetExamInfos
-import GetCourseSemesterInfos
-import GetMarkedList
-import SaveMarkedList
-import GetUserLog
-import GetSettings
-import SaveSettings
-import ManageDefinitions
-import GetStudentInfo
-import GetApplicants
-import GetLogs
-import ManageTags
+import GetData
