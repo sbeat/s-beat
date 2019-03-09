@@ -65,6 +65,8 @@ def handle():
         elif setting_type == 'shared':
             ret['settings'][s.id.replace('shared_', '', 1)] = s.data
         else:
+            if s.id.startswith('sv_') and not g.students_view:
+                continue
             ret['settings'][s.id] = s.data
 
     return respond(ret, 200)
