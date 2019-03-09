@@ -16,6 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
+import re
 import sys
 
 sys.path.append('lib')
@@ -167,7 +168,10 @@ def gpl():
 @app.route('/<filename>.html')
 @requires_auth
 def html(filename):
-    return render_template(filename + '.html')
+    if re.match('^[-a-zA-Z0-9_]{1,30}$', filename):
+        return render_template(filename + '.html')
+    else:
+        return Response('Illegal file name', 400)
 
 
 @app.route('/api/<endpoint>', methods=['POST', 'GET'])

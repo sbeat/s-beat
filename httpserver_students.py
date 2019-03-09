@@ -16,6 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
+import re
 import sys
 
 sys.path.append('lib')
@@ -48,6 +49,7 @@ port = config.getint('http_students', 'port')
 host = config.get('http_students', 'host')
 debug = True if config.get('http_students', 'debug') == 'true' else False
 document_root = config.get('http_students', 'document_root')
+username_field = config.get('http_students', 'student_username_field')
 base_path = '/students_view'
 if config.has_section('web'):
     web_config = dict(config.items('web'))
@@ -105,7 +107,9 @@ def requires_auth(f):
             username = request.headers['x-remote-user']
 
         if username is not None and type(username) is str:
-            user = DB.Student.find_one({'short': username})
+            user_query = dict()
+            user_query[username_field] = username
+            user = DB.Student.find_one(user_query)
             logger.info("Authenticated %s %s", username, user is not None)
             g.user = user
             if user:
@@ -138,7 +142,10 @@ def gpl():
 @app.route(base_path + '/<filename>.html')
 @requires_auth
 def html(filename):
-    return render_template('students_view/' + filename + '.html')
+    if re.match('^[-a-zA-Z0-9_]{1,30}$', filename):
+        return render_template('students_view/' + filename + '.html')
+    else:
+        return Response('Illegal file name', 400)
 
 
 @app.route(base_path + '/api/get_current_students_data')
