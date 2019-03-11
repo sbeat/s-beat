@@ -22,11 +22,12 @@ In Debian 9 (Stretch) you need to install the dirmngr package. Otherwise you run
 
 	apt-get install dirmngr
 
-See [Install MongoDB Community Edition on Debian](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian/)
+See [Install MongoDB Community Edition on Debian](https://docs.mongodb.com/v3.6/tutorial/install-mongodb-on-debian/)
 
+*Note: MongoDB 4.0 deprecated the snapshot cursor feature, which S-BEAT uses. Therefore please use MongoDB 3.x*
 	
-	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
-	echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+	echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/3.6 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
 	apt-get update
 	apt-get install -y mongodb-org
 
