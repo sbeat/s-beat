@@ -4,7 +4,7 @@
   -->
 {% set active_page = "student_details" %}
 {% extends "students_view/layout.html" %}
-{% block title %}Student Details: {{ request.args.get('id',0) }}{% endblock %}
+{% block title %}Zusammenfassung zu Ihrem Studium{% endblock %}
 {% block head %}
 {{ super() }}
 <script src="js/pathlist.js"></script>
@@ -30,7 +30,8 @@
 				<tr>
 					<td>Studiengang</td>
 					<td>
-						<span data-student="stg_original"></span>
+						<span data-student="stg_original"></span> -
+						<span data-student="course.name"></span>
 					</td>
 					<td></td>
 				</tr>
@@ -39,13 +40,6 @@
 					<td data-student="finishstatus"></td>
 					<td></td>
 				</tr>
-				<!--
-				<tr>
-					<td>Ignoriert</td>
-					<td data-student="ignore"></td>
-					<td></td>
-				</tr>
-				-->
 
 				<tr>
 					<td>Immatrikulation</td>
@@ -88,7 +82,24 @@
 
 			<h2>Person</h2>
 			<table class="tbl detailTable">
-
+				<tr data-student="display.matrikelno">
+					<td>Matrikel-Nr.*</td>
+					<td data-student="matrikelno"></td>
+					<td></td>
+				</tr>
+				<tr data-student="display.forename">
+					<td>Name*</td>
+					<td>
+						<span data-student="forename"></span>
+						<span data-student="surname"></span>
+					</td>
+					<td></td>
+				</tr>
+				<tr data-student="display.email">
+					<td>E-Mail*</td>
+					<td data-student="email"></td>
+					<td></td>
+				</tr>
 				<tr data-student="display.birth_date">
 					<td>Geburtsdatum</td>
 					<td data-student="birth_date"></td>
@@ -119,27 +130,7 @@
 					<td data-student="zip"></td>
 					<td ></td>
 				</tr>
-			</table>
-			<br>
-			<table class="tbl detailTable" id="identification_data" style="display: none">
-				<tr data-student="display.matrikelno">
-					<td>Matrikel-Nr.*</td>
-					<td data-student="matrikelno"></td>
-					<td></td>
-				</tr>
-				<tr data-student="display.forename">
-					<td>Name*</td>
-					<td>
-						<span data-student="forename"></span>
-						<span data-student="surname"></span>
-					</td>
-					<td></td>
-				</tr>
-				<tr data-student="display.email">
-					<td>E-Mail*</td>
-					<td data-student="email"></td>
-					<td></td>
-				</tr>
+
 			</table>
 
 			<p class="text" data-student="def.text_left"></p>

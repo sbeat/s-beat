@@ -118,7 +118,7 @@ def requires_auth(f):
             user_query = dict()
             user_query[username_field] = username
             user = DB.Student.find_one(user_query)
-            logger.info("Authenticated %s %s", username, user is not None)
+            # logger.info("Authenticated %s %s", username, user is not None)
             g.user = user
             if user:
                 g.username = user.short

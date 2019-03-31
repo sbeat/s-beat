@@ -18,10 +18,9 @@ along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
 from flask import g
 
-import DataDefinitions
-import UserTools
-from WebAPI.APIBase import respond
 import DB
+import DataDefinitions
+from WebAPI.APIBase import respond
 
 
 def handle():
@@ -29,7 +28,7 @@ def handle():
     ret = dict()
     ret['student'] = student.get_dict(None)
 
-    cursor = DB.Exam.find({'student_id': student.ident}, limit=1000)
+    cursor = DB.Exam.find({'student_id': student.ident}, sort=[('semster', 1)])
 
     ret['exams'] = [s.__dict__ for s in cursor]
     exam_ids = list(set([e['exam_info_id'] for e in ret['exams']]))
@@ -38,6 +37,13 @@ def handle():
 
     course_semester = DB.CourseSemesterInfo.get_by_stg_and_semid(student.stg, student.start_semester)
     ret['course_semester'] = {'semester_data': course_semester.semester_data}
+
+    course = DB.Course.get_by_stg_original(student.stg_original)
+    ret['student']['course'] = {
+        'name': course.name,
+        'short_name': course.short_name,
+        'degree_type': course.degree_type
+    }
 
     settings = DB.Settings.load_dict([
         'sv_max_risk_paths',
