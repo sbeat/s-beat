@@ -180,6 +180,9 @@ article h3 {
 	/*margin-top: 20px;*/
 	margin-left: 20px;
 }
+.mr {
+	margin-right: 20px;
+}
 
 .col2_50 {
 	width: 50%;
@@ -1326,6 +1329,11 @@ h2.toggle:hover {
 
 .text {
 	white-space: pre;
+}
+
+.justify-between {
+	display: flex;
+	justify-content: space-between;
 }
 
 @media print {

@@ -52,6 +52,7 @@ document_root = config.get('http_students', 'document_root')
 username_field = config.get('http_students', 'student_username_field')
 base_path = config.get('http_students', 'base_path')
 do_on_not_found = config.get('http_students', 'not_found')
+logout_url = config.get('http_students', 'logout_url')
 
 if config.has_section('web'):
     web_config = dict(config.items('web'))
@@ -87,6 +88,7 @@ def before_request():
     g.version = Version.get_string()
     g.web_config = web_config
     g.get_setting = get_setting
+    g.logout_url = logout_url
 
     g.logo = None
     if config.has_section('logo'):

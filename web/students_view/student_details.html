@@ -14,7 +14,12 @@
 {% endblock %}
 {% block content %}
 <div class="layout" data-load="StudentDetailsStudents">
-	<h1>Zusammenfassung zu Ihrem Studium</h1>
+	<h1 class="justify-between mr">
+		<span>Zusammenfassung zu Ihrem Studium</span>
+		{% if g.logout_url %}
+		<a href="{{ g.logout_url }}">Logout</a>
+		{% endif %}
+	</h1>
 
 	<p class="text" data-student="def.text_top"></p>
 

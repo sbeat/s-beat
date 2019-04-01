@@ -37,7 +37,7 @@ function ExamList(parentDOM) {
 			sortable: true
 		},
 		'student_view': {
-			limit: 100,
+			limit: 1000,
 			sort1: 'semester,1',
 			filters: [],
 			columns: ['exam_id', 'semester', 'name', 'status', 'recognized', 'mandatory', 'try_nr', 'type', 'bonus', 'grade', 'phase'],
@@ -483,7 +483,7 @@ ExamList.prototype.drawCellValue = function (exam, col, td) {
 
 		td.append(detailA);
 
-	} else if (col.id == 'exam_id') {
+	} else if (col.id == 'exam_id' && self.settingId !== 'student_view') {
 		value = getByPath(col.id, exam);
 		idA = $(document.createElement('a'));
 		idA.attr('href', 'examdetails.html?exam_info_id=' + exam.exam_info_id);

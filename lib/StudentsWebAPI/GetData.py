@@ -28,7 +28,7 @@ def handle():
     ret = dict()
     ret['student'] = student.get_dict(None)
 
-    cursor = DB.Exam.find({'student_id': student.ident}, sort=[('semster', 1)])
+    cursor = DB.Exam.find({'student_id': student.ident}, sort=[('semester', 1)])
 
     ret['exams'] = [s.__dict__ for s in cursor]
     exam_ids = list(set([e['exam_info_id'] for e in ret['exams']]))
