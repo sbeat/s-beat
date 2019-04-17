@@ -259,9 +259,17 @@ StudentDetails.prototype.drawValue = function (field, el) {
 			el.hide();
 		}
 
+	} else if (field.match(/^def\.(text_.+)/)) {
+		value = getByPath(RegExp.$1, self.definitions);
+		if (value && value.length) {
+			el.html(self.bbCodeToHTML(value));
+		} else {
+			el.hide();
+		}
+
 	} else if (field.match(/^def\.(.+)/)) {
 		value = getByPath(RegExp.$1, self.definitions);
-		if(value && value.length) {
+		if (value && value.length) {
 			el.text(value);
 		} else {
 			el.hide();
@@ -289,6 +297,15 @@ StudentDetails.prototype.drawValue = function (field, el) {
 		}
 	}
 
+};
+StudentDetails.prototype.bbCodeToHTML = function (bbcode) {
+	var tags = BBCodeParser.defaultTags();
+	tags.color = new BBTag('color', true, false, false, function (tag, content, attr) {
+		return '<span style="color:' + attr.color + '">' + content + '</span>';
+	});
+
+	var parser = new BBCodeParser(tags);
+	return parser.parseString(bbcode);
 };
 StudentDetails.prototype.isHiddenField = function (field) {
 	var self = this;

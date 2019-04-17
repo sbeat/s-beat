@@ -324,7 +324,7 @@ function SettingsManager(parentDOM) {
 		"sv_text_top": {
 			type: 'text',
 			name: 'Text oben',
-			desc: 'Text, welcher über den Daten des Studierenden angezeigt wird.',
+			desc: 'Text, welcher über den Daten des Studierenden angezeigt wird. BBCode kann verwendet werden: [b], [i], [u], [img], [url=], [color=]',
 			group: 'Studierendenansicht'
 		},
 		"sv_text_left": {
