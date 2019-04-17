@@ -107,6 +107,7 @@ def get_definitions():
     data['generate_risk_group_all'] = settings['generate_risk_group_all']
     data['generate_risk_group_stg'] = settings['generate_risk_group_stg']
     data['generate_risk_group_degree'] = settings['generate_risk_group_degree']
+    data['hide_student_fields'] = settings['sv_hide_student_fields']
     data['main_risk_group'] = settings['main_risk_group']
     data['risk_value_allowed'] = settings['sv_show_risk_value']
     data['compare_averages'] = settings['sv_compare_averages']
