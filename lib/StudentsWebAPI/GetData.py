@@ -26,7 +26,7 @@ from WebAPI.APIBase import respond
 def handle():
     student = g.user
     ret = dict()
-    ret['student'] = student.get_dict(None)
+    ret['student'] = student.get_dict(None, False)
 
     cursor = DB.Exam.find({'student_id': student.ident}, sort=[('semester', 1)])
 
