@@ -563,7 +563,8 @@ ExamList.prototype.load = function () {
 			self.tableDOM.removeClass('loading');
 			self.data = {
 				list: data.exams,
-				info: data.exams_info
+				info: data.exams_info,
+				compare_averages: data.definitions.compare_averages
 			};
 
 			self.pagination.update(data);

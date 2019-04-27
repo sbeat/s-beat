@@ -28,15 +28,34 @@ def handle():
     ret = dict()
     ret['student'] = student.get_dict(None, False)
 
-    cursor = DB.Exam.find({'student_id': student.ident}, sort=[('semester', 1)])
+    ret['definitions'] = get_definitions()
 
-    ret['exams'] = [s.__dict__ for s in cursor]
-    exam_ids = list(set([e['exam_info_id'] for e in ret['exams']]))
-    exam_info_cursor = DB.ExamInfo.find({'_id': {'$in': exam_ids}})
-    ret['exams_info'] = [s.__dict__ for s in exam_info_cursor]
+    if ret['definitions']['compare_averages']:
+
+        cursor = DB.Exam.find({'student_id': student.ident}, sort=[('semester', 1)])
+
+        ret['exams'] = [s.__dict__ for s in cursor]
+        exam_ids = list(set([e['exam_info_id'] for e in ret['exams']]))
+        exam_info_cursor = DB.ExamInfo.find({'_id': {'$in': exam_ids}})
+        ret['exams_info'] = []
+
+        for s in exam_info_cursor:
+            entry = {
+                'exam_info_id': s.exam_info_id,
+                'semester_data': {}
+            }
+            for semid, d in s.semester_data.iteritems():
+                if d['grades']:
+                    del d['grades']['values']
+                    entry['semester_data'][semid] = {'grades': d['grades']}
+
+            ret['exams_info'].append(entry)
 
     course_semester = DB.CourseSemesterInfo.get_by_stg_and_semid(student.stg, student.start_semester)
     ret['course_semester'] = {'semester_data': course_semester.semester_data}
+    if ret['course_semester']['semester_data']:
+        for semid, d in ret['course_semester']['semester_data'].iteritems():
+            continue  # del d['students']
 
     course = DB.Course.get_by_stg_original(student.stg_original)
     ret['student']['course'] = {
@@ -50,8 +69,6 @@ def handle():
     ])
 
     ret['paths'] = [s.get_dict(True, True) for s in student.get_paths()][0:settings['sv_max_risk_paths']]
-
-    ret['definitions'] = get_definitions()
 
     return respond(ret, 200)
 
