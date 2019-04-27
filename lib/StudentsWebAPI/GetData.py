@@ -30,11 +30,12 @@ def handle():
 
     ret['definitions'] = get_definitions()
 
+    cursor = DB.Exam.find({'student_id': student.ident}, sort=[('semester', 1)])
+    ret['exams'] = [s.__dict__ for s in cursor]
+
     if ret['definitions']['compare_averages']:
 
-        cursor = DB.Exam.find({'student_id': student.ident}, sort=[('semester', 1)])
 
-        ret['exams'] = [s.__dict__ for s in cursor]
         exam_ids = list(set([e['exam_info_id'] for e in ret['exams']]))
         exam_info_cursor = DB.ExamInfo.find({'_id': {'$in': exam_ids}})
         ret['exams_info'] = []
