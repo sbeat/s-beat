@@ -35,7 +35,6 @@ def handle():
 
     if ret['definitions']['compare_averages']:
 
-
         exam_ids = list(set([e['exam_info_id'] for e in ret['exams']]))
         exam_info_cursor = DB.ExamInfo.find({'_id': {'$in': exam_ids}})
         ret['exams_info'] = []
