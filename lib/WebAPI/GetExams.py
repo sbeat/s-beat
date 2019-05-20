@@ -165,4 +165,9 @@ def handle():
         _metadata_cache_exams = ret['metadata']
         _metadata_cache_exams_prefix = DB.Exam.get_collection_prefix()
 
+    if ret['metadata'] and allowed_stgs:
+        ret['metadata']['stg'] = [stg for stg in ret['metadata']['stg'] if stg in allowed_stgs]
+        ret['metadata']['stg_original'] = [stg for stg in ret['metadata']['stg_original']
+                                           if DB.Course.get_by_stg_original(stg).stg in allowed_stgs]
+
     return respond(ret, 200)
