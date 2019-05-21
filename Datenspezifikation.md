@@ -116,8 +116,9 @@ Die Nummer wird über die [mappings.json](data/mappings.default.json) eine der f
 * Kolleg = Fachhochschulreife Kolleg
 
 
+#### `ACCOUNT`
 
-
+Benutzername des Studierenden (Optionales Feld)
 
 
 ## Prüfungsleistungsdaten CSV Datei

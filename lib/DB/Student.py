@@ -74,6 +74,7 @@ class Student(DBDocument):
 
         self.ident = None  # System Ident number
         self.ident_original = None  # Original ident number
+        self.account_name = None  # Optional account name
         self.gender = ''  # Gender of student: M,W
         self.birth_date = None  # Date of birth
         self.hzb_grade = 0  # entrance qualification grade
@@ -891,6 +892,7 @@ class Student(DBDocument):
     def db_setup(cls):
         c = cls.get_collection()
         c.create_index([('ignore', 1)])
+        c.create_index([('account_name', 1)])
 
     @staticmethod
     def get_matching_students_count(path_elements, query=None):
@@ -1064,6 +1066,9 @@ def create_student_from_entry(data, settings):
 
         if 'eu' in data:
             student.eu = get_boolean(data['eu'])
+
+    if 'account' in data:
+        student.account_name = get_unicode(data['account'], encoding)
 
     student.ident = Student.generate_ident(student, settings['unique_student_id'])
 
