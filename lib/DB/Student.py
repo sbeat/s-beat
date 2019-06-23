@@ -25,6 +25,7 @@ import numbers
 import time
 
 from pymongo import errors
+from pymongo.collation import Collation
 
 import CalcTools
 import ImportTools
@@ -892,7 +893,7 @@ class Student(DBDocument):
     def db_setup(cls):
         c = cls.get_collection()
         c.create_index([('ignore', 1)])
-        c.create_index([('account_name', 1)])
+        c.create_index([('account_name', 1)], collation=Collation('de', strength=2))
 
     @staticmethod
     def get_matching_students_count(path_elements, query=None):

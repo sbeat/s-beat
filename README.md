@@ -31,7 +31,7 @@ S-BEAT kann sowohl auf Windows als auch auf Linux ausgeführt werden. Für den p
 * Freier Festplattenspeicher: mind. 4GB
 * Arbeitsspeicher: mind. 1GB
 * Python 2.x
-* MongoDB 3+
+* MongoDB 3.4+
 
 Für den produktiven Betrieb muss ein Webserver als Reverse-Proxy vorgeschaltet werden, beispielsweise Apache 2.x. Dieser übernimmt die SSL Verschlüsselung und die Authentifizierung der Benutzer.
 

@@ -19,6 +19,8 @@ along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 import re
 import sys
 
+from pymongo.collation import Collation
+
 sys.path.append('lib')
 
 import StudentsWebAPI
@@ -119,7 +121,7 @@ def requires_auth(f):
         if username is not None and type(username) is str:
             user_query = dict()
             user_query[username_field] = username
-            user = DB.Student.find_one(user_query)
+            user = DB.Student.find_one(user_query, collation=Collation('de', strength=2))
             # logger.info("Authenticated %s %s", username, user is not None)
             g.user = user
             if user:
