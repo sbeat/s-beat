@@ -966,7 +966,7 @@ def create_student_from_entry(data, settings):
     course = Course.get_by_stg_original(student.stg_original)
     if course is None or course.ignore:
         logger.error(
-            "Student has no known STG group for: " + student.stg_original + " ID: " + repr(student.ident))
+            "Student has no known STG group for: " + student.stg_original + " ID: " + repr(student.ident_original))
         return None
 
     student.stg = course.stg
@@ -984,7 +984,7 @@ def create_student_from_entry(data, settings):
 
     if student.start_semester is None:
         logger.error(
-            "Student has no start semester ID: " + repr(student.ident))
+            "Student has no start semester ID: " + repr(student.ident_original))
         return None
 
     if 'sem_end' in data and len(data.sem_start) == 5:
@@ -1001,7 +1001,7 @@ def create_student_from_entry(data, settings):
         student.hzb_type = clean_db_string(get_unicode(data['hzbgrp'], encoding))
 
     if student.hzb_type == '':
-        logger.warning('No hzb_type for ' + student.stg_original + " ID: " + repr(student.ident))
+        logger.warning('No hzb_type for ' + student.stg_original + " ID: " + repr(student.ident_original))
 
     student.hzb_date = get_date_from_csv(data['hzbdatum'])
     if student.imm_date is not None and student.hzb_date is not None:
@@ -1016,7 +1016,7 @@ def create_student_from_entry(data, settings):
             student.imm_date,
             student.exm_date) < 5:
         logger.warning(
-            "Student in 4 or less semesters successful: " + student.stg_original + " ID: " + repr(student.ident))
+            "Student in 4 or less semesters successful: " + student.stg_original + " ID: " + repr(student.ident_original))
 
     # Status 1=Finished, 2=Aborted, 3=Successful, 4=Studying
     if student.finished:
