@@ -474,12 +474,14 @@ def path_store_test():
 
 def find_test():
     run_on_temp_data()
-    student = Student.find_one({'_id': 69790})
-    print 'student', student
-
-    student.calculate_from_exams()
-
-    print student.semester_data
+    students = Student.find({})
+    total = students.count()
+    print 'Total: ', total
+    num = 0
+    for s in students:
+        num += 1
+        print s.ident
+    print num, ' / ', total
 
 
 # find all courses of study and count the inscribed students for each

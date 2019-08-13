@@ -502,7 +502,7 @@ class Path(DBDocument):
         min_value, max_value = cls.get_min_max()
         print 'min_value', min_value, 'max_value', max_value
 
-        all_paths = Path.find({}).hint('_id')
+        all_paths = Path.find({})
 
         for p in all_paths:
             p.scaled_value = (p.value - min_value) / (max_value - min_value)

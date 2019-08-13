@@ -4,6 +4,10 @@ The following notes tell you what to do when upgrading S-BEAT from an older vers
 
 ## Upgrade 1.6 to 1.7
 
+Update the MongoDB Database to at least version 3.6. Update the depencenies:
+
+    pip install -r requirements.txt --user
+
 Run the following command to integrate new settings:
 
     python sbeat.py initial_settings

@@ -335,7 +335,7 @@ class Course(DBDocument):
         Calculate additions values of student based on exam data
         """
 
-        courses = Course.find({}).batch_size(10).hint('_id')
+        courses = Course.find({}).batch_size(10)
 
         num = 0
         for course in courses:
