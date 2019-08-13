@@ -570,8 +570,7 @@ class Student(DBDocument):
 
         max_valid_cp_stg = Settings.load_dict_for_key('max_valid_cp')
 
-        students = Student.find({}, modifiers={'$snapshot': True}).batch_size(
-            10)  # choose small batches to avoid cursor timeout
+        students = Student.find({}).batch_size(10)  # choose small batches to avoid cursor timeout
         start = time.clock()
         count = students.count()
 
@@ -629,7 +628,7 @@ class Student(DBDocument):
             all_paths[group].append(path)
 
         db_query = {"ignore": False}
-        students = Student.find(db_query, modifiers={'$snapshot': True}).batch_size(20)
+        students = Student.find(db_query).batch_size(20).hint('_id')
         index = 0
         count = students.count()
         start_time = time.clock()
@@ -670,7 +669,7 @@ class Student(DBDocument):
                     'count': count
                 })
 
-        students = Student.find(db_query, modifiers={'$snapshot': True}).batch_size(20)
+        students = Student.find(db_query).batch_size(20).hint('_id')
         for student in students:
             for group, mm in min_max.iteritems():
                 name = mm['name']
@@ -1431,7 +1430,7 @@ class StudentsBitArray:
         # self.order_elements()
 
         print 'load_bitmapchecker query', self.query
-        students = Student.find(self.query, modifiers={'$snapshot': True})
+        students = Student.find(self.query).hint('_id')
         self.count = students.count()
         self.yields = 0
 
@@ -1497,7 +1496,7 @@ class StudentsBitArray:
         self.order_elements()
 
         count_elements = len(self.elements)
-        students = Student.find(self.query, modifiers={'$snapshot': True})
+        students = Student.find(self.query)
         self.count = students.count()
         for student in students:
             ba = self.make_bit_array(count_elements, 0)

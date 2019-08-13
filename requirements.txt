@@ -1,3 +1,3 @@
-pymongo >=3,<4
+pymongo >=3.6,<5
 Flask
 markdown

@@ -15,7 +15,7 @@ def handle():
 
     file_name = request.args.get('file')
 
-    if file_name is None or not re.match(r'^[A-Za-z0-9]+$', file_name):
+    if file_name is None or not re.match(r'^[A-Za-z0-9]+(\.\d)?$', file_name):
         return respond({'error': 'invalid_file'}, 403)
 
     return send_from_directory('./logs', file_name + '.log', as_attachment=False, mimetype='text/plain')

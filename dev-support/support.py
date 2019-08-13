@@ -24,7 +24,8 @@ from os.path import join, exists, basename
 import sys
 import shutil
 
-mongodb_url = 'https://fastdl.mongodb.org/win32/mongodb-win32-x86_64-2008plus-3.4.21.zip'
+# mongodb_url = 'https://fastdl.mongodb.org/win32/mongodb-win32-x86_64-2008plus-ssl-3.6.13.zip'
+mongodb_url = 'https://fastdl.mongodb.org/win32/mongodb-win32-x86_64-2008plus-ssl-4.0.12.zip'
 
 
 def download_mongodb():

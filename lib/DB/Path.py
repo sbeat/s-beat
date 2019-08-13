@@ -484,7 +484,7 @@ class Path(DBDocument):
         max_path = Path.find_one({"count": max_count})
         print "max_count", max_count, max_path.calculate_path_weight(max_count)
 
-        all_paths = Path.find({"count": {"$gt": 0}}, modifiers={'$snapshot': True})
+        all_paths = Path.find({"count": {"$gt": 0}})
 
         for p in all_paths:
             p.weight = p.calculate_path_weight(max_count)
@@ -502,7 +502,7 @@ class Path(DBDocument):
         min_value, max_value = cls.get_min_max()
         print 'min_value', min_value, 'max_value', max_value
 
-        all_paths = Path.find({}, modifiers={'$snapshot': True})
+        all_paths = Path.find({}).hint('_id')
 
         for p in all_paths:
             p.scaled_value = (p.value - min_value) / (max_value - min_value)
