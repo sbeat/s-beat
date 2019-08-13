@@ -385,6 +385,10 @@ class DBCursor:
         self.cursor.batch_size(*args, **kwargs)
         return self
 
+    def hint(self, *args, **kwargs):
+        self.cursor.hint(*args, **kwargs)
+        return self
+
     def limit(self, *args, **kwargs):
         self.cursor.limit(*args, **kwargs)
         return self
