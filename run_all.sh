@@ -16,6 +16,20 @@
 #	You should have received a copy of the GNU General Public License
 #	along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 
+if [ -f data/request_stop.txt ]; then
+	echo "data/request_stop.txt found"
+	rm data/request_stop.txt
+	if [ -f data/run_all.pid ]; then
+    echo "data/run_all.pid found"
+    pid=`cat data/run_all.pid`
+    if [ -e /proc/${pid} ]; then
+      echo "data/run_all.pid ${pid} is running, trying to stop it"
+      kill -2 $pid
+    fi
+  fi
+	exit
+fi
+
 
 if [ ! -f data/request_start.txt ]; then
 	echo "data/request_start.txt does not exist"
@@ -24,11 +38,11 @@ fi
 rm data/request_start.txt
 
 if [ -f data/run_all.pid ]; then
-        echo "data/run_all.pid does already exist"
-        pid=`cat data/run_all.pid`
-        if [ -e /proc/${pid} ]; then
-       		echo "data/run_all.pid ${pid} is running"
-	        exit
+  echo "data/run_all.pid does already exist"
+  pid=`cat data/run_all.pid`
+  if [ -e /proc/${pid} ]; then
+    echo "data/run_all.pid ${pid} is running"
+    exit
 	fi
 fi
 

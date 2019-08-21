@@ -34,6 +34,22 @@ def handle():
         return respond({'error': 'no_rights'}, 403)
 
     apply_data = request.args.get('apply_data', default='false') == 'true'
+    stop_process = request.args.get('stop', default='false') == 'true'
+    if stop_process:
+        stop_file = 'data/request_stop.txt'
+        if os.path.isfile(stop_file):
+            return respond({'error': 'stop_requested'}, 200)
+
+        with open(stop_file, 'w') as fd:
+            fd.write(str(time.time()))
+
+        now = time.time()
+        nextup = math.ceil(now / 60) * 60
+
+        DB.UserLog.add_entry('stop_update', g.username)
+
+        return respond({'ok': True, 'wait': nextup - now}, 200)
+
     if apply_data:
         try:
             DB.ProcessTracking.process_update('apply_data', 0, {'state': 'running'})

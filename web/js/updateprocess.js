@@ -5,6 +5,7 @@ function UpdateProcess(parentDOM) {
 	this.parentDOM = parentDOM;
 
 	this.buttonDOM = $(document.createElement('a'));
+	this.stopDOM = $(document.createElement('a'));
 	this.applyDOM = $(document.createElement('a'));
 	this.viewTempDOM = $(document.createElement('a'));
 	this.preInfoDOM = $(document.createElement('p'));
@@ -18,6 +19,7 @@ function UpdateProcess(parentDOM) {
 
 	UpdateProcess.prototype.init.call(this);
 }
+
 /**
  * Gets called once this UpdateProcess is initialized
  */
@@ -60,8 +62,23 @@ UpdateProcess.prototype.draw = function () {
 			self.run();
 		});
 
+		this.stopDOM.addClass('updatebutton');
+		this.parentDOM.append(this.stopDOM);
+		this.stopDOM.text('Updateprozess stoppen');
+		this.stopDOM.hide();
+		this.stopDOM.addClass('button');
+		this.stopDOM.click(function (e) {
+			e.preventDefault();
+			if (!confirm('Möchten Sie den Updateprozess wirklich stoppen?')) {
+				return;
+			}
+			self.stopDOM.hide();
+			self.run(true);
+		});
+
+
 		function getViewTempButtonText() {
-			return isTempActive()?'Temporäre Datenansicht deaktivieren':'Temporäre Datenansicht aktivieren';
+			return isTempActive() ? 'Temporäre Datenansicht deaktivieren' : 'Temporäre Datenansicht aktivieren';
 		}
 
 		this.viewTempDOM
@@ -69,7 +86,7 @@ UpdateProcess.prototype.draw = function () {
 			.hide()
 			.addClass('button')
 			.appendTo(this.parentDOM)
-			.click(function(e){
+			.click(function (e) {
 				e.preventDefault();
 				saveStorage('isTempActive', !isTempActive());
 				$(this).text(getViewTempButtonText());
@@ -99,8 +116,10 @@ UpdateProcess.prototype.draw = function () {
 
 	if (this.isRunning) {
 		this.buttonDOM.hide();
+		this.stopDOM.show();
 	} else {
 		this.buttonDOM.show();
+		this.stopDOM.hide();
 	}
 
 	if (!this.data) {
@@ -108,7 +127,7 @@ UpdateProcess.prototype.draw = function () {
 		return;
 	}
 
-	if(this.data.settings.update_manual_apply) {
+	if (this.data.settings.update_manual_apply) {
 		this.preInfoDOM.text('ACHTUNG: Wenn der komplette Prozess durchlaufen ist, müssen die Daten von einem Administrator übernommen werden.');
 	}
 
@@ -125,7 +144,7 @@ UpdateProcess.prototype.draw = function () {
 	for (var i = 0; i < this.data.steps.length; i++) {
 		var step = this.data.steps[i];
 		this.listDOM.append(this.drawProcessEntry(step));
-		if(step.ident=='apply_data' && step.progress_info && step.progress_info.state=='wait_for_admin') {
+		if (step.ident == 'apply_data' && step.progress_info && step.progress_info.state == 'wait_for_admin') {
 			this.applyDOM.show();
 			this.viewTempDOM.show();
 			if (this.data.complete) {
@@ -158,7 +177,7 @@ UpdateProcess.prototype.drawProcessEntry = function (step) {
 	if (step.running) status = 'Wird ausgeführt';
 	if (step.failed) status = 'Fehlgeschlagen ';
 	//if(step.running && !step.done && !step.failed) status = 'Unbekannter Fehler';
-	if(step.progress_info && step.progress_info.state == 'wait_for_admin') {
+	if (step.progress_info && step.progress_info.state == 'wait_for_admin') {
 		status = 'Warte auf Admin';
 		step.progress = 0;
 	}
@@ -234,11 +253,14 @@ UpdateProcess.prototype.drawProcessEntry = function (step) {
 
 };
 
-UpdateProcess.prototype.run = function () {
+UpdateProcess.prototype.run = function (stop) {
 	var self = this;
 	var url = '/api/RunProcess';
 
 	var params = [];
+	if (stop) {
+		params.push('stop=true');
+	}
 
 	if (params.length) url += '?';
 	url += params.join('&');
@@ -252,7 +274,12 @@ UpdateProcess.prototype.run = function () {
 
 			var wait = (data.wait + 5) * 1000;
 
-			self.infoDOM.text('Startsignal wurde registriert. Es kann bis zu einer Minute dauern, bis der Prozess startet.');
+			if (stop) {
+				self.infoDOM.text('Stopsignal wurde registriert. Es kann bis zu einer Minute dauern, bis der Prozess beendet wird.');
+			} else {
+				self.infoDOM.text('Startsignal wurde registriert. Es kann bis zu einer Minute dauern, bis der Prozess startet.');
+			}
+
 			setTimeout(function () {
 				self.listDOM.removeClass('loading');
 				self.load();
@@ -266,7 +293,11 @@ UpdateProcess.prototype.run = function () {
 
 	}).fail(function () {
 		self.listDOM.removeClass('loading');
-		self.listDOM.text('Starten des Prozesses ist fehlgeschlagen.');
+		if (stop) {
+			self.listDOM.text('Stop des Prozesses ist fehlgeschlagen.');
+		} else {
+			self.listDOM.text('Starten des Prozesses ist fehlgeschlagen.');
+		}
 
 	})
 
