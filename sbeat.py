@@ -1079,7 +1079,7 @@ if __name__ == '__main__':
     console_handler.setFormatter(log_formatter)
 
     file_handler = logging.handlers.RotatingFileHandler(
-        filename=config.get('general', 'logfile'), maxBytes=1024 * 1024 * 20, backupCount=10)
+        filename=config.get('general', 'logfile'), maxBytes=1024 * 1024 * 40, backupCount=10)
     file_handler.setFormatter(log_formatter)
     logging.getLogger('').addHandler(console_handler)
     logging.getLogger('').addHandler(file_handler)

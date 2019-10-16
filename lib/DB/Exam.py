@@ -45,7 +45,8 @@ if 'exam_is_applied' not in import_expressions:
     import_expressions['exam_is_applied'] = lambda e: e.status == 'AN' and e.comment not in ('G', 'RT', 'U')
 
 if 'exam_is_resigned' not in import_expressions:
-    import_expressions['exam_is_resigned'] = lambda e: e.status == 'RT' or e.status == 'AN' and e.comment in ('G', 'RT', 'U')
+    import_expressions['exam_is_resigned'] = lambda e: e.status == 'RT' or e.status == 'AN' and e.comment in (
+        'G', 'RT', 'U')
 
 if 'exam_is_delayed' not in import_expressions:
     import_expressions['exam_is_delayed'] = lambda e: e.status == 'RT' or e.status == 'AN' and e.comment == 'G'
@@ -231,6 +232,10 @@ class Exam(DBDocument):
         for entry, curr, total in ImportTools.read_csv(file_info):
             num += 1
             exam = create_exam_from_entry(entry, settings)
+            error = None
+            if exam == 'missing_field' or exam == 'unknown_course':
+                error = exam
+                exam = None
 
             if exam is not None:
                 grade_exam_number = grade_exam_number_stg.get(exam.stg, settings['grade_exam_number'])
@@ -247,7 +252,7 @@ class Exam(DBDocument):
                 exam.generate_ident(settings['unique_exam_id'])
 
             if exam is not None and (
-                            exam.exam_id == grade_exam_number
+                    exam.exam_id == grade_exam_number
                     or unicode(exam.exam_id) in final_exam_numbers_ba and exam.status == 'BE'):
 
                 if student and exam.exam_id == grade_exam_number and 100 <= exam.grade <= 400:
@@ -270,16 +275,15 @@ class Exam(DBDocument):
                     'duplicate(s): ', failed_num
 
                 # ExamInfo.update_by_exam(exam)  # problem with duplicates, now called in Student.calculate_from_exams
-
-            elif exam is None:
+            elif error == 'missing_field':
+                logger.warning("import_from_file %s: mandatory field missing, ignore entry: %d : %s",
+                               file_info['file'], num, entry)
+            elif error == 'unknown_course':
                 logger.warning(
-                    "Exam.import_from_file " + file_info['file']
-                    + ": mandatory field missing or stg not found ignored entry: " + repr(num)
-                    + " : " + repr(entry))
+                    "import_from_file %s: course for stg %s not found, ignore entry: %d, identnr: %s pnr: %s",
+                    file_info['file'], entry['stg'], num, entry['identnr'], entry['pnr'])
             else:
-                logger.warning(
-                    "Exam.import_from_file " + file_info['file'] + ": ignored entry: " + repr(num) + " : " + repr(
-                        entry))
+                logger.warning("import_from_file %s: ignored entry: %d :%s", file_info['file'], num, entry)
 
             if num % 100 == 0:
                 ProcessTracking.process_update('import_exams', float(curr) / total, {
@@ -308,7 +312,7 @@ def create_exam_from_entry(data, settings):
     exam.try_nr = get_int(data['pversuch'])  # try number
 
     if None in (exam.ident_original, exam.exam_id, exam.semester, exam.try_nr):
-        return None
+        return 'missing_field'
 
     exam.name = get_unicode(data['pdtxt'])
     exam.bonus = get_float(data['bonus'])  # number of ECTS
@@ -322,7 +326,7 @@ def create_exam_from_entry(data, settings):
 
     course = Course.get_by_stg_original(exam.stg_original)
     if course is None or course.ignore:
-        return None
+        return 'unknown_course'
 
     exam.stg = course.stg
 

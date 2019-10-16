@@ -1015,7 +1015,7 @@ def create_student_from_entry(data, settings):
             student.imm_date,
             student.exm_date) < 5:
         logger.warning(
-            "Student in 4 or less semesters successful: " + student.stg_original + " ID: " + repr(student.ident_original))
+            "Student in 4 or less semesters successful: %s ID: %s", student.stg_original, student.ident_original)
 
     # Status 1=Finished, 2=Aborted, 3=Successful, 4=Studying
     if student.finished:

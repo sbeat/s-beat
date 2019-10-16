@@ -312,6 +312,8 @@ class Course(DBDocument):
 
             if allowed_degree_types and course.degree_type not in allowed_degree_types:
                 course.ignore = True
+                logger.warning("import_from_file %s: ignored entry %d stg=%s for not allowed degree type: %s",
+                               file_info['file'], num, course.stg_original, course.degree_type)
 
             result = course.db_insert()
             logger.info('course %d %s', num, (result.inserted_id if result else None))
