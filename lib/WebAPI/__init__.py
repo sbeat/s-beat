@@ -41,3 +41,4 @@ import GetStudentInfo
 import GetApplicants
 import GetLogs
 import ManageTags
+import ManageDisplayTexts

@@ -36,6 +36,7 @@ from MarkedList import MarkedList
 from UserLog import UserLog
 from Tag import Tag
 from StudentTag import StudentTag
+from DisplayText import DisplayText
 
 
 def enable_temp_data():
