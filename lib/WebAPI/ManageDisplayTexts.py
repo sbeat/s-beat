@@ -20,6 +20,7 @@ from flask import request, g
 import DB
 import UserTools
 from APIBase import respond
+from GetDefinitions import get_definitions
 
 
 def handle():
@@ -46,10 +47,13 @@ def handle():
 
 def get_display_texts(data):
     query = {}
-    if data['path_elements']:
-        query['path_elements'] = {"$all": data['path_elements']}
+    if 'filters' in data and type(data['filters']) is list:
+        query['filters'] = {"$all": data['filters']}
 
-    result = {'texts': [text for text in DB.DisplayText.find(query)]}
+    result = {
+        'texts': [text.get_dict() for text in DB.DisplayText.find(query)],
+        'definitions': get_definitions()
+    }
 
     return respond(result, 200)
 
@@ -105,7 +109,7 @@ def assign_data(data, text_entry):
     text_entry.ident = data['ident']
     text_entry.position = data['position']
     text_entry.enabled = data['enabled']
-    text_entry.path_elements = data['path_elements']
+    text_entry.filters = data['filters']
     text_entry.text = data['text']
     text_entry.order = data['order']
 
@@ -127,7 +131,5 @@ def validate_data(data):
     if 'order' not in data or type(data['order']) is not int:
         errors.append('invalid_order')
 
-    if len(errors):
-        return errors
-    else:
-        return None
+    return errors
+

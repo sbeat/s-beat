@@ -25,7 +25,7 @@ class DisplayText(DBDocument):
     collection_name = 'display_texts'
 
     def __init__(self, **kwargs):
-        self.path_elements = []  # list of path element ids
+        self.filters = []  # list of filter definitions
         self.ident = ''
         self.position = 'left'  # positon where to display the text
         self.text = ''  # HTML text

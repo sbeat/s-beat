@@ -88,7 +88,7 @@ TagsManager.prototype.drawTag = function (tag) {
 	catO.appendChild(orderBox);
 
 	var statusBox = document.createElement('div');
-	statusBox.className = 'status';
+	statusBox.className = 'itemStatus';
 	catO.appendChild(statusBox);
 
 	if (tag.active) {

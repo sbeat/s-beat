@@ -93,6 +93,17 @@ function drawFormLine(type, label, desc) {
 			return this.input.value = value;
 		};
 	}
+	if (type == 'number') {
+		var inputO = valueO.appendChild(document.createElement('input'));
+		inputO.type = 'number';
+		container.input = inputO;
+		container.getValue = function () {
+			return parseFloat(this.input.value);
+		};
+		container.setValue = function (value) {
+			return this.input.value = value;
+		};
+	}
 	if (type == 'static') {
 		var spanO = valueO.appendChild(document.createElement('span'));
 		container.input = spanO;

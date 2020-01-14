@@ -6,9 +6,11 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 	{% for href, id, label, required_right, sub_navi in navigation %}
 	{% if required_right==None or g.has_right(required_right) %}
 	{% if id!='applicants' or g.get_setting('import_applicants') %}
+	{% if id!='texts' or g.students_view %}
 	<a href="{{ href|e }}"{% if id == active_page %} class="active"{% endif %}>{{ label|e }}</a>
 	{% if id == active_page %}
 		{% set side_navigation = sub_navi %}
+	{% endif %}
 	{% endif %}
 	{% endif %}
 	{% endif %}

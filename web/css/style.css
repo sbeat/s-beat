@@ -535,7 +535,7 @@ Table style
 .columnlist .colrow {
 	border: 1px solid #ccc;
 	padding: 5px;
-	margin: 5px;
+	margin: 5px 0;
 }
 
 .columnlist .colrow:hover {
@@ -1295,16 +1295,17 @@ h2.toggle:hover {
 	max-width: 300px;
 }
 
-.tagitem .status {
+.itemStatus {
 	display: inline-block;
 	width: 20px;
 	height: 16px;
 	background: url('../img/icons/cross.png') 50% 50% no-repeat;
 	cursor: pointer;
 	float: right;
+	margin: 0 5px;
 }
 
-.tagitem .status.active {
+.itemStatus.active {
 	background: url('../img/icons/tick.png') 50% 50% no-repeat;
 }
 
@@ -1334,6 +1335,10 @@ h2.toggle:hover {
 .justify-between {
 	display: flex;
 	justify-content: space-between;
+}
+
+.TextsManager .textBox {
+	padding: 0;
 }
 
 @media print {

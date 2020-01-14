@@ -1,0 +1,37 @@
+<!--
+  Copyright (c) 2019 S-BEAT GbR and others. Licensed under GPL-v3-or-Later
+  see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
+  -->
+{% set active_page = "admin" %}
+{% set active_subpage = "texts" %}
+{% extends "index.html" %}
+{% set website_class = "" %}
+{% block title %}Texte{% endblock %}
+{% block head %}
+{{ super() }}
+<script src="js/textsmanager.js"></script>
+<link href="js/vendor/quill.snow.css" rel="stylesheet">
+<script src="js/vendor/quill.min.js"></script>
+{% endblock %}
+{% block content %}
+<div class="layout">
+	{% if not g.has_right('admin_access') %}
+	<article>
+		<h1>Zugriff verweigert</h1>
+		<p>
+			Sie haben keine Berechtigung.
+		</p>
+	</article>
+	{% else %}
+	<article>
+		<h1>Texte</h1>
+		<p>
+			Die aktiven Texte werden basierend auf den zugwiesenen Filtern auf der Studierendenansicht, den passenden
+			Studierenden angezeigt.
+		</p>
+		<div data-load="TextsManager"></div>
+
+	</article>
+	{% endif %}
+</div>
+{% endblock %}
