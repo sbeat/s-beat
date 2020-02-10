@@ -1295,6 +1295,14 @@ h2.toggle:hover {
 	max-width: 300px;
 }
 
+.textitem .filters {
+	clear: both;
+	margin-top: 5px;
+}
+.textitem .textBox {
+	clear: both;
+}
+
 .itemStatus {
 	display: inline-block;
 	width: 20px;

@@ -15,6 +15,12 @@ function TextsManager(parentDOM) {
 	this.filterDOM = $(document.createElement('div')).addClass('filterlist');
 	this.filter = new FilterList(this.filterDOM);
 
+	this.positionOptions = [
+		{value: 'left', label: 'Links'},
+		{value: 'top', label: 'Oben'},
+		{value: 'bottom', label: 'Unten'}
+	];
+
 
 	TextsManager.prototype.init.call(this);
 }
@@ -79,10 +85,6 @@ TextsManager.prototype.drawTextEntry = function (text) {
 		self.openTextDialog(text.ident, text);
 	});
 
-	var orderBox = document.createElement('div');
-	orderBox.className = 'orderbox';
-	catO.appendChild(orderBox);
-
 	var statusBox = document.createElement('div');
 	statusBox.className = 'itemStatus';
 	catO.appendChild(statusBox);
@@ -100,6 +102,17 @@ TextsManager.prototype.drawTextEntry = function (text) {
 			self.action('edit_text', text, $(catO));
 			$(catO).replaceWith(self.drawTextEntry(text));
 		});
+
+	var filterBox = document.createElement('div');
+	filterBox.className = 'filters';
+	catO.appendChild(filterBox);
+
+	if (text.filters) {
+		for (var i = 0; i < text.filters.length; i++) {
+			var filter = text.filters[i];
+			filterBox.append(self.filter.drawFilter(filter, true)[0]);
+		}
+	}
 
 	var textBox = document.createElement('div');
 	textBox.className = 'ql-editor textBox';
@@ -124,11 +137,7 @@ TextsManager.prototype.openTextDialog = function (ident, text) {
 	dialogBox.append(form.ident);
 
 	form.position = drawFormLine('select', 'Position');
-	form.position.setOptions([
-		{value: 'left', label: 'Links'},
-		{value: 'top', label: 'Oben'},
-		{value: 'bottom', label: 'Unten'}
-	]);
+	form.position.setOptions(this.positionOptions);
 	dialogBox.append(form.position);
 
 	form.enabled = drawFormLine('checkbox', 'Aktiv');
@@ -145,7 +154,7 @@ TextsManager.prototype.openTextDialog = function (ident, text) {
 		[{'list': 'ordered'}, {'list': 'bullet'}],
 		[{'indent': '-1'}, {'indent': '+1'}],
 		[{'size': []}],  // custom dropdown
-		[{'header': [1, 2, 3, 4, false]}],
+		[{'header': [2, 3, 4, false]}],
 		[{'color': []}],
 		[{'align': []}],
 		['clean']

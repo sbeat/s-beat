@@ -51,7 +51,7 @@ def get_display_texts(data):
         query['filters'] = {"$all": data['filters']}
 
     result = {
-        'texts': [text.get_dict() for text in DB.DisplayText.find(query)],
+        'texts': [text.get_dict() for text in DB.DisplayText.find(query, sort=[('position', 1),('order', 1)])],
         'definitions': get_definitions()
     }
 
