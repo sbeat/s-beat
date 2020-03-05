@@ -47,6 +47,8 @@ TextsManager.prototype.draw = function () {
 		this.drawn = true;
 		this.parentDOM.empty();
 
+		// this.parentDOM.append(this.filterDOM);
+
 		$('<a href="" class="button"/>')
 			.text('Text erstellen')
 			.appendTo(this.parentDOM)
@@ -128,10 +130,14 @@ TextsManager.prototype.openTextDialog = function (ident, text) {
 	var dialogBox = $(document.createElement('div'));
 	dialogBox.attr('title', text ? 'Text bearbeiten' : 'Text hinzufügen');
 
+	var filterDOM = $(document.createElement('div')).addClass('filterlist');
+	var filter = new FilterList(filterDOM);
+	filter.available = self.filter.available.slice();
+
 	var form = {};
 
-	dialogBox.append(self.filterDOM);
-	self.filter.filters = [];
+	filterDOM.appendTo(dialogBox);
+	filter.filters = [];
 
 	form.ident = drawFormLine('text', 'ID');
 	dialogBox.append(form.ident);
@@ -171,15 +177,15 @@ TextsManager.prototype.openTextDialog = function (ident, text) {
 		return this.quill.root.innerHTML;
 	};
 	form.text.setValue = function (v) {
-		this.quill.setContents(this.quill.clipboard.convert(v));
+		this.quill.root.innerHTML = v;
 	};
 
 	form.filters = {};
 	form.filters.getValue = function () {
-		return self.filter.filters;
+		return filter.filters;
 	};
 	form.filters.setValue = function (v) {
-		self.filter.filters = v;
+		filter.filters = v;
 	};
 
 
@@ -197,7 +203,7 @@ TextsManager.prototype.openTextDialog = function (ident, text) {
 		form.order.setValue(0);
 	}
 
-	self.filter.draw();
+	filter.draw();
 
 	var status = $(document.createElement('p')).appendTo(dialogBox);
 
@@ -297,6 +303,7 @@ TextsManager.prototype.initDefinitions = function (definitions) {
 		}
 	}
 
+	// self.filter.draw();
 	self.filter.sortFilters();
 
 
