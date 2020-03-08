@@ -290,18 +290,18 @@ TextsManager.prototype.initDefinitions = function (definitions) {
 			usedQueries.push(pe['query_id'].toString());
 		}
 	}
-	for (var qId in self.definitions['queries']) {
-		query = self.definitions['queries'][qId];
-		if (self.definitions.restricted.indexOf(query.q) != -1) continue;
-		if (usedQueries.indexOf(qId) == -1) {
-			self.filter.addAttributeFilter(query.q, query.name, query.category, query['formatting'], null);
-		} else if (['int', 'grade', 'percent'].indexOf(query['formatting']) != -1) {
-			var catg = query.category.split('.');
-			catg.push(query.name);
-			var f = self.filter.addAttributeFilter(query.q, query.name, catg, query['formatting'], null);
-			f.displayName = 'Benutzerdefiniert';
-		}
-	}
+	// for (var qId in self.definitions['queries']) {
+	// 	query = self.definitions['queries'][qId];
+	// 	if (self.definitions.restricted.indexOf(query.q) != -1) continue;
+	// 	if (usedQueries.indexOf(qId) == -1) {
+	// 		self.filter.addAttributeFilter(query.q, query.name, query.category, query['formatting'], null);
+	// 	} else if (['int', 'grade', 'percent'].indexOf(query['formatting']) != -1) {
+	// 		var catg = query.category.split('.');
+	// 		catg.push(query.name);
+	// 		var f = self.filter.addAttributeFilter(query.q, query.name, catg, query['formatting'], null);
+	// 		f.displayName = 'Benutzerdefiniert';
+	// 	}
+	// }
 
 	// self.filter.draw();
 	self.filter.sortFilters();

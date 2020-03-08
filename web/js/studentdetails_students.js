@@ -36,6 +36,7 @@ StudentDetailsStudents.prototype.load = function () {
 		if (data.definitions) {
 			self.initDefinitions(data.definitions);
 		}
+		self.texts = data.texts;
 		self.draw();
 
 		window.loadedData = data;

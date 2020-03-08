@@ -32,7 +32,12 @@ class DisplayText(DBDocument):
         self.enabled = False
         self.order = 0  # in case multiple texts match, sort by this order number
 
-    def get_dict(self):
+    def get_dict(self, for_output=False):
+        if for_output:
+            return {
+                'position': self.position,
+                'text': self.text
+            }
         data = self.__dict__.copy()
         return data
 
@@ -44,6 +49,7 @@ class DisplayText(DBDocument):
         data = self.__dict__.copy()
         del data['ident']
         data['_id'] = self.ident
+        data['filter_ids'] = [f['id'] for f in self.filters]
         return data
 
     @staticmethod
@@ -57,3 +63,11 @@ class DisplayText(DBDocument):
         del son['_id']
         p.__dict__.update(son)
         return p
+
+    @staticmethod
+    def get_by_student(student):
+        element_ids = [unicode(pe._id) for pe in student.get_matching_elements()]
+        return DisplayText.find({'$and': [
+            {'enabled': True},
+            {'$expr': {'$setIsSubset': ['$filter_ids', element_ids]}}
+        ]}, sort=[['order', 1]])

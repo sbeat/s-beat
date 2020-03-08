@@ -42,6 +42,7 @@ function StudentDetails(parentDOM) {
 	this.markedData = null;
 	this.markedListData = null;
 	this.definitions = null;
+	this.texts = [];
 
 	StudentDetails.prototype.init.call(this);
 }
@@ -243,8 +244,7 @@ StudentDetails.prototype.drawValue = function (field, el) {
 		value = getByPath(field, self.student);
 		if (self.student.current_semester) {
 			el.text(value);
-		}
-		else {
+		} else {
 			el.text('0');
 		}
 	} else if (field == 'identification_link') {
@@ -259,11 +259,27 @@ StudentDetails.prototype.drawValue = function (field, el) {
 			el.hide();
 		}
 
-	} else if (field.match(/^def\.(text_.+)/)) {
+	} else if (field.match(/^def\.(text_(.+))/)) {
+		var pos = RegExp.$2;
 		value = getByPath(RegExp.$1, self.definitions);
+		var texts = [];
 		if (value && value.length) {
-			el.html(self.bbCodeToHTML(value));
-		} else {
+			var tel = document.createElement('div');
+			tel.innerHTML = self.bbCodeToHTML(value);
+			texts.push(tel);
+			el.append(tel);
+		}
+		for (var i = 0; i < self.texts.length; i++) {
+			var text = self.texts[i];
+			if(text.position === pos) {
+				var tel = document.createElement('div');
+				tel.className = 'ql-editor textBox';
+				tel.innerHTML = text.text;
+				texts.push(tel);
+				el.append(tel);
+			}
+		}
+		if (!texts.length) {
 			el.hide();
 		}
 
@@ -384,9 +400,9 @@ StudentDetails.prototype.drawSemesterDataTable = function (el) {
 
 		if (cmpInfo && self.definitions.compare_averages) {
 			td.className = 'darr';
-			if (typeof(value) == 'number' && value < cmpInfo.cmpValue) {
+			if (typeof (value) == 'number' && value < cmpInfo.cmpValue) {
 				td.className = 'darr ' + (cmpInfo.lowerBetter ? 'downgreen' : 'downred');
-			} else if (typeof(value) == 'number' && value > cmpInfo.cmpValue) {
+			} else if (typeof (value) == 'number' && value > cmpInfo.cmpValue) {
 				td.className = 'darr ' + (cmpInfo.lowerBetter ? 'upred' : 'upgreen');
 			}
 			td.title = 'Ø ' + getNumericValueOutput(cmpInfo.cmpValue, format);
@@ -449,7 +465,7 @@ StudentDetails.prototype.drawMarkedListInfo = function (el) {
 		var item = $(document.createElement('a')).addClass('item').appendTo(el);
 		item.attr('href', 'markedlist.html?mlist=' + d.ident);
 		item.text(d.name);
-		if (typeof(d.comments[self.studentId]) != 'undefined') {
+		if (typeof (d.comments[self.studentId]) != 'undefined') {
 			item.attr('title', d.comments[self.studentId].text);
 		}
 		item.tooltip();
@@ -728,14 +744,14 @@ StudentDetails.prototype.drawMarkedListDialog = function (baseElement) {
 			status.text('Speichere Vormerkungen ...');
 
 			var data = {};
-			if (typeof(changes[list_ident]['comments']) != 'undefined') {
+			if (typeof (changes[list_ident]['comments']) != 'undefined') {
 				data['comments'] = {};
 				data['comments'][self.studentId] = changes[list_ident]['comments'];
 			}
-			if (typeof(changes[list_ident]['add_idents']) != 'undefined') {
+			if (typeof (changes[list_ident]['add_idents']) != 'undefined') {
 				data['add_idents'] = [self.studentId];
 			}
-			if (typeof(changes[list_ident]['remove_idents']) != 'undefined') {
+			if (typeof (changes[list_ident]['remove_idents']) != 'undefined') {
 				data['remove_idents'] = [self.studentId];
 			}
 

@@ -1345,7 +1345,8 @@ h2.toggle:hover {
 	justify-content: space-between;
 }
 
-.TextsManager .textBox {
+.TextsManager .textBox,
+.text .textBox {
 	padding: 0;
 }
 
