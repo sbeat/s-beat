@@ -118,14 +118,16 @@ def requires_auth(f):
         if username_header and 'x-remote-user' in request.headers:
             username = request.headers['x-remote-user']
 
+        g.user_role = None
+        g.settings = {
+            'hide_finished_ident_data': False
+        }
         if username is not None and type(username) is str:
             user_query = dict()
             user_query[username_field] = username
-            user = DB.Student.find_one(user_query, collation=Collation('de', strength=2))
-            # logger.info("Authenticated %s %s", username, user is not None)
-            g.user = user
-            if user:
-                g.username = user.short
+            student = DB.Student.find_one(user_query, collation=Collation('de', strength=2))
+            g.student = student
+            if student:
                 return f(*args, **kwargs)
 
         return authenticate()

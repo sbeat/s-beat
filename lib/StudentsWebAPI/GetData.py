@@ -24,8 +24,11 @@ from WebAPI.APIBase import respond
 
 
 def handle():
-    student = g.user
+    student = g.student
     ret = dict()
+    if g.user_role:
+        ret['student'] = student.get_dict(g.user_role, hide_finished_ident_data=g.settings['hide_finished_ident_data'])
+
     ret['student'] = student.get_dict(None, False)
 
     ret['definitions'] = get_definitions()

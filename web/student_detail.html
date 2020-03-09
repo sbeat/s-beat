@@ -15,7 +15,10 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 {% endblock %}
 {% block content %}
 <div class="layout" data-load="StudentDetails" data-id="{{ request.args.get('id',0) }}">
-<h1>Student Details: <span data-student="ident"></span></h1>
+<h1>
+	Student Details: <span data-student="ident"></span>
+	<a href="students_view_{{ request.args.get('id',0) }}.html" target="students_view" class="students_view_link">Studierendenansicht</a>
+</h1>
 
 <div class="col2_50">
 	<article>

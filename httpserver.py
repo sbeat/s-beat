@@ -32,6 +32,7 @@ import UserTools
 import WebAPI
 import Version
 import DB
+import StudentsWebAPI
 
 config = RawConfigParser()
 config.read('config/main.cfg')
@@ -81,7 +82,7 @@ def before_request():
     g.user = None
     g.username = ''
     g.web_config = web_config
-    g.students_view = students_view
+    g.students_view = True if students_view else False
 
     g.get_setting = get_setting
 
@@ -163,6 +164,43 @@ def data_specification():
 @app.route('/gpl.txt')
 def gpl():
     return send_file('gpl.txt', 'text/plain')
+
+
+@app.route('/students_view_<student_ident>.html')
+@requires_auth
+def students_view(student_ident):
+    if not UserTools.has_right('students_data', g.user_role):
+        return Response('No Permission', 403)
+    return render_template('students_view/student_details.html')
+
+
+@app.route('/api/get_current_students_data')
+@requires_auth
+def handle_students_view_api_request():
+    if not UserTools.has_right('students_data', g.user_role):
+        return Response('No Permission', 403)
+
+    if not request.headers['referer']:
+        return Response('No Referer', 403)
+
+    m = re.search('students_view_(.+?)\\.html', request.headers['referer'])
+    if m is None:
+        return Response('No Student ident found', 404)
+
+    g.settings = DB.Settings.load_dict([
+        'hide_finished_ident_data',
+        'student_ident_string'
+    ])
+
+    ident = m.group(1)
+    if not g.settings['student_ident_string']:
+        ident = int(ident)
+
+    g.student = DB.Student.find_one({'_id': ident})
+    if g.student is None:
+        return Response('No Student found with ident ' + ident, 404)
+
+    return StudentsWebAPI.GetData.handle()
 
 
 @app.route('/<filename>.html')

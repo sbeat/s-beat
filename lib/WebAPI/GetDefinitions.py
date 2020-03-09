@@ -103,6 +103,8 @@ def get_definitions():
     for item in DB.Tag.find({}, sort=[['order', 1]]):
         data['tags'].append(item.get_dict())
 
+    data['students_view'] = g.students_view
+
     return data
 
 

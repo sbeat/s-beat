@@ -11,6 +11,7 @@ h1 {
 	font-size: 18px;
 	padding-bottom: 5px;
 	border-bottom: 1px solid #CCCCCC;
+	margin-right: 20px;
 }
 
 img {
@@ -1348,6 +1349,12 @@ h2.toggle:hover {
 .TextsManager .textBox,
 .text .textBox {
 	padding: 0;
+}
+
+.students_view_link {
+	font-size: 10pt;
+	display: inline-block;
+	float: right;
 }
 
 @media print {
