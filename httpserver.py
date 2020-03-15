@@ -44,7 +44,7 @@ host = config.get('http', 'host')
 debug = True if config.get('http', 'debug') == 'true' else False
 document_root = config.get('http', 'document_root')
 upload_folder = config.get('http', 'upload_folder')
-students_view = config.has_section('http_students')
+
 if config.has_section('web'):
     web_config = dict(config.items('web'))
 else:
@@ -82,7 +82,7 @@ def before_request():
     g.user = None
     g.username = ''
     g.web_config = web_config
-    g.students_view = True if students_view else False
+    g.students_view = config.has_section('http_students')
 
     g.get_setting = get_setting
 
