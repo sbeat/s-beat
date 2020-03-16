@@ -49,8 +49,18 @@ class DisplayText(DBDocument):
         data = self.__dict__.copy()
         del data['ident']
         data['_id'] = self.ident
-        data['filter_ids'] = [f['id'] for f in self.filters]
+        data['filter_ids'] = self.get_filter_ids()
         return data
+
+    def get_filter_ids(self):
+        filter_ids = list()
+        for f in self.filters:
+            if f['type'] == 'filterElement':
+                filter_ids.append(f['id'])
+            if f['type'] == 'value':
+                filter_ids.append(f['id'] + '=' + f['value'])
+
+        return filter_ids
 
     @staticmethod
     def db_create(son):
@@ -65,8 +75,26 @@ class DisplayText(DBDocument):
         return p
 
     @staticmethod
-    def get_by_student(student):
+    def get_by_student(student, settings):
         element_ids = [unicode(pe._id) for pe in student.get_matching_elements()]
+        lights = settings['lights']
+        if 'lights:' + student.stg_original in settings:
+            lights = settings['lights:' + student.stg_original]
+        if 'lights:' + student.stg in settings:
+            lights = settings['lights:' + student.stg]
+
+        for name in ['risk', 'risk_all', 'risk_stg', 'risk_degree']:
+            cat_value = student.__dict__[name]
+            if cat_value is None:
+                continue
+            value = cat_value['median_scaled']
+            if value < lights[1]:
+                element_ids.append(name + '=green')
+            if lights[1] <= value < lights[2]:
+                element_ids.append(name + '=yellow')
+            if value >= lights[2]:
+                element_ids.append(name + '=red')
+
         return DisplayText.find({'$and': [
             {'enabled': True},
             {'$expr': {'$setIsSubset': ['$filter_ids', element_ids]}}

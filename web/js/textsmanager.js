@@ -290,6 +290,13 @@ TextsManager.prototype.initDefinitions = function (definitions) {
 			usedQueries.push(pe['query_id'].toString());
 		}
 	}
+
+	self.filter.addValueFilter('risk', 'Risikobereich Ampel', 'Vorhersage', 'risk', {
+		'red': 'Rot',
+		'yellow': 'Gelb',
+		'green': 'Grün'
+	}, null);
+
 	// for (var qId in self.definitions['queries']) {
 	// 	query = self.definitions['queries'][qId];
 	// 	if (self.definitions.restricted.indexOf(query.q) != -1) continue;

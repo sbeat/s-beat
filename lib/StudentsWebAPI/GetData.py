@@ -69,11 +69,14 @@ def handle():
 
     settings = DB.Settings.load_dict([
         'sv_max_risk_paths',
+        'lights',
+        'lights:' + student.stg_original,
+        'lights:' + student.stg
     ])
 
     ret['paths'] = [s.get_dict(True, True) for s in student.get_paths()][0:settings['sv_max_risk_paths']]
 
-    ret['texts'] = [t.get_dict(True) for t in DB.DisplayText.get_by_student(student)]
+    ret['texts'] = [t.get_dict(True) for t in DB.DisplayText.get_by_student(student, settings)]
 
     return respond(ret, 200)
 
