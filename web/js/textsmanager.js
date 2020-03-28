@@ -275,6 +275,9 @@ TextsManager.prototype.openTextDialog = function (ident, text) {
 
 TextsManager.prototype.initDefinitions = function (definitions) {
 	var self = this;
+	if (self.definitions) {
+		return;
+	}
 	self.definitions = definitions;
 
 	var query;
