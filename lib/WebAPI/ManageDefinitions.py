@@ -212,10 +212,11 @@ def edit_path_element(data):
         return respond({'error': 'invalid_data', 'errors': errors}, 200)
 
     if pe_id != pe.md5_id():
-        DB.PathElement.remove_by_id(pe_id)
-
         if pe.db_insert():
+            DB.PathElement.remove_by_id(pe_id)
             return respond({'status': 'ok', 'pe': pe.get_dict()}, 200)
+        else:
+            return respond({'status': 'edit_failed', 'pe': pe.get_dict()}, 200)
 
     elif pe.db_update():
         return respond({'status': 'ok', 'pe': pe.get_dict()}, 200)

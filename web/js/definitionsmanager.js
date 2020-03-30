@@ -624,6 +624,8 @@ DefinitionsManager.prototype.openConditionDialog = function (query_id, query, pe
 				getNumericValueOutput(pe.condition.compare_value[0], query.formatting),
 				getNumericValueOutput(pe.condition.compare_value[1], query.formatting)
 			]);
+		} else if(query.formatting === 'yesno') {
+			form.value.setValue(String(pe.condition.compare_value));
 		} else {
 			form.value.setValue(getNumericValueOutput(pe.condition.compare_value, query.formatting));
 		}
@@ -661,7 +663,11 @@ DefinitionsManager.prototype.openConditionDialog = function (query_id, query, pe
 				getNumericValueInput(data.value[1], query.formatting)
 			];
 		} else {
-			data.compare_value = getNumericValueInput(data.value, query.formatting);
+			if(query.formatting === 'yesno') {
+				data.compare_value = data.value === 'true';
+			} else {
+				data.compare_value = getNumericValueInput(data.value, query.formatting);
+			}
 		}
 		data.order = parseInt(data.order ? data.order : 0);
 
