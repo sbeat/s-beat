@@ -91,6 +91,7 @@ class Student(DBDocument):
         self.aborted = False  # Whether the study has been aborted
         self.status = None  # Status 1=Finished, 2=Aborted, 3=Successful, 4=Studying
         self.tags = []
+        self.faculty = None  # faculty of that course
 
         # applicant data
         self.applicant_ident = None  # ident of the applicant
@@ -970,6 +971,7 @@ def create_student_from_entry(data, settings):
 
     student.stg = course.stg
     student.degree_type = course.degree_type
+    student.faculty = course.faculty
 
     student.imm_date = get_date_from_csv(data['immdat'])
     student.exm_date = get_date_from_csv(data['exmdat'])

@@ -33,6 +33,7 @@ class ExamInfo(DBDocument):
         self.bonus = None  # bonus for this exam
         self.stg = []  # list of stg this exam was written in
         self.stg_original = []  # list of original stg this exam was written in
+        self.version = []
 
         self.count_exams = 0  # count of exams
         self.count_successful = 0  # count of passed exams
@@ -221,6 +222,9 @@ class ExamInfo(DBDocument):
 
         if exam.form not in ei.form:
             ei.form.append(exam.form)
+
+        if exam.version not in ei.version:
+            ei.version.append(exam.version)
 
         ei.type = exam.type
 
