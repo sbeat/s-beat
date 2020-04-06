@@ -497,6 +497,9 @@ Table style
 	background: url('../img/icons/control-270-small.png') 0 50% no-repeat;
 	padding-left: 20px;
 }
+.sortable th.nosort {
+	cursor: default;
+}
 
 .gender.M {
 	background: url('../img/icons/gender.png') 100% 0 no-repeat;

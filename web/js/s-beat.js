@@ -16,7 +16,7 @@ function createDom(tag, classname, parent) {
 function drawSelect(options, current, empty) {
 	var s = document.createElement('select');
 	var o;
-	if (typeof(empty) != 'undefined') {
+	if (typeof (empty) != 'undefined') {
 		o = document.createElement('option');
 		s.appendChild(o);
 		o.value = '';
@@ -28,7 +28,7 @@ function drawSelect(options, current, empty) {
 		o = document.createElement('option');
 		s.appendChild(o);
 		var v = options[value];
-		if (isArray && typeof(v) == 'object') {
+		if (isArray && typeof (v) == 'object') {
 			o.value = v.value;
 			o.appendChild(document.createTextNode(v.label));
 		} else if (isArray) {
@@ -143,8 +143,7 @@ function drawFormLine(type, label, desc) {
 					if (option.value.length) {
 						values.push(option.value);
 					}
-				}
-				else if (option.selected) return option.value;
+				} else if (option.selected) return option.value;
 			}
 			if (this.select.multiple) {
 				return values;
@@ -164,7 +163,7 @@ function drawFormLine(type, label, desc) {
 		container.setOptions = function (options, current, empty) {
 			var o;
 			$(this.select).empty();
-			if (typeof(empty) != 'undefined') {
+			if (typeof (empty) != 'undefined') {
 				o = document.createElement('option');
 				this.select.appendChild(o);
 				o.value = '';
@@ -177,7 +176,7 @@ function drawFormLine(type, label, desc) {
 				o = document.createElement('option');
 				this.select.appendChild(o);
 				var v = options[value];
-				if (isArray && typeof(v) == 'object') {
+				if (isArray && typeof (v) == 'object') {
 					o.value = v.value;
 					o.appendChild(document.createTextNode(v.label));
 				} else if (isArray) {
@@ -336,7 +335,7 @@ function drawOptionSelector(options, sendCallb) {
 function loadStorage(key, def) {
 	try {
 		var data = window.localStorage.getItem(key);
-		if (typeof(data) == 'undefined' || data === null) return def;
+		if (typeof (data) == 'undefined' || data === null) return def;
 		return JSON.parse(data);
 	} catch (e) {
 		return def;
@@ -355,7 +354,7 @@ function getByPath(path, o) {
 	if (!Array.isArray(path)) path = path.split('.');
 	if (!path.length) return o;
 	var name = path.shift();
-	if (o && typeof(o) == 'object') {
+	if (o && typeof (o) == 'object') {
 		return getByPath(path, o[name]);
 	}
 	return undefined;
@@ -364,7 +363,7 @@ function getByPath(path, o) {
 function getByField(o, field, value) {
 	for (var i = 0; i < o.length; i++) {
 		var el = o[i];
-		if(el[field] == value) {
+		if (el[field] == value) {
 			return el;
 		}
 	}
@@ -374,7 +373,7 @@ function getByField(o, field, value) {
 
 function getNumericValueOutput(value, formatting) {
 	if (formatting == 'str') return value;
-	if (typeof(value) == 'object' && value === null || isNaN(value)) return '';
+	if (typeof (value) == 'object' && value === null || isNaN(value)) return '';
 	if (formatting == 'grade') return (Math.floor(value / 10) / 10).toFixed(1);
 	if (formatting == 'percent') return (value * 100).toFixed(1);
 	if (formatting == 'date') return getDateText(new Date(value * 1000));
@@ -385,7 +384,7 @@ function getNumericValueOutput(value, formatting) {
 }
 
 function getNumericValueInput(value, formatting) {
-	if (typeof(value) == 'string') value = value.replace(/,/g, '.');
+	if (typeof (value) == 'string') value = value.replace(/,/g, '.');
 	if (formatting == '') return null;
 	if (formatting == 'grade') return Math.round(value * 100);
 	if (formatting == 'percent') return value / 100;
@@ -446,16 +445,21 @@ function getCompareValueInfo(value, formatting, raw) {
 		dataValue: value,
 		operator: 'equal',
 		text: '',
-		value: null
+		value: null,
+		matches: function () {
+		}
 	};
 	if (['int', 'grade', 'percent', 'date', 'semester'].indexOf(formatting) != -1) {
 		ret.type = 'numeric';
 		value = String(value);
-		if (value == '' || value == 'null' || value === null) {
+		if (value == '' || value === 'null' || value === null) {
 			ret.operator = 'equal';
 			ret.value = 0;
 			ret.valueOutput = '';
 			ret.text = ret.valueOutput;
+			ret.matches = function (v) {
+				return v === this.value || v == '' || v === null || v === 'null';
+			};
 
 		} else if (value.indexOf(',') != -1) {
 			var parts = value.split(',');
@@ -466,22 +470,34 @@ function getCompareValueInfo(value, formatting, raw) {
 				ret.minValueOutput = getNumericValueOutput(ret.minValue, formatting);
 				ret.maxValueOutput = getNumericValueOutput(ret.maxValue, formatting);
 				ret.text = ret.minValueOutput + ' ≤x≤ ' + ret.maxValueOutput;
+				ret.matches = function (v) {
+					return v >= this.minValue && v <= this.maxValue;
+				};
 			} else if (parts.length == 2 && parts[0].length && !parts[1].length) {
 				ret.operator = 'gte';
 				ret.value = parseFloat(parts[0]);
 				ret.valueOutput = getNumericValueOutput(ret.value, formatting);
 				ret.text = '>= ' + ret.valueOutput;
+				ret.matches = function (v) {
+					return v >= this.value;
+				};
 			} else if (parts.length == 2 && !parts[0].length && parts[1].length) {
 				ret.operator = 'lte';
 				ret.value = parseFloat(parts[1]);
 				ret.valueOutput = getNumericValueOutput(ret.value, formatting);
 				ret.text = '<= ' + ret.valueOutput;
+				ret.matches = function (v) {
+					return v <= this.value;
+				};
 			}
 		} else {
 			ret.operator = 'equal';
 			ret.value = parseFloat(value);
 			ret.valueOutput = getNumericValueOutput(ret.value, formatting);
 			ret.text = ret.valueOutput;
+			ret.matches = function (v) {
+				return v === this.value;
+			};
 		}
 
 	} else if (formatting == 'yesno') {
@@ -781,8 +797,7 @@ function getMonthsText(month) {
 
 	if (month < 12) {
 		return month + " Monate";
-	}
-	else {
+	} else {
 		years = Math.floor(month / 12);
 		months = month % 12;
 		text += years + ' ' + (years > 1 ? 'Jahre' : 'Jahr');
@@ -1342,34 +1357,34 @@ function openLoadSettingsDialog() {
 
 function loadPresetSettings() {
 	var settings = this.settings[this.settingId] || this.settings['default'];
-	if (typeof(settings.limit) != 'undefined')
+	if (typeof (settings.limit) != 'undefined')
 		this.pagination.limit = settings.limit;
 
-	if (typeof(settings.sort1) != 'undefined')
+	if (typeof (settings.sort1) != 'undefined')
 		this.pagination.sort1 = settings.sort1;
 
-	if (typeof(settings.sort2) != 'undefined')
+	if (typeof (settings.sort2) != 'undefined')
 		this.pagination.sort2 = settings.sort2;
 
-	if (typeof(settings.columns) != 'undefined' && this.filter)
+	if (typeof (settings.columns) != 'undefined' && this.filter)
 		this.filter.filters = settings.filters;
 
-	if (typeof(settings.columns) != 'undefined')
+	if (typeof (settings.columns) != 'undefined')
 		this.columns = settings.columns.slice();
 
-	if (typeof(settings.rows) != 'undefined')
+	if (typeof (settings.rows) != 'undefined')
 		this.rows = settings.rows.slice();
 
-	if (typeof(settings.displayFilters) != 'undefined')
+	if (typeof (settings.displayFilters) != 'undefined')
 		this.displayFilters = settings.displayFilters;
 
-	if (typeof(settings.displayPagination) != 'undefined')
+	if (typeof (settings.displayPagination) != 'undefined')
 		this.displayPagination = settings.displayPagination;
 
-	if (typeof(settings.displayStats) != 'undefined')
+	if (typeof (settings.displayStats) != 'undefined')
 		this.displayStats = settings.displayStats;
 
-	if (typeof(settings.sortable) != 'undefined')
+	if (typeof (settings.sortable) != 'undefined')
 		this.sortable = settings.sortable;
 
 }
@@ -1417,7 +1432,7 @@ function saveSettings(serverSettingId, name, callb, type) {
 	if (this.filter) {
 		settings.filters = this.filter.filters;
 	}
-	if (typeof(this.pagination) !== 'undefined') {
+	if (typeof (this.pagination) !== 'undefined') {
 		settings.limit = this.pagination.limit;
 		settings.sort1 = this.pagination.sort1;
 		settings.sort2 = this.pagination.sort2;
@@ -1440,7 +1455,7 @@ function saveSettings(serverSettingId, name, callb, type) {
 
 	if (!serverSettingId) return;
 
-	setServerSetting(type?type:'list', serverSettingId, settings, callb);
+	setServerSetting(type ? type : 'list', serverSettingId, settings, callb);
 
 }
 
@@ -1468,20 +1483,20 @@ function loadServerSettings(type, callb) {
 			// Globally save settings, cache settings in browser
 			loadedServerSettings[type] = data.settings;
 
-			if (typeof(callb) == 'function') callb(loadedServerSettings[type]);
+			if (typeof (callb) == 'function') callb(loadedServerSettings[type]);
 		} else {
-			if (typeof(callb) == 'function') callb(null);
+			if (typeof (callb) == 'function') callb(null);
 		}
 
 
 	}).fail(function () {
-		if (typeof(callb) == 'function') callb(null);
+		if (typeof (callb) == 'function') callb(null);
 	});
 
 }
 
 function getServerSetting(type, id, callb) {
-	if (loadedServerSettings[type] && typeof(loadedServerSettings[type][id]) != 'undefined') {
+	if (loadedServerSettings[type] && typeof (loadedServerSettings[type][id]) != 'undefined') {
 		callb(loadedServerSettings[type][id]);
 		return;
 	}
@@ -1496,14 +1511,14 @@ function getServerSetting(type, id, callb) {
 		url: url
 	}).success(function (data) {
 		if (data.settings) {
-			if (typeof(callb) == 'function') callb(data.settings[id]);
+			if (typeof (callb) == 'function') callb(data.settings[id]);
 		} else {
-			if (typeof(callb) == 'function') callb(null);
+			if (typeof (callb) == 'function') callb(null);
 		}
 
 
 	}).fail(function () {
-		if (typeof(callb) == 'function') callb(null);
+		if (typeof (callb) == 'function') callb(null);
 	});
 
 }
@@ -1525,10 +1540,10 @@ function setServerSetting(type, id, value, callb) {
 		if (data && data.status == 'ok') {
 			loadedServerSettings[type] = null;
 		}
-		if (typeof(callb) == 'function') callb(data);
+		if (typeof (callb) == 'function') callb(data);
 
 	}).fail(function () {
-		if (typeof(callb) == 'function') callb(null);
+		if (typeof (callb) == 'function') callb(null);
 	});
 
 }
@@ -1550,10 +1565,10 @@ function deleteServerSetting(type, id, callb) {
 		if (data && data.status == 'ok') {
 			loadedServerSettings[type] = null;
 		}
-		if (typeof(callb) == 'function') callb(data);
+		if (typeof (callb) == 'function') callb(data);
 
 	}).fail(function () {
-		if (typeof(callb) == 'function') callb(null);
+		if (typeof (callb) == 'function') callb(null);
 	});
 
 }
@@ -1630,6 +1645,7 @@ function drawTableHead(tr, tooltipPrefix) {
 		if (sort1 === sortField + ',-1') th.addClass('desc');
 		if (sort2 === sortField + ',1') th.addClass('asc2');
 		if (sort2 === sortField + ',-1') th.addClass('desc2');
+		if (cd.sortBy === false) th.addClass('nosort');
 
 
 		tr.append(th);
@@ -1801,7 +1817,7 @@ function selectTagsDialog(tagDefinitions, selectedTags, callb) {
 function createCheckbox(onChange) {
 	var box = document.createElement('input');
 	box.type = 'checkbox';
-	box.addEventListener('change', function() {
+	box.addEventListener('change', function () {
 		onChange(box.checked);
 	}, false);
 	return box;
@@ -1854,6 +1870,7 @@ $(function onReady() {
 			e.preventDefault();
 			toggle();
 		});
+
 		function toggle() {
 			if (target.is(':visible')) {
 				element.removeClass('visible');
@@ -1870,7 +1887,7 @@ $(function onReady() {
 	$('[data-load]').each(function () {
 		var element = $(this);
 		var loadName = element.attr('data-load');
-		if (typeof(window[loadName]) == 'function') {
+		if (typeof (window[loadName]) == 'function') {
 			new window[loadName](element);
 		}
 	});

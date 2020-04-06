@@ -211,6 +211,56 @@ function ExamInfoList(parentDOM) {
 			formatting: 'percent',
 			group: 'Leistung.Nicht bestanden'
 		},
+
+		'semester_data.PERIOD.exams': {
+			id: 'semester_data.PERIOD.exams',
+			label: 'Anzahl Anmeldungen im Zeitraum',
+			title: 'Anzahl Prüfungsanmeldungen  im Zeitraum',
+			formatting: 'int',
+			group: 'Leistung.Anmeldungen',
+			sortBy: false
+		},
+		'semester_data.PERIOD.successful': {
+			id: 'semester_data.PERIOD.successful',
+			label: 'Bestanden im Zeitraum',
+			title: 'Anzahl bestandene Leistungen im Zeitraum',
+			formatting: 'int',
+			group: 'Leistung.Bestanden',
+			sortBy: false
+		},
+		'semester_data.PERIOD.failed': {
+			id: 'semester_data.PERIOD.failed',
+			label: 'Nicht bestanden im Zeitraum',
+			title: 'Anzahl nicht bestandene Leistungen im Zeitraum',
+			formatting: 'int',
+			group: 'Leistung.Nicht bestanden',
+			sortBy: false
+		},
+		'semester_data.PERIOD.applied': {
+			id: 'semester_data.PERIOD.applied',
+			label: 'Status=AN im Zeitraum',
+			title: 'Anzahl Leistungen mit dem Status=AN im Zeitraum',
+			formatting: 'int',
+			group: 'Leistung.Anmeldungen',
+			sortBy: false
+		},
+		'semester_data.PERIOD.success_perc': {
+			id: 'semester_data.PERIOD.success_perc',
+			label: 'Bestanden im Zeitraum in %',
+			title: 'Prozentanteil bestandender Leistungen im Zeitraum',
+			formatting: 'percent',
+			group: 'Leistung.Bestanden',
+			sortBy: false
+		},
+		'semester_data.PERIOD.failed_perc': {
+			id: 'semester_data.PERIOD.failed_perc',
+			label: 'Nicht bestanden im Zeitraum in %',
+			title: 'Prozentanteil nicht bestandender Leistungen im Zeitraum',
+			formatting: 'percent',
+			group: 'Leistung.Nicht bestanden',
+			sortBy: false
+		},
+
 		'semesters': {
 			id: 'semesters',
 			label: 'Semester',
@@ -250,9 +300,11 @@ ExamInfoList.prototype.init = function () {
 
 	for (var colId in this.columnData) {
 		var col = this.columnData[colId];
-		this.filter.addAttributeFilter(col.id, col.label, col.group, col.formatting, col.formatting == 'int' ? 0 : '');
+		if (col.id.indexOf('PERIOD') === -1) {
+			this.filter.addAttributeFilter(col.id, col.label, col.group, col.formatting, col.formatting == 'int' ? 0 : '');
+		}
 
-		if (col.sortBy) continue;
+		if (col.sortBy || col.sortBy === false) continue;
 		this.pagination.sortOptions[col.id + ',1'] = col.label + ' aufsteigend';
 		this.pagination.sortOptions[col.id + ',-1'] = col.label + ' absteigend';
 	}
@@ -364,6 +416,9 @@ ExamInfoList.prototype.draw = function () {
 		thead.find('th').click(function (e) {
 			var col = self.columnData[this.colId];
 			var sortField = col.sortBy ? col.sortBy : col.id;
+			if (col.sortBy === false) {
+				return;
+			}
 
 			if (self.pagination.sort1 == sortField + ',1') {
 				self.pagination.sort1 = sortField + ',-1';
@@ -409,6 +464,44 @@ ExamInfoList.prototype.draw = function () {
 
 
 };
+ExamInfoList.prototype.prepareExamData = function (exam) {
+	var f = this.filter.filters.find(function (f) {
+		return f.id === 'semesters'
+	});
+	if (!f) {
+		return;
+	}
+	var info = getCompareValueInfo(f.value, f.formatting);
+	var periodStats = {
+		applied: 0,
+		failed_perc: null,
+		successful: 0,
+		resign_perc: null,
+		failed: 0,
+		grades: null,
+		success_perc: null,
+		exams: 0,
+		resigned: 0,
+		grades_nb: null
+	};
+	Object.keys(exam.semester_data).forEach(function (semid) {
+		if (semid !== 'PERIOD' && info.matches(parseFloat(semid))) {
+			var s = exam.semester_data[semid];
+			periodStats.applied += s.applied;
+			periodStats.successful += s.successful;
+			periodStats.failed += s.failed;
+			periodStats.exams += s.exams;
+			periodStats.resigned += s.resigned;
+		}
+	});
+	var total = periodStats.successful + periodStats.failed;
+	periodStats.failed_perc = total ? periodStats.failed / total : null;
+	periodStats.success_perc = total ? periodStats.successful / total : null;
+	periodStats.resign_perc = periodStats.exams ? periodStats.resigned / periodStats.exams : null;
+
+	exam.semester_data['PERIOD'] = periodStats;
+
+};
 ExamInfoList.prototype.drawExam = function (exam) {
 
 	var tr = $(document.createElement('tr'));
@@ -419,6 +512,7 @@ ExamInfoList.prototype.drawExam = function (exam) {
 		var col = this.columnData[this.columns[i]];
 		var td = $(document.createElement('td'));
 		tr.append(td);
+		this.prepareExamData(exam);
 		this.drawCellValue(exam, col, td);
 	}
 

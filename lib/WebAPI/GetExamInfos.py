@@ -31,6 +31,9 @@ def handle():
     # if request.method == 'POST':
     # name = request.form['name']
 
+    if not UserTools.has_right('exams_data', g.user_role):
+        return respond({'error': 'no_rights'}, 403)
+
     query_types = {
         'exam_info_id': 'str',
         'exam_id': 'int',
@@ -76,9 +79,6 @@ def handle():
     current_semester = str(current_semester)
     last_semester = str(last_semester)
 
-    if not UserTools.has_right('exams_data', g.user_role):
-        return respond({'error': 'no_rights'}, 403)
-
     def gff(field):
         field = field.replace('CURRENT', current_semester)
         field = field.replace('LAST', last_semester)
@@ -103,7 +103,6 @@ def handle():
     ])
 
     ret['hide_exam_fields'] = settings['hide_exam_fields']
-
 
     db_query = dict()
     db_queries = []  # for restrictions
