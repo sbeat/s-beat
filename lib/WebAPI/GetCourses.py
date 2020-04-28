@@ -34,7 +34,7 @@ def handle():
         'stg': 'str',
         'name': 'str',
         'short_name': 'str',
-        'faculty': 'int',
+        'faculty': 'str',
         'degree_type': 'str',
         'semesters': 'int',
         'ignore': 'bool',

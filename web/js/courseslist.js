@@ -43,7 +43,7 @@ function CoursesList(parentDOM) {
 		'stg_original': {id: 'stg_original', label: 'Kürzel', title: 'Kürzel', formatting: 'str', sortBy: '_id'},
 		'stg': {id: 'stg', label: 'Gruppe', title: 'Gruppe', formatting: 'str'},
 		'name': {id: 'name', label: 'Name', title: 'Name', formatting: 'str'},
-		'faculty': {id: 'faculty', label: CONFIG.faculty_label, title: CONFIG.faculty_label, formatting: 'int'},
+		'faculty': {id: 'faculty', label: CONFIG.faculty_label, title: CONFIG.faculty_label, formatting: 'str'},
 		'semesters': {id: 'semesters', label: 'Regelstu- dienzeit', title: 'Regelstudienzeit', formatting: 'int'},
 		'degree_type': {id: 'degree_type', label: 'Abschluss', title: 'Abschlussart', formatting: 'str'},
 		'count_finished': {

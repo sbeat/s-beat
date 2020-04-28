@@ -378,7 +378,7 @@ def create_course_from_entry(data, settings):
 
     course.name = get_unicode(data['ltxt'])
     course.short_name = get_unicode(data['ktxt'])
-    course.faculty = get_int(data['fb'])
+    course.faculty = get_unicode(data['fb'])
     course.semesters = get_int(data['regelstz'])
 
     return course

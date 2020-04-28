@@ -396,7 +396,7 @@ Kurzname des Studiengangs
 
 #### `FB`
 
-Nummer des Fakultätsbereichs
+Fakultätsbereich
 
 
 #### `REGELSTZ`
