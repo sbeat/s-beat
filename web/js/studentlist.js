@@ -158,7 +158,7 @@ function StudentList(parentDOM) {
 			formatting: 'int'
 		},
 		'gender': {id: 'gender', label: 'Geschl.', title: 'Geschlecht', formatting: 'gender'},
-		'faculty': {id: 'faculty', label: 'Fakultät', title: 'Fakultät', formatting: 'int'},
+		'faculty': {id: 'faculty', label: CONFIG.faculty_label, title: CONFIG.faculty_label, formatting: 'int'},
 		'risk': {
 			id: 'risk',
 			label: 'Risiko',
