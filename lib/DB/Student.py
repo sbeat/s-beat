@@ -135,6 +135,7 @@ class Student(DBDocument):
         self.exam_count_try = {}  # counts by tries
         self.exam_count_type_try = {}  # counts by type and try
         self.exam_count_status_type_try = {}  # counts by statsu and type and try
+        self.exam_try_semesters = {}  # semesters by try
         self.bonus_total = None  # total count of reached ECTS points
         self.study_time_real = None  # amount of semesters with finished exams
         self.study_semesters = []  # list of semester numbers
@@ -486,6 +487,7 @@ class Student(DBDocument):
         self.exam_count_try = calc.exam_try_counts
         self.exam_count_type_try = calc.exam_type_try_counts
         self.exam_count_status_type_try = calc.exam_status_type_try_counts
+        self.exam_try_semesters = calc.exam_try_semesters
         total = float(self.exam_count_success + self.exam_count_failed)
         if total > 0:
             self.exam_success_perc = float(self.exam_count_success) / total
@@ -539,6 +541,7 @@ class Student(DBDocument):
                 'exam_count_try',
                 'exam_count_type_try',
                 'exam_count_status_type_try',
+                'exam_try_semesters',
                 'bonus_total',
                 'study_time_real',
                 'study_semesters',
@@ -1135,7 +1138,8 @@ class StudentExamCalculator:
         self.exam_type_counts, \
         self.exam_try_counts, \
         self.exam_type_try_counts, \
-        self.exam_status_type_try_counts = self.get_counts()
+        self.exam_status_type_try_counts, \
+        self.exam_try_semesters = self.get_counts()
 
         self.semester_counts = self.get_semester_counts()
 
@@ -1307,9 +1311,10 @@ class StudentExamCalculator:
         phase_counters = {}  # counters for every phase (G=basic studies, H=main studies)
         exam_status_counts = {}  # count of exams for each status
         exam_type_counts = {}  # count of exams for each type
-        exam_try_counts = {}  # count of exams for each number of ties
+        exam_try_counts = {}  # count of exams for each number of tries
         exam_type_try_counts = {}  # count of exams for each type and number of ties
-        exam_status_type_try_counts = {}  # count of exams for each status and type and number of ties
+        exam_status_type_try_counts = {}  # count of exams for each status and type and number of tries
+        exam_try_semesters = {}  # semesters with x tries
 
         # run through distinct exams and add to counters
         for exam in self.get_distinct_exams():
@@ -1362,7 +1367,10 @@ class StudentExamCalculator:
             try_id = str(exam.try_nr)
             if try_id not in exam_try_counts:
                 exam_try_counts[try_id] = 0
+                exam_try_semesters[try_id] = []
             exam_try_counts[try_id] += 1
+            if exam.semester not in exam_try_semesters[try_id]:
+                exam_try_semesters[try_id].append(exam.semester)
 
             type_try_id = exam.type + '_' + try_id
             if type_try_id not in exam_type_try_counts:
@@ -1404,7 +1412,7 @@ class StudentExamCalculator:
             last_phase = phase
 
         return totals, semester_counters, phase_counters, exam_status_counts, exam_type_counts, exam_try_counts, \
-               exam_type_try_counts, exam_status_type_try_counts
+               exam_type_try_counts, exam_status_type_try_counts, exam_try_semesters
 
 
 class StudentsBitArray:

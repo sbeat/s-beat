@@ -11,7 +11,26 @@ Update the MongoDB Database to at least version 3.6. Update the depencenies:
 Run the following command to integrate new settings:
 
     python sbeat.py initial_settings
+    
+Add new Definition under Administration -> Definitionen:
 
+    Student » Studium
+        Name: Facultät
+        Query: faculty
+        Formatierung: String
+        Ignorieren: Ja
+         
+    Student » Studium » Prüfungsleistungen
+        Name: Semester mit 2. Versuchen
+        Query: exam_try_semesters.2
+        Formatierung: Semester
+        Ignorieren: Ja
+        
+    Student » Studium » Prüfungsleistungen
+        Name: Semester mit 3. Versuchen
+        Query: exam_try_semesters.3
+        Formatierung: Semester
+        Ignorieren: Ja
 
 ## Upgrade 1.5 to 1.6
 
