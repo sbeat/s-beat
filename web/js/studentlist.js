@@ -12,7 +12,7 @@ function StudentList(parentDOM) {
 	this.settings = {
 		'default': {
 			title: "Studenten Übersicht",
-			limit: 20,
+			limit: CONFIG.studentlist.limit,
 			sort1: '_id,1',
 			sort2: null,
 			filters: [],
@@ -23,7 +23,7 @@ function StudentList(parentDOM) {
 		},
 		'risk': {
 			title: "Risikofälle",
-			limit: 20,
+			limit: CONFIG.studentlist.limit,
 			sort1: 'risk.median_scaled,-1',
 			sort2: null,
 			filters: [
@@ -58,7 +58,7 @@ function StudentList(parentDOM) {
 		},
 		'pathbased': {
 			title: "Studenten",
-			limit: 20,
+			limit: CONFIG.studentlist.limit,
 			sort1: 'risk.median_scaled,-1',
 			sort2: null,
 			filters: [],
@@ -69,7 +69,7 @@ function StudentList(parentDOM) {
 		},
 		'mlist': {
 			title: "Vormerkungsliste",
-			limit: 20,
+			limit: CONFIG.studentlist.limit,
 			sort1: 'risk.median_scaled,-1',
 			filters: [],
 			columns: ['ident', 'stg', 'start_semester', 'finishstatus', 'age', 'gender', 'bonus_total', 'risk', 'risk.median_scaled', 'comment', 'actions'],

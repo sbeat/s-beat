@@ -79,18 +79,15 @@ UserTools.set_user_roles_by_config(config)
 def has_right(required_role):
     return UserTools.has_right(required_role, g.user_role)
 
-
-def get_setting(key):
-    import DB
-    return DB.Settings.load(key)
-
-
 @app.before_request
 def before_request():
     g.version = Version.get_string()
     g.web_config = web_config
-    g.get_setting = get_setting
     g.logout_url = logout_url
+
+    g.settings = DB.Settings.load_dict([
+        'cp_label'
+    ])
 
     g.logo = None
     if config.has_section('logo'):
@@ -119,9 +116,7 @@ def requires_auth(f):
             username = request.headers['x-remote-user']
 
         g.user_role = None
-        g.settings = {
-            'hide_finished_ident_data': False
-        }
+        g.settings['hide_finished_ident_data'] = False
         if username is not None and type(username) is str:
             user_query = dict()
             user_query[username_field] = username

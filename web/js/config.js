@@ -14,6 +14,9 @@ var CONFIG={
 		 */
 		graph_step:10
 	},
+	studentlist: {
+		limit: 20
+	},
 	/**
 	 * Label for naming credit points.
 	 * Is overwritten in index.html by using data from main.cfg

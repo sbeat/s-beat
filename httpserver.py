@@ -69,12 +69,6 @@ UserTools.set_user_roles_by_config(config)
 def has_right(required_role):
     return UserTools.has_right(required_role, g.user_role)
 
-
-def get_setting(key):
-    import DB
-    return DB.Settings.load(key)
-
-
 @app.before_request
 def before_request():
     g.user_role = 'guest'
@@ -84,7 +78,14 @@ def before_request():
     g.web_config = web_config
     g.students_view = config.has_section('http_students')
 
-    g.get_setting = get_setting
+    g.settings = DB.Settings.load_dict([
+        'cp_label',
+        'student_list_limit',
+        'contact_software',
+        'contact_hosting',
+        'contact_data',
+        'import_applicants'
+    ])
 
     g.version = Version.get_string()
 

@@ -28,7 +28,7 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 	<script src="js/s-beat.js"></script>
 	<script src="js/listsettings.js"></script>
 	<script type="text/javascript">
-		CONFIG.cp_label = "{{ g.get_setting('cp_label') }}";
+		CONFIG.cp_label = "{{ g.settings['cp_label'] }}";
 	</script>
 	{% endblock %}
 	{% if g.web_config['custom_css'] %}

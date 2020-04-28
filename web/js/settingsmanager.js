@@ -152,7 +152,7 @@ function SettingsManager(parentDOM) {
 			type: 'boolean',
 			name: 'Risiko nach Studiengang berechnen',
 			desc: 'Es wird ein Risikowert für jeden Studenten in seinem Studiengang berechnet. Dies kann ' +
-			'den Updatevorgang erheblich verlängern.',
+				'den Updatevorgang erheblich verlängern.',
 			group: 'Risikoberechnung',
 			defaultVal: false
 		},
@@ -160,7 +160,7 @@ function SettingsManager(parentDOM) {
 			type: 'boolean',
 			name: 'Risiko nach Abschluss berechnen',
 			desc: 'Es wird ein Risikowert für jeden Studenten in seiner Abschlussgruppe berechnet. Dies kann ' +
-			'den Updatevorgang erheblich verlängern.',
+				'den Updatevorgang erheblich verlängern.',
 			group: 'Risikoberechnung',
 			defaultVal: false
 		},
@@ -176,7 +176,7 @@ function SettingsManager(parentDOM) {
 			type: 'int',
 			name: 'Minimale Studentenzahl im Studiengang',
 			desc: 'Die minimale Anzahl Studenten, die einen Studiengang abgeschlossen haben müssen, ' +
-			'bevor ein eigener Risikowert für den Studiengang berechnet wird.',
+				'bevor ein eigener Risikowert für den Studiengang berechnet wird.',
 			group: 'Pfadgenerierung',
 			defaultVal: 200
 		},
@@ -289,6 +289,14 @@ function SettingsManager(parentDOM) {
 			name: 'Prüfungsfelder ausblenden',
 			desc: 'Liste der technischen Felder, welche ausgeblendet werden sollen. Z.B. weil diese Daten nicht verfügbar sind.',
 			group: 'Anzeige'
+		},
+		"student_list_limit": {
+			type: 'int',
+			name: 'Standardlimit der Studierendenliste',
+			desc: 'Anzahl der Studierenden, welche initial in der Studierendenlisten angezeigt werden.',
+			group: 'Anzeige',
+			defaultVal: 20,
+			selectItems: [10, 20, 30, 50, 100, 500, 1000]
 		},
 		"sv_show_risk_value": {
 			type: 'boolean',
@@ -425,7 +433,7 @@ SettingsManager.prototype.getSettingInfo = function (name) {
 			var rd = {};
 			for (var key in this.settings[pattern]) {
 				var value = this.settings[pattern][key];
-				if (typeof(value) == 'string') {
+				if (typeof (value) == 'string') {
 					for (var i = 0; i < m.length; i++) {
 						value = value.replace('$' + i, m[i]);
 					}
@@ -495,8 +503,8 @@ SettingsManager.prototype.drawValue = function (name, stg) {
 	var value = self.data['settings'][key];
 	var defaultVal = info ? info.defaultVal : undefined;
 	var type = info ? info.type : 'string';
-	if (!info && typeof(value) == 'number') type = 'float';
-	if (!info && typeof(value) == 'object' && Array.isArray(value)) type = 'list';
+	if (!info && typeof (value) == 'number') type = 'float';
+	if (!info && typeof (value) == 'object' && Array.isArray(value)) type = 'list';
 	if (type == 'float' || type == 'int') {
 		return drawNumeric();
 	}
@@ -572,8 +580,8 @@ SettingsManager.prototype.drawValueInput = function (name, stg) {
 	var info = self.getSettingInfo(name);
 	var value = self.data['settings'][key];
 	var type = info ? info.type : 'string';
-	if (!info && typeof(value) == 'number') type = 'float';
-	if (!info && typeof(value) == 'object' && Array.isArray(value)) type = 'list';
+	if (!info && typeof (value) == 'number') type = 'float';
+	if (!info && typeof (value) == 'object' && Array.isArray(value)) type = 'list';
 	if (type == 'float' || type == 'int') {
 		return drawNumeric();
 	}
@@ -600,8 +608,13 @@ SettingsManager.prototype.drawValueInput = function (name, stg) {
 	function drawNumeric() {
 		var box = $(document.createElement('div'));
 
-		var input = $(document.createElement('input')).appendTo(box);
-		input.val(value);
+		var input;
+		if (info && info.selectItems) {
+			input = $(drawSelect(info.selectItems, value)).appendTo(box);
+		} else {
+			input = $(document.createElement('input')).appendTo(box);
+			input.val(value);
+		}
 
 		box.getValue = function () {
 			return parseFloat(input.val());
@@ -695,7 +708,7 @@ SettingsManager.prototype.drawValueInput = function (name, stg) {
 			e.preventDefault();
 
 			var item_value = prompt('Neuer Listeneintrag');
-			if (typeof(item_value) == 'string' && item_value.length) {
+			if (typeof (item_value) == 'string' && item_value.length) {
 				value.push(item_value);
 				box.drawItem(item_value);
 			}
@@ -782,7 +795,7 @@ SettingsManager.prototype.drawSettingDialog = function (name) {
 
 			var newValue = input.getValue();
 			console.log('new value ' + key + ' :', newValue);
-			if (typeof(newValue) == 'number' && isNaN(newValue)) {
+			if (typeof (newValue) == 'number' && isNaN(newValue)) {
 				alert('Ungültige Nummer');
 				return;
 			}
