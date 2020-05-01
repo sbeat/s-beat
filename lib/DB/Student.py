@@ -1439,7 +1439,7 @@ class StudentsBitArray:
 
         # self.order_elements()
 
-        print 'load_bitmapchecker query', self.query
+        logger.info('load_bitmapchecker query %s', self.query)
         students = Student.find(self.query)
         self.count = students.count()
         self.yields = 0
@@ -1449,8 +1449,8 @@ class StudentsBitArray:
         self.bmo = bitmapchecker.BitmapObject(generator, self.count, len(self.elements))
         self.rows = self.bmo.rows
         self.read_rows = self.bmo.read_rows
-        print 'load_bitmapchecker count:', self.count, 'columns:', len(self.elements), 'rows:', self.rows, \
-            'yields', self.yields, 'read_rows:', self.read_rows
+        logger.info('load_bitmapchecker count: %d columns: %d rows: %d yields: %d read_rows: %d', self.count,
+                    len(self.elements), self.rows, self.yields, self.read_rows)
 
     def generate_students(self, students, elements):
         for student in students:

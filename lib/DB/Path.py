@@ -713,9 +713,9 @@ class PathGenerator:
         start = time.time()
         student_ba = Student.get_students_bitarray(self.feature_set, self.student_query)
         diff = time.time() - start
-        print 'PathGenerator', self.ident, 'calculated students bitmap for ', \
-            len(self.feature_set), 'features and', student_ba.count, \
-            'students with', student_ba.rows, 'rows after %.1f seconds' % (diff,)
+        logger.info(
+            'PathGenerator %s calculated bitmap for %d features and %d students with %d rows after %.1f seconds',
+            self.ident, len(self.feature_set), student_ba.count, student_ba.rows, diff)
 
         return student_ba
 
@@ -776,7 +776,7 @@ class PathGenerator:
 
         support = float(matching_count) / total_count if total_count else 0.0
 
-        print '_check_itemset ', matching_count, '/', total_count, [pe.get_str() for pe in itemset]
+        # print '_check_itemset ', matching_count, '/', total_count, [pe.get_str() for pe in itemset]
 
         if support > self.min_support:
             self.features_used.update(itemset)
@@ -824,19 +824,19 @@ class PathGenerator:
                     self.count_saved += 1
                     self.count_saved_total += 1
 
-                    print 'saved path id:', result.inserted_id, \
-                        sup, conf, [pe.get_str() for pe in a], \
-                        '->', [pe.get_str() for pe in success_elements], matching_count, '/', a_matching, self.ident
+                    logger.info('saved path %s id %s sup: %.2f conf: %.2f path: %s -> %s matching: %d / %d', self.ident,
+                                result.inserted_id, sup, conf, [pe.get_str() for pe in a],
+                                [pe.get_str() for pe in success_elements], matching_count, a_matching)
                     return result.inserted_id
         return False
 
     def _print_process(self):
         if not self.print_results:
             return
-        print get_progress(self.num, self.real_count, self.ts_started), 'k:', self.k, \
-            'features:', len(self.feature_set), 'used:', len(self.features_used), \
-            'saved:', self.count_saved, '/', self.count_saved_total, 'denied:', self.count_denied, \
-            'time:', time.time() - self.ts_started, self.ident
+        logger.info('Progress k: %d | %s | features: %d used: %d saved: %d / %d denied: %d time: %.3f', self.k,
+                     get_progress(self.num, self.real_count, self.ts_started), len(self.feature_set),
+                     len(self.features_used), self.count_saved, self.count_saved_total, self.count_denied,
+                     time.time() - self.ts_started)
 
     def run(self, do_calc=True):
         """
@@ -849,8 +849,8 @@ class PathGenerator:
         self._calc_totals(ba)
 
         if self.print_results:
-            print 'PathGenerator', self.ident, 'run k:', self.k, ' features:', len(
-                self.feature_set), 'count:', self.count, 'start:', self.start, 'end:', self.end
+            logger.info('PathGenerator %s run k: %d features: %d count: %d start: %d end: %d', self.ident, self.k,
+                        len(self.feature_set), self.count, self.start, self.end)
 
         self.date_started = datetime.utcnow()
         self.ts_started = time.time()
@@ -931,11 +931,8 @@ class PathGenerator:
 
         self._calc_count()
 
-        print 'PathGenerator run multiprocess k:', self.k, ' features:', len(self.feature_set), 'count:', self.count
-        logger.info(
-            'PathGenerator run multiprocess k: ' + str(self.k) + ' features: ' + str(
-                len(self.feature_set)) + ' count: ' + str(
-                self.count))
+        logger.info('PathGenerator run multiprocess k: %d features: %d count: %d', self.k, len(self.feature_set),
+                    self.count)
 
         # self._calc_ba()
         # self._calc_totals()
@@ -973,14 +970,14 @@ class PathGenerator:
                 self.count_denied = 0L
                 self.count_saved_total = count_saved_total
                 for pg in pg_list:
-                    print 'finished ', pg.ident, 'saved:', pg.count_saved, 'used:', len(pg.features_used)
                     self.index = max(self.index, pg.index)
                     self.count_saved_total += pg.count_saved
                     self.features_used.update(pg.features_used)
                     self.num += pg.num
                     self.count_saved += pg.count_saved
                     self.count_denied += pg.count_denied
-                    print 'processf', pg.ident, 'num:', pg.num, '/', per_proc, 'saved:', pg.count_saved
+                    logger.info('finished %s num: %d / %d saved: %d used: %d', pg.ident, pg.num, per_proc,
+                                pg.count_saved, len(pg.features_used))
 
                 self._track_process()
                 self._print_process()
@@ -1084,8 +1081,8 @@ def run_multiprocess_pg_task(info):
     pg.start = info['start']
     pg.end = info['end']
 
-    print 'run', pg.ident, ' from:', info['start'], 'to', info['end']
+    logger.info('start %s from: %d to: %d', pg.ident, info['start'], info['end'])
     pg.run(False)
-    print 'ended', pg.ident, ' from:', info['start'], 'to', info['end']
+    logger.info('ended %s from: %d to: %d', pg.ident, info['start'], info['end'])
 
     return pg

@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo:4.2
+    expose:
+      - 27017
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+
+
+  s-beat:
+    build: .
+    links:
+      - mongodb
+    ports:
+      - 8080:80
+    volumes:
+      - s-beat-data:/opt/s-beat/data
+    restart: always
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo-data:
+  s-beat-data:

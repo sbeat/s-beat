@@ -1,12 +1,8 @@
 # S-BEAT Docker setup
 
-Run the command sin the docker folder.
+Run the following command in this docker folder to start s-beat.
 
-Build
+    docker-compose up
+    
+This will run the docker image build and start the mongodb and s-beat in separate containers.
 
-    docker build -t s-beat .
-
-Run with interactive console
-
-    docker run -p 8080:80 -it s-beat:latest //bin/bash
-    ./start_sbeat.sh
