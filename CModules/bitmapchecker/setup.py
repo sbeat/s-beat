@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with S-BEAT. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 setup(name="bitmapchecker", version="1.0",
       author="S-BEAT GbR",
       author_email="kontakt@s-beat.de",

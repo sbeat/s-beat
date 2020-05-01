@@ -65,3 +65,15 @@ Start the webserver with the **httpserver** run configuration. Then you can navi
 Enter just the username admin, you don't need a password in the dev setup.
 
 To run a data update, you can use the **run_all** run configuration.
+
+
+## Compiling bitmapchecker under Windows
+
+Install [Microsoft Visual C++ Compiler for Python 2.7](https://www.microsoft.com/en-us/download/details.aspx?id=44266)
+
+Open a terminal in the folder `CModules/bitmapchecker` and run:
+
+    python setup.py build
+    
+Copy the file in `CModules/bitmapchecker/build/lib.*/bitmapchecker.pyd` to `lib/bitmapchecker.pyd` 
+

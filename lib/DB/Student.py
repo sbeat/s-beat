@@ -1431,7 +1431,8 @@ class StudentsBitArray:
         try:
             imp.find_module('bitmapchecker')
             self.load_bitmapchecker()
-        except ImportError:
+        except ImportError as err:
+            logger.warn('Failed to load bitmapchecker. Using python implementation. %s', err)
             self.load()
 
     def load_bitmapchecker(self):

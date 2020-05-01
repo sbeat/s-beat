@@ -385,7 +385,7 @@ class Path(DBDocument):
                 'proc_type': step['type']
             }
 
-            pg.run_all(multiprocess, max_k=max_k, proc_count=6)
+            pg.run_all(multiprocess, max_k=max_k)
 
     @staticmethod
     def test_generate_paths_with_generator(path_elements, query, multiprocess=False, min_support=0.05,
@@ -410,7 +410,7 @@ class Path(DBDocument):
             'proc_type': 'test'
         }
 
-        pg.run_all(multiprocess, max_k=max_k, proc_count=6)
+        pg.run_all(multiprocess, max_k=max_k)
 
     @staticmethod
     def get_process_for_generation():
@@ -834,9 +834,9 @@ class PathGenerator:
         if not self.print_results:
             return
         logger.info('Progress k: %d | %s | features: %d used: %d saved: %d / %d denied: %d time: %.3f', self.k,
-                     get_progress(self.num, self.real_count, self.ts_started), len(self.feature_set),
-                     len(self.features_used), self.count_saved, self.count_saved_total, self.count_denied,
-                     time.time() - self.ts_started)
+                    get_progress(self.num, self.real_count, self.ts_started), len(self.feature_set),
+                    len(self.features_used), self.count_saved, self.count_saved_total, self.count_denied,
+                    time.time() - self.ts_started)
 
     def run(self, do_calc=True):
         """
@@ -924,7 +924,7 @@ class PathGenerator:
         self._print_process()
         self._track_process()
 
-    def run_multiprocess(self, proc_count=6):
+    def run_multiprocess(self):
         if self.k < 2:
             self.run()
             return
@@ -940,7 +940,9 @@ class PathGenerator:
         self.date_started = datetime.utcnow()
         self.ts_started = time.time()
 
-        from multiprocessing import Pool, Manager, TimeoutError
+        from multiprocessing import Pool, Manager, TimeoutError, cpu_count
+
+        proc_count = cpu_count()
 
         manager = Manager()
         p = Pool(proc_count)
@@ -1033,9 +1035,9 @@ class PathGenerator:
         p.close()
         p.join()
 
-    def run_all(self, multiprocess=False, max_k=None, proc_count=6):
+    def run_all(self, multiprocess=False, max_k=None):
         if multiprocess:
-            self.run_multiprocess(proc_count)
+            self.run_multiprocess()
         else:
             self.run()
 
@@ -1059,7 +1061,7 @@ class PathGenerator:
         pg.process_tracking_info = self.process_tracking_info
         pg.count_saved_total = self.count_saved_total
 
-        pg.run_all(multiprocess, max_k, proc_count)
+        pg.run_all(multiprocess, max_k)
 
 
 def run_multiprocess_pg_task(info):
