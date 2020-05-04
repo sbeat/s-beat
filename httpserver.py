@@ -38,6 +38,7 @@ config = RawConfigParser()
 config.read('config/main.cfg')
 
 logging.basicConfig(filename=config.get('http', 'logfile'), level=logging.INFO)
+# logging.getLogger('').addHandler(logging.StreamHandler())
 
 port = config.getint('http', 'port')
 host = config.get('http', 'host')

@@ -217,50 +217,43 @@ function ExamInfoList(parentDOM) {
 			label: 'Anzahl Anmeldungen im Zeitraum',
 			title: 'Anzahl Prüfungsanmeldungen  im Zeitraum',
 			formatting: 'int',
-			group: 'Leistung.Anmeldungen',
-			sortBy: false
+			group: 'Leistung.Anmeldungen'
 		},
 		'semester_data.PERIOD.successful': {
 			id: 'semester_data.PERIOD.successful',
 			label: 'Bestanden im Zeitraum',
 			title: 'Anzahl bestandene Leistungen im Zeitraum',
 			formatting: 'int',
-			group: 'Leistung.Bestanden',
-			sortBy: false
+			group: 'Leistung.Bestanden'
 		},
 		'semester_data.PERIOD.failed': {
 			id: 'semester_data.PERIOD.failed',
 			label: 'Nicht bestanden im Zeitraum',
 			title: 'Anzahl nicht bestandene Leistungen im Zeitraum',
 			formatting: 'int',
-			group: 'Leistung.Nicht bestanden',
-			sortBy: false
+			group: 'Leistung.Nicht bestanden'
 		},
 		'semester_data.PERIOD.applied': {
 			id: 'semester_data.PERIOD.applied',
 			label: 'Status=AN im Zeitraum',
 			title: 'Anzahl Leistungen mit dem Status=AN im Zeitraum',
 			formatting: 'int',
-			group: 'Leistung.Anmeldungen',
-			sortBy: false
+			group: 'Leistung.Anmeldungen'
 		},
 		'semester_data.PERIOD.success_perc': {
 			id: 'semester_data.PERIOD.success_perc',
 			label: 'Bestanden im Zeitraum in %',
 			title: 'Prozentanteil bestandender Leistungen im Zeitraum',
 			formatting: 'percent',
-			group: 'Leistung.Bestanden',
-			sortBy: false
+			group: 'Leistung.Bestanden'
 		},
 		'semester_data.PERIOD.failed_perc': {
 			id: 'semester_data.PERIOD.failed_perc',
 			label: 'Nicht bestanden im Zeitraum in %',
 			title: 'Prozentanteil nicht bestandender Leistungen im Zeitraum',
 			formatting: 'percent',
-			group: 'Leistung.Nicht bestanden',
-			sortBy: false
+			group: 'Leistung.Nicht bestanden'
 		},
-
 		'semesters': {
 			id: 'semesters',
 			label: 'Semester',
@@ -512,7 +505,7 @@ ExamInfoList.prototype.drawExam = function (exam) {
 		var col = this.columnData[this.columns[i]];
 		var td = $(document.createElement('td'));
 		tr.append(td);
-		this.prepareExamData(exam);
+		// this.prepareExamData(exam);
 		this.drawCellValue(exam, col, td);
 	}
 

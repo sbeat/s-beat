@@ -22,6 +22,7 @@ from pymongo import errors, MongoClient
 from datetime import datetime
 import sys
 import logging
+
 logger = logging.getLogger(__name__)
 
 _open_db = None
@@ -137,6 +138,23 @@ def get_db_query_by_type(value, data_type):
     else:
         result = value
 
+    return result
+
+
+def get_db_aggregation_condition(value, data_type, var_name):
+    result = {}
+    if data_type == 'int':
+        parts = value.split(',')
+        if len(parts) > 1:
+            if len(parts[0]) > 0:
+                result = {'$gte': [var_name, int(parts[0])]}
+
+            if len(parts[1]) > 0:
+                result = {'$lte': [var_name, int(parts[1])]}
+        else:
+            result = {'$eq': [var_name, int(value)]}
+    else:
+        result = {'$eq': [var_name, value]}
     return result
 
 

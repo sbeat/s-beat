@@ -61,7 +61,13 @@ def handle():
         'semester_data.LAST.failed': 'int',
         'semester_data.LAST.applied': 'int',
         'semester_data.LAST.success_perc': 'float',
-        'semester_data.LAST.failed_perc': 'float'
+        'semester_data.LAST.failed_perc': 'float',
+        'semester_data.PERIOD.exams': 'int',
+        'semester_data.PERIOD.successful': 'int',
+        'semester_data.PERIOD.failed': 'int',
+        'semester_data.PERIOD.applied': 'int',
+        'semester_data.PERIOD.success_perc': 'float',
+        'semester_data.PERIOD.failed_perc': 'float'
     }
     sortable = query_types.keys()
     sortable.append('_id')
@@ -107,11 +113,11 @@ def handle():
 
     db_query = dict()
     db_queries = []  # for restrictions
-    db_sort = []
+    db_sort = {}
     if len(sort1) == 2 and sort1[0] in sortable:
-        db_sort.append((gff(sort1[0]), int(sort1[1])))
+        db_sort[gff(sort1[0])] = int(sort1[1])
     if len(sort2) == 2 and sort2[0] in query_types:
-        db_sort.append((gff(sort2[0]), int(sort2[1])))
+        db_sort[gff(sort2[0])] = int(sort2[1])
 
     for name in request.args:
         if name not in query_types:
@@ -138,10 +144,57 @@ def handle():
         db_queries.append(db_query)
         db_query = {'$and': db_queries}
 
-    cursor = DB.ExamInfo.find(db_query, limit=limit, skip=start, sort=db_sort)
+    pipeline = [{'$match': db_query}]
+    if request.args.has_key('semesters'):
+        cond = DB.get_db_aggregation_condition(request.args.get('semesters'), 'int', {'$toInt': '$$this.k'})
+        pipeline.append({'$addFields': {
+            'semester_data.PERIOD': {
+                '$reduce': {
+                    'input': {'$objectToArray': '$semester_data'},
+                    'initialValue': {
+                        'applied': 0,
+                        'failed': 0,
+                        'exams': 0,
+                        'successful': 0,
+                        'resigned': 0
+                    },
+                    'in': {
+                        '$cond': {
+                            'if': cond,
+                            'then': {
+                                'applied': {'$add': ['$$value.applied', '$$this.v.applied']},
+                                'failed': {'$add': ['$$value.failed', '$$this.v.failed']},
+                                'exams': {'$add': ['$$value.exams', '$$this.v.exams']},
+                                'successful': {'$add': ['$$value.successful', '$$this.v.successful']},
+                                'resigned': {'$add': ['$$value.resigned', '$$this.v.resigned']},
+                                'failed_perc': {'$divide': [
+                                    {'$add': ['$$value.failed', '$$this.v.failed']},
+                                    {'$add': ['$$value.exams', '$$this.v.exams']}
+                                ]},
+                                'success_perc': {'$divide': [
+                                    {'$add': ['$$value.successful', '$$this.v.successful']},
+                                    {'$add': ['$$value.exams', '$$this.v.exams']}
+                                ]},
+                                'resign_perc': {'$divide': [
+                                    {'$add': ['$$value.resigned', '$$this.v.resigned']},
+                                    {'$add': ['$$value.exams', '$$this.v.exams']}
+                                ]}
+                            },
+                            'else': '$$value'
+                        }
+                    }
+                }
+            }
+        }})
+
+    pipeline.append({'$sort': db_sort})
+    pipeline.append({'$skip': start})
+    pipeline.append({'$limit': limit})
+
+    cursor = DB.ExamInfo.find(db_query, limit=limit, skip=start)
 
     ret['count'] = cursor.count()
-    ret['list'] = [s.__dict__ for s in cursor]
+    ret['list'] = DB.ExamInfo.db_aggregate(pipeline)
     ret['query'] = repr(db_query)
     ret['sort'] = repr(db_sort)
     ret['current'] = current_semester
