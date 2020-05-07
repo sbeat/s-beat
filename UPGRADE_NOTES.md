@@ -4,7 +4,7 @@ The following notes tell you what to do when upgrading S-BEAT from an older vers
 
 ## Upgrade 1.6 to 1.7
 
-Update the MongoDB Database to at least version 3.6. Update the depencenies:
+Update the MongoDB Database to at least version 4.0. Update the depencenies:
 
     pip install -r requirements.txt --user
 
@@ -19,7 +19,8 @@ Add new Definition under Administration -> Definitionen:
         Query: faculty
         Formatierung: String
         Ignorieren: Ja
-         
+        Bedingungsgenerierung: Ja
+        
     Student » Studium » Prüfungsleistungen
         Name: Semester mit 2. Versuchen
         Query: exam_try_semesters.2
