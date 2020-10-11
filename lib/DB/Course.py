@@ -177,10 +177,10 @@ class Course(DBDocument):
     def update_stat_dict_by_values(d):
         total_count = sum(d['values'].values())
         if total_count:
-            exams_values = [int(x) for x in d['values'] if x != 'None']
+            exams_values = [int(x) for x in d['values'] if x is not None]
             d['min'] = min(exams_values)
             d['max'] = max(exams_values)
-            values_sum = [int(x) * c for x, c in d['values'].iteritems() if x != 'None']
+            values_sum = [int(x) * c for x, c in d['values'].iteritems() if x is not None]
             d['mean'] = float(sum(values_sum)) / total_count
 
     @staticmethod
