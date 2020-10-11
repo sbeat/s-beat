@@ -194,7 +194,7 @@ def handle():
     cursor = DB.ExamInfo.find(db_query, limit=limit, skip=start)
 
     ret['count'] = cursor.count()
-    ret['list'] = DB.ExamInfo.db_aggregate(pipeline)
+    ret['list'] = [DB.ExamInfo.db_create(d).__dict__ for d in DB.ExamInfo.db_aggregate(pipeline)]
     ret['query'] = repr(db_query)
     ret['sort'] = repr(db_sort)
     ret['current'] = current_semester
