@@ -82,5 +82,13 @@ see LICENSE.md file in the root of this project or http://www.gnu.org/licenses/
 		{% endblock %}
 	</footer>
 </div>
+{% if g.settings['privacy_notice'] %}
+<div id="privacy_notice" style="display: none">
+	<div>
+		{{ g.settings['privacy_notice']|safe }}
+	</div>
+	<button type="button" class="closeBtn">🗙</button>
+</div>
+{% endif %}
 </body>
 </html>

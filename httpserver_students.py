@@ -86,7 +86,8 @@ def before_request():
     g.logout_url = logout_url
 
     g.settings = DB.Settings.load_dict([
-        'cp_label'
+        'cp_label',
+        'privacy_notice'
     ])
 
     g.logo = None

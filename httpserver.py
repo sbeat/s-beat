@@ -85,7 +85,8 @@ def before_request():
         'contact_software',
         'contact_hosting',
         'contact_data',
-        'import_applicants'
+        'import_applicants',
+        'privacy_notice'
     ])
 
     g.version = Version.get_string()

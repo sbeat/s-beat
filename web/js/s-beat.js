@@ -1839,6 +1839,19 @@ function downloadFile(contents, type, fileName) {
 	}
 }
 
+function displayPrivacyNotice() {
+	var note = $('#privacy_notice');
+	var content = note.text();
+
+	if(window.localStorage && window.localStorage.getItem('hidePrivacyNote') !== content) {
+		note.show();
+		note.find('.closeBtn').click(function() {
+			$('#privacy_notice').hide();
+			window.localStorage.setItem('hidePrivacyNote', content);
+		});
+	}
+}
+
 $(function onReady() {
 
 	/*$(".tbl").each(function () {
@@ -1846,6 +1859,7 @@ $(function onReady() {
 	 });*/
 
 	displayTempDataHeader();
+	displayPrivacyNotice();
 
 	$(window).bind("resize", function () {
 		$(".tbl").each(function () {

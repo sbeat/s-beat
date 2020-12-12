@@ -51,5 +51,6 @@
 	"sv_text_left": "",
 	"sv_text_bottom": "",
 	"sv_show_risk_value": true,
-	"student_list_limit": 20
+	"student_list_limit": 20,
+	"privacy_notice": ""
 }

@@ -346,6 +346,12 @@ function SettingsManager(parentDOM) {
 			name: 'Text unten',
 			desc: 'Text, welcher unterhalb aller Daten angezeigt wird.',
 			group: 'Studierendenansicht'
+		},
+		"privacy_notice": {
+			type: 'html',
+			name: 'Datenschutzhinweis',
+			desc: 'Text wird dem Nutzer in der Mitarbeiteransicht sowie in der Studierendenansicht angezeigt, bis dieser diesen Hinweis schließt.',
+			group: 'Studierendenansicht'
 		}
 	};
 
@@ -514,6 +520,9 @@ SettingsManager.prototype.drawValue = function (name, stg) {
 	if (type == 'string' || type == 'text') {
 		return drawString();
 	}
+	if (type == 'html') {
+		return drawHtml();
+	}
 	if (type == 'boolean') {
 		return drawBoolean();
 	}
@@ -538,6 +547,22 @@ SettingsManager.prototype.drawValue = function (name, stg) {
 			span.text(value + " (" + defaultVal + ")");
 		else
 			span.text(value);
+		return span;
+	}
+
+	function drawHtml() {
+		var dummy = document.createElement('div');
+		dummy.innerHTML = value;
+		var text = dummy.innerText;
+		if (text.length > 100) {
+			text = text.substr(0, 100) + '...';
+		}
+		var span = $(document.createElement('span'));
+		span.addClass('text');
+		if (defaultVal !== undefined)
+			span.text(text + " (" + defaultVal + ")");
+		else
+			span.text(text);
 		return span;
 	}
 
@@ -591,6 +616,9 @@ SettingsManager.prototype.drawValueInput = function (name, stg) {
 	if (type == 'text') {
 		return drawString(true);
 	}
+	if (type == 'html') {
+		return drawHtml();
+	}
 	if (type == 'lights') {
 		if (!value) {
 			value = [0, 0, 0];
@@ -637,6 +665,43 @@ SettingsManager.prototype.drawValueInput = function (name, stg) {
 			return input.val();
 		};
 		return box;
+	}
+
+	function drawHtml() {
+		var box = document.createElement('div');
+		var quill;
+		var toolbarOptions = [
+			['bold', 'italic', 'underline'],
+			[{'list': 'ordered'}, {'list': 'bullet'}],
+			[{'indent': '-1'}, {'indent': '+1'}],
+			[{'size': []}],  // custom dropdown
+			[{'header': [2, 3, 4, false]}],
+			[{'color': []}],
+			[{'align': []}],
+			['clean']
+		];
+
+		setTimeout(function () {
+			quill = new Quill(box, {
+				theme: 'snow',
+				modules: {
+					toolbar: toolbarOptions
+				}
+			});
+
+			quill.root.innerHTML = value;
+		}, 1);
+
+
+		var boxJQ = $(box);
+
+		boxJQ.getValue = function () {
+			if (quill.root.textContent === '') {
+				return '';
+			}
+			return quill.root.innerHTML;
+		};
+		return boxJQ;
 	}
 
 	function drawBoolean() {
@@ -813,7 +878,7 @@ SettingsManager.prototype.drawSettingDialog = function (name) {
 
 	dialog.dialog({
 		title: title + ' bearbeiten',
-		width: 400,
+		width: 500,
 		modal: true,
 		buttons: buttons
 	})

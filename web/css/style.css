@@ -1360,6 +1360,27 @@ h2.toggle:hover {
 	float: right;
 }
 
+#privacy_notice {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background: #ececec;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+	padding: 10px 25px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	box-shadow: 0 0 10px 3px #CACACA;
+}
+#privacy_notice .closeBtn {
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+	font-size: 1.2rem;
+}
+
 @media print {
 	#side {
 		display: none;
