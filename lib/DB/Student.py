@@ -733,6 +733,10 @@ class Student(DBDocument):
         for path in paths:
             success_element = list(path.elements)[0]  # success criteria
             success_id = success_element.condition.name
+            if success_id is None:
+                logger.error('The success criteria condition should have a name element=%s path=%s', success_element.md5_id(), path.md5_id())
+                raise Exception('The success criteria condition should have a name')
+
             if path.scaled_value is not None:
                 value = path.scaled_value
             else:
