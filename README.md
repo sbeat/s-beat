@@ -2,7 +2,7 @@
 
 This Software is currently aimed towards a German audience, sorry.
 
-<a href="http://s-beat.de"><img src="https://s-beat.p-stats.com/img/sbeat_logo_klein.png" align="left" hspace="10" vspace="6"></a>
+<a href="https://s-beat.de"><img src="https://s-beat.de/img/sbeat_logo_klein.png" align="left" hspace="10" vspace="6"></a>
 
 > Das Studenten Beratungs- & Analysetool S-BEAT ist ein Werkzeug, welches sich insbesondere an die beratenden Stellen einer Hochschule richtet.
 Durch seine detaillierte und übersichtliche Darstellung liefert es aber auch Studiendekanen wichtige und interessante Einblicke in die Studiengänge und weitergehende Analysemöglichkeiten.
