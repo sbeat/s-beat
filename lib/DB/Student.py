@@ -140,6 +140,7 @@ class Student(DBDocument):
         self.study_time_real = None  # amount of semesters with finished exams
         self.study_semesters = []  # list of semester numbers
         self.semester_data = {}  # dictionary for every semester # {sem_1: {bonus:0, bonus_total:0, ...}}
+        self.semester_data_last = None  # dictionary for the last semester # {bonus:0, bonus_total:0, ...}
         self.phase_data = {}  # dictionary for every phase # {G: {bonus:0, bonus_total:0, ...}, H:...}
         self.cnt_delayed_exams = 0  # count of delayed exams due to valid reasons: is_resigned and comment==G
         self.cnt_unauthorized_delayed_exams = 0  # count of delayed exams due to unauthorized absence
@@ -505,6 +506,10 @@ class Student(DBDocument):
         self.semester_data = calc.exam_semesters  #
         self.phase_data = calc.exam_phases
 
+        last_sem_id = 'sem_' + str(self.study_time_real)
+        if last_sem_id in self.semester_data:
+            self.semester_data_last = self.semester_data[last_sem_id]
+
         if self.study_time_real >= 2 and calc.exam_phases.get('G', {}).get('bonus') >= 60:
             self.grade_basic_studies = calc.exam_phases.get('G', {}).get('grade')
         self.grade_main_studies = calc.exam_phases.get('H', {}).get('grade')
@@ -546,6 +551,7 @@ class Student(DBDocument):
                 'study_time_real',
                 'study_semesters',
                 'semester_data',
+                'semester_data_last',
                 'grade_basic_studies',
                 'grade_main_studies',
                 'grade_current',
